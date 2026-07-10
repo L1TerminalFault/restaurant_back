@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Awaze - Digital Menu</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              950: '#061f12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js for lightweight, reactive state management (no build step required) -->
+  <script src="https://unpkg.com/alpinejs" defer></script>
+
+  <style>
+    /* Custom thin scrollbar styling */
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #064e3b;
+      border-radius: 10px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#050806] text-white font-sans antialiased selection:bg-emerald-500 selection:text-black">
+
+  <!-- Interactive Alpine App Container -->
+  <div x-data="menuApp()" class="flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-40 bg-[#050806]/95 backdrop-blur-md border-b border-emerald-950/40 px-4 py-3.5 md:px-8">
+      <div class="max-w-7xl mx-auto flex sm:flex-row items-center justify-between gap-4">
+        
+        <!-- Logo & Hotel Identity -->
+        <div class="flex items-center space-x-3 self-start sm:self-center min-w-[150px]">
+          <div class="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 p-[1.5px] shadow-lg shadow-emerald-950/50">
+            <div class="w-full h-full bg-[#050806] rounded-[10px] flex items-center justify-center">
+              <span class="text-emerald-400 font-black text-xl tracking-tighter">A</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex flex-col">
+              <h1 class="font-black text-lg md:text-2xl tracking-tight text-white uppercase leading-none">AWAZE</h1>
+              <span class="text-emerald-400 text-[10px] uppercase font-semibold tracking-widest mt-1">Digital Menu</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Search Field -->
+        <div class="relative w-full sm:max-w-md">
+          <!-- Search Icon -->
+          <svg class="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search from foods and drinks..." 
+            x-model="searchQuery"
+            class="w-full bg-[#0d1410] border border-emerald-950/80 text-white placeholder-zinc-500 rounded-xl py-2.5 pl-10 pr-10 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm"
+          />
+          <button 
+            x-show="searchQuery" 
+            @click="searchQuery = ''"
+            style="display: none;"
+            class="absolute right-3.5 top-3.5 text-zinc-400 hover:text-white"
+          >
+            <!-- X Icon -->
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-6 md:py-8 md:px-8 flex-grow w-full">
+      
+      <!-- Premium Hotel Hero Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0a140f] to-[#030604] border border-emerald-950/60 p-6 md:p-8 mb-8">
+        <div class="absolute right-0 top-0 h-full w-1/3 opacity-15 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-400 via-transparent to-transparent"></div>
+        <div class="relative z-10 max-w-2xl">
+          <span class="text-emerald-400 text-2xl uppercase tracking-widest font-extrabold flex items-center mb-2">
+            <!-- Sparkles Icon -->
+            <svg class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            Girum Burger & Pizza
+          </span>
+          <h2 class="text-sm md:text-4xl font-black tracking-tight text-white mb-2 leading-tight uppercase">
+            Awaze Recommendations
+          </h2>
+          <!---<p class="text-zinc-400 text-xs md:text-sm leading-relaxed max-w-lg mb-4">
+            Welcome to our live guest menu. Explore our selection of award-winning traditional Ethiopian dishes, gourmet plates, and signature handcrafted beverages.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-emerald-400/90 font-medium">
+            <span class="bg-[#0c1611] border border-emerald-900/40 rounded-full px-3 py-1">⏱️ Dining & Takeout Available</span>
+            <span class="bg-[#0c1611] border border-emerald-900/40 rounded-full px-3 py-1">🌿 Vegan Options Highlighted</span>
+          </div>-->
+        </div>
+      </div>
+
+      <!-- Broad Core Category Toggle -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-emerald-950/40">
+        
+        <div class="flex bg-[#0d1410] p-1 rounded-xl border border-emerald-950 max-w-max">
+          <button 
+            @click="setMenuType('all')"
+            :class="activeType === 'all' ? 'bg-white text-black shadow-lg' : 'text-zinc-400 hover:text-white'"
+            class="px-5 py-2 rounded-lg text-xs font-bold transition-all"
+          >
+            Complete Menu
+          </button>
+          <button 
+            @click="setMenuType('food')"
+            :class="activeType === 'food' ? 'bg-emerald-600 text-black shadow-lg' : 'text-zinc-400 hover:text-white'"
+            class="px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5"
+          >
+            <!-- Utensils Icon -->
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span>Gourmet Food</span>
+          </button>
+          <button 
+            @click="setMenuType('drinks')"
+            :class="activeType === 'drinks' ? 'bg-emerald-600 text-black shadow-lg' : 'text-zinc-400 hover:text-white'"
+            class="px-5 py-2 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5"
+          >
+            <!-- Coffee / Drink Icon -->
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Beverages & Drinks</span>
+          </button>
+        </div>
+
+        <!-- Sorting Menu Option Selection -->
+        <div class="flex items-center justify-between md:justify-end space-x-3">
+          <div class="flex items-center text-xs text-zinc-400 bg-[#0d1410] px-3 py-2 rounded-lg border border-emerald-950">
+            <span class="mr-2">Sort By:</span>
+            <select 
+              x-model="sortOption"
+              class="bg-transparent border-none text-emerald-400 focus:outline-none cursor-pointer font-bold"
+            >
+              <option value="popular" class="bg-[#0d1410]">Most Popular</option>
+              <option value="price-low" class="bg-[#0d1410]">Price: Low to High</option>
+              <option value="price-high" class="bg-[#0d1410]">Price: High to Low</option>
+            </select>
+          </div>
+          
+          <div class="text-xs text-zinc-500 font-medium">
+            Showing <span class="text-white font-bold" x-text="filteredItems().length"></span> items
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Category Horizontal Filter Feed -->
+      <div class="mb-8">
+        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3.5">Browse Categories</p>
+        <div class="flex space-x-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-emerald-950 scrollbar-track-transparent">
+          <template x-for="cat in visibleCategories()" :key="cat.id">
+            <button
+              @click="activeCategory = cat.id"
+              :class="activeCategory === cat.id ? 'bg-emerald-950/80 border-emerald-500 text-white shadow-md' : 'bg-[#0d1410] border-emerald-950/60 hover:border-emerald-800 text-zinc-300'"
+              class="flex items-center space-x-2 px-5 py-3 rounded-xl border whitespace-nowrap transition-all duration-200"
+            >
+              <!-- Icon Injection from SVG catalog inside client state -->
+              <span x-html="getCategoryIcon(cat.iconName)" :class="activeCategory === cat.id ? 'text-emerald-400' : 'text-zinc-400'" class="h-4 w-4"></span>
+              <span class="text-xs font-semibold tracking-wide" x-text="cat.name"></span>
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Empty Query Result State -->
+      <template x-if="filteredItems().length === 0">
+        <div class="text-center py-16 bg-[#0d1410] rounded-3xl border border-emerald-950/60 max-w-lg mx-auto px-4">
+          <div class="bg-[#101b15] p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 border border-emerald-900/40">
+            <!-- Info Icon -->
+            <svg class="h-8 w-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">No matching items found</h3>
+          <p class="text-zinc-400 text-xs max-w-sm mx-auto mb-6">
+            We couldn't find any menu items matching your criteria. Let's try adjusting the filters or search keywords.
+          </p>
+          <button 
+            @click="searchQuery = ''; activeCategory = 'all'; activeType = 'all';"
+            class="bg-emerald-600 hover:bg-emerald-500 text-black text-xs font-bold px-6 py-2.5 rounded-xl transition"
+          >
+            Reset Filters
+          </button>
+        </div>
+      </template>
+
+      <!-- Main Food & Drink Grid Presentation (All items shown - No Pagination) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" x-show="filteredItems().length > 0">
+        <template x-for="item in filteredItems()" :key="item.id">
+          <div 
+            @click="selectedItem = item"
+            class="group bg-[#0d1410] border border-emerald-950/60 hover:border-emerald-700/60 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald-950/10 cursor-pointer flex flex-col justify-between"
+          >
+            <!-- Card Image Box with Labels -->
+            <div class="relative aspect-[4/3] overflow-hidden bg-zinc-900">
+              <img 
+                :src="item.image" 
+                :alt="item.name"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                @error="$el.src = 'https://placehold.co/600x450/0d1410/10b981?text=' + encodeURIComponent(item.name)"
+              />
+              
+              <!-- Promo Highlight Label -->
+              <span 
+                x-text="item.tag"
+                class="absolute top-3 left-3 bg-[#050806]/90 text-white border border-emerald-950 text-[10px] font-extrabold px-2.5 py-1 rounded-lg backdrop-blur-md"
+              ></span>
+              
+              <!-- Hot Spiciness Badge Tag -->
+              <template x-if="item.spicy">
+                <span class="absolute top-3 right-3 bg-red-950/90 text-red-400 border border-red-900/40 text-[10px] font-extrabold px-2 py-1 rounded-lg backdrop-blur-md flex items-center">
+                  <!-- Flame Icon -->
+                  <svg class="h-3 w-3 mr-0.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.486 2.58c-.027.205-.052.411-.073.614C7.03 9.242 6.5 8.12 6.5 7A1 1 0 005 6.2a8.035 8.035 0 00-1.785 2.33C2.409 10.03 2 11.47 2 13a7 7 0 1014 0c0-1.502-.409-2.943-1.215-4.47a8.035 8.035 0 00-1.785-2.33s-.336.575-.61 1.258c-.287.712-.52 1.543-.655 2.378-.016.096-.03.19-.041.285a4.774 4.774 0 01-.01.077c-.1.353-.306.66-.583.874a1.004 1.004 0 01-1.218-.12 3.77 3.77 0 01-.937-2.652c.033-.902.164-1.921.393-2.966.223-1.012.545-2.029.932-2.946a9.585 9.585 0 01.91-1.636z" clip-rule="evenodd" />
+                  </svg>
+                  Spicy
+                </span>
+              </template>
+            </div>
+
+            <!-- Card Description/Rating Details (Dark Base Theme) -->
+            <div class="p-4 flex-grow flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs text-zinc-400 mb-1.5">
+                  <span x-text="item.subCategory" class="text-[10px] font-extrabold tracking-widest text-emerald-400 uppercase"></span>
+                  <div class="flex items-center space-x-1 text-amber-400">
+                    <!-- Star Icon -->
+                    <svg class="h-3.5 w-3.5 fill-amber-400 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span class="font-bold text-white text-[11px]" x-text="item.rating"></span>
+                    <span class="text-zinc-500 text-[10px]" x-text="'(' + item.reviews + ')'"></span>
+                  </div>
+                </div>
+
+                <h3 class="font-bold text-sm md:text-base text-white tracking-tight mb-1 group-hover:text-emerald-400 transition-colors" x-text="item.name"></h3>
+                <p class="text-zinc-400 text-xs line-clamp-2 leading-relaxed mb-4" x-text="item.description"></p>
+              </div>
+
+              <!-- Pricing Metrics Container -->
+              <div class="flex items-center justify-between pt-3 border-t border-emerald-950/40">
+                <div>
+                  <span class="text-[10px] text-zinc-500 block uppercase font-semibold">Price</span>
+                  <span class="font-black text-emerald-400 text-base md:text-lg" x-text="'ETB ' + item.price.toLocaleString()"></span>
+                </div>
+
+                <span class="text-zinc-400 group-hover:text-emerald-400 text-xs font-bold flex items-center space-x-1 transition-colors">
+                  <span>Details</span>
+                  <!-- ChevronRight Icon -->
+                  <svg class="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </template>
+      </div>
+
+    </main>
+
+    <!-- Exquisite Detail Modal Overlay -->
+    <template x-if="selectedItem">
+      <div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div 
+          @click.away="selectedItem = null"
+          class="bg-[#0d1410] border border-emerald-900/60 w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl relative"
+        >
+          
+          <!-- Close Button -->
+          <button 
+            @click="selectedItem = null"
+            class="absolute top-4 right-4 z-10 bg-black/70 p-2 rounded-full hover:bg-black transition text-white border border-emerald-950/40"
+          >
+            <!-- Close Icon -->
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <!-- Modal Image Header -->
+          <div class="relative h-64 w-full">
+            <img 
+              :src="selectedItem.image" 
+              :alt="selectedItem.name" 
+              class="w-full h-full object-cover"
+              @error="$el.src = 'https://placehold.co/600x400/0d1410/10b981?text=' + encodeURIComponent(selectedItem.name)"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1410] to-transparent"></div>
+            <div class="absolute bottom-4 left-4">
+              <span class="bg-emerald-950 text-emerald-400 border border-emerald-800/60 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md" x-text="selectedItem.tag"></span>
+              <h3 class="text-xl md:text-2xl font-black text-white mt-2" x-text="selectedItem.name"></h3>
+            </div>
+          </div>
+
+          <!-- Modal Inner Content -->
+          <div class="p-6">
+            
+            <!-- Core metrics panel -->
+            <div class="flex items-center space-x-4 text-xs text-zinc-300 mb-4 bg-[#101b15] p-3 rounded-xl border border-emerald-950">
+              <div class="flex items-center space-x-1 text-amber-400">
+                <!-- Star Icon -->
+                <svg class="h-3.5 w-3.5 fill-amber-400 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span class="font-bold text-white" x-text="selectedItem.rating"></span>
+              </div>
+              <div class="h-3 w-[1px] bg-emerald-900/40"></div>
+              <div class="flex items-center space-x-1">
+                <!-- Clock Icon -->
+                <svg class="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span x-text="'Prep time: ' + selectedItem.prepTime"></span>
+              </div>
+              <div class="h-3 w-[1px] bg-emerald-900/40"></div>
+              <div class="flex items-center space-x-1">
+                <span class="text-emerald-400 font-bold">Calories:</span>
+                <span x-text="selectedItem.calories"></span>
+              </div>
+            </div>
+
+            <!-- Item detailed description -->
+            <div class="mb-6">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Chef's Notes</h4>
+              <p class="text-zinc-300 text-xs md:text-sm leading-relaxed" x-text="selectedItem.description"></p>
+            </div>
+
+            <!-- Information disclaimer info bar -->
+            <div class="mb-6 bg-[#050806] p-4 rounded-xl border border-emerald-950 flex items-start space-x-2.5">
+              <!-- Info Icon -->
+              <svg class="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-zinc-400 text-xs leading-relaxed">
+                Please let our dining attendants know if you have any food allergies or specific nutritional preferences before placing your order.
+              </p>
+            </div>
+
+            <!-- Modal Action Footer -->
+            <div class="flex items-center justify-between pt-4 border-t border-emerald-950/40">
+              <div>
+                <span class="text-xs text-zinc-500 block uppercase font-semibold">Base Price</span>
+                <span class="font-extrabold text-emerald-400 text-lg md:text-xl" x-text="'ETB ' + selectedItem.price.toLocaleString()"></span>
+              </div>
+
+              <button 
+                @click="selectedItem = null"
+                class="bg-emerald-600 hover:bg-emerald-500 text-black text-xs font-extrabold px-6 py-2.5 rounded-xl transition"
+              >
+                Back to Menu
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </template>
+
+    <!-- Footer System Information -->
+    <footer class="mt-auto border-t border-emerald-950/40 bg-[#030504] py-12 px-4 md:px-8 text-xs text-zinc-400">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center space-x-3">
+          <span class="font-extrabold text-sm tracking-tight text-white uppercase">AWAZE DIGITAL MENU</span>
+        </div>
+        
+        <div class="flex flex-wrap items-center justify-center gap-6 text-zinc-400">
+          <span class="hover:text-white transition cursor-pointer">Quality Standards</span>
+          <span class="hover:text-white transition cursor-pointer">Terms of Dining</span>
+          <span class="hover:text-white transition cursor-pointer">Chef's Desk</span>
+        </div>
+
+        <div>
+          <p class="text-[11px] text-zinc-500">&copy; 2026 Awaze Menu. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Client Data Store & Controller Functions logic -->
+  <script>
+    function menuApp() {
+      return {
+        activeCategory: 'all',
+        activeType: 'all',
+        searchQuery: '',
+        sortOption: 'popular',
+        selectedItem: null,
+
+        // Premium Menu Items Database
+        menuItems: [
+          {
+            id: 'f1',
+            name: 'Special Sizzling Tibs',
+            category: 'food',
+            subCategory: 'Meat',
+            price: 680,
+            rating: 4.9,
+            reviews: 142,
+            prepTime: '15-20 min',
+            tag: 'Chef Choice',
+            description: 'Fresh pan-fried prime beef cubes sautéed with onions, rosemary, garlic, and jalapeños, served sizzling hot on a traditional clay burner with fresh injera.',
+            image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
+            spicy: true,
+            calories: '420 kcal'
+          },
+          {
+            id: 'f2',
+            name: 'Royal Beyaynetu Platter',
+            category: 'food',
+            subCategory: 'Health',
+            price: 490,
+            rating: 4.8,
+            reviews: 98,
+            prepTime: '10-15 min',
+            tag: 'Popular',
+            description: 'A colorful, nutritious assortment of traditional vegan stews including split peas, lentils, collard greens, beetroot, and shiro, served over sourdough injera.',
+            image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '310 kcal'
+          },
+          {
+            id: 'f3',
+            name: 'Premium Kitfo Special',
+            category: 'food',
+            subCategory: 'Meat',
+            price: 720,
+            rating: 4.9,
+            reviews: 210,
+            prepTime: '10-15 min',
+            tag: 'Signature',
+            description: 'Finely minced extra-lean beef warmed with seasoned butter (Niter Kibbeh) and spiced chili powder (Mitmita). Served with Ayib (cottage cheese) and Gomen.',
+            image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&q=80&w=600',
+            spicy: true,
+            calories: '550 kcal'
+          },
+          {
+            id: 'f4',
+            name: 'Gourmet Sheger Burger',
+            category: 'food',
+            subCategory: 'Burger',
+            price: 420,
+            rating: 4.7,
+            reviews: 85,
+            prepTime: '15-20 min',
+            tag: 'Classic',
+            description: 'Premium grilled beef patty with sharp cheddar cheese, caramelized onions, house burger sauce, and crisp lettuce on a toasted sesame brioche bun.',
+            image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '620 kcal'
+          },
+          {
+            id: 'f5',
+            name: 'Smoked Salmon Toast',
+            category: 'food',
+            subCategory: 'Bakery',
+            price: 580,
+            rating: 4.6,
+            reviews: 44,
+            prepTime: '10 min',
+            tag: 'Fresh',
+            description: 'House-baked rustic sourdough bread topped with creamy herb dill cheese spread, cold-smoked salmon slices, pickled onions, and organic sprouts.',
+            image: 'https://images.unsplash.com/photo-1541532713592-79a0317b6b77?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '280 kcal'
+          },
+          {
+            id: 'f6',
+            name: 'Spiced Chicken Skewers',
+            category: 'food',
+            subCategory: 'Chicken',
+            price: 490,
+            rating: 4.7,
+            reviews: 62,
+            prepTime: '20-25 min',
+            tag: 'Spicy Delight',
+            description: 'Tender chicken thighs marinated in home-blended Berbere and garlic rub, charcoal-grilled to perfection. Served with spicy avocado dips.',
+            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600',
+            spicy: true,
+            calories: '390 kcal'
+          },
+          {
+            id: 'f7',
+            name: 'Smokey Pepperoni Pizza',
+            category: 'food',
+            subCategory: 'Pizza',
+            price: 540,
+            rating: 4.8,
+            reviews: 130,
+            prepTime: '15-20 min',
+            tag: 'Bestseller',
+            description: 'Artisanal thin sourdough crust layered with spicy marinara, dry-cured pepperoni, fresh shredded mozzarella, and dried wild oregano.',
+            image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '780 kcal'
+          },
+          {
+            id: 'f8',
+            name: 'Herb Grilled Sea Bass',
+            category: 'food',
+            subCategory: 'Seafood',
+            price: 950,
+            rating: 4.9,
+            reviews: 77,
+            prepTime: '25 min',
+            tag: 'Luxury Selection',
+            description: 'Locally caught fresh whole sea bass marinated in lemon zest and mixed garden herbs, oven-grilled, and accompanied with creamy buttered rice.',
+            image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '450 kcal'
+          },
+          {
+            id: 'd1',
+            name: 'Premium Aged Tej',
+            category: 'drinks',
+            subCategory: 'Beverage',
+            price: 320,
+            rating: 4.9,
+            reviews: 160,
+            prepTime: '5 min',
+            tag: 'Heritage Brew',
+            description: 'Our house-crafted organic honey wine, slowly fermented with Gesho roots. Offers a smooth, delightfully sweet and crisp finish.',
+            image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '180 kcal'
+          },
+          {
+            id: 'd2',
+            name: 'Ethiopian Spris Juice',
+            category: 'drinks',
+            subCategory: 'Beverage',
+            price: 180,
+            rating: 4.8,
+            reviews: 112,
+            prepTime: '5-10 min',
+            tag: 'Healthy',
+            description: 'Thick, beautifully layered natural fruit juice made from ripe avocados, sweet mangoes, and red papayas. Finished with a slice of lime.',
+            image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '210 kcal'
+          },
+          {
+            id: 'd3',
+            name: 'Grand Macchiato',
+            category: 'drinks',
+            subCategory: 'Coffee',
+            price: 95,
+            rating: 4.9,
+            reviews: 320,
+            prepTime: '5 min',
+            tag: 'Barista Star',
+            description: 'Our world-renowned, signature dark roast espresso poured through velvety steam-frothed milk layers to achieve absolute perfection.',
+            image: 'https://images.unsplash.com/photo-1572442388796-11668a67e13a?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '90 kcal'
+          },
+          {
+            id: 'd4',
+            name: 'Chilled Hibiscus Herbal Tea',
+            category: 'drinks',
+            subCategory: 'Coffee',
+            price: 140,
+            rating: 4.7,
+            reviews: 55,
+            prepTime: '5 min',
+            tag: 'Refreshed',
+            description: 'Invigorating organic dried hibiscus leaf infusion over ice, naturally sweetened with raw sugarcane honey syrup and mint leaves.',
+            image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '75 kcal'
+          },
+          {
+            id: 'd5',
+            name: 'Habesha Cold Lager',
+            category: 'drinks',
+            subCategory: 'Beverage',
+            price: 120,
+            rating: 4.7,
+            reviews: 189,
+            prepTime: '2 min',
+            tag: 'Chilled',
+            description: 'Premium local beer crafted from the purest spring waters, featuring a deep rich malt aroma and exceptionally crisp golden bubbles.',
+            image: 'https://images.unsplash.com/photo-1608270176050-12109395f2eb?auto=format&fit=crop&q=80&w=600',
+            spicy: false,
+            calories: '140 kcal'
+          }
+        ],
+
+        // Category configurations for UI layout representation mapping
+        categories: [
+          { id: 'all', name: 'All', iconName: 'all', type: 'all' },
+          { id: 'Bakery', name: 'Bakery', iconName: 'bakery', type: 'food' },
+          { id: 'Burger', name: 'Burger', iconName: 'burger', type: 'food' },
+          { id: 'Chicken', name: 'Chicken', iconName: 'chicken', type: 'food' },
+          { id: 'Pizza', name: 'Pizza', iconName: 'pizza', type: 'food' },
+          { id: 'Seafood', name: 'Seafood', iconName: 'seafood', type: 'food' },
+          { id: 'Health', name: 'Health', iconName: 'health', type: 'food' },
+          { id: 'Meat', name: 'Meat', iconName: 'meat', type: 'food' },
+          { id: 'Beverage', name: 'Beverage', iconName: 'beverage', type: 'drinks' },
+          { id: 'Coffee', name: 'Coffee & Tea', iconName: 'coffee', type: 'drinks' }
+        ],
+
+        // Helper function to return allowed categories dynamically based on core Active Type
+        visibleCategories() {
+          return this.categories.filter(cat => {
+            if (cat.id === 'all') return true;
+            if (this.activeType === 'all') return true;
+            return cat.type === this.activeType;
+          });
+        },
+
+        // Safeguard to handle tab swaps seamlessly
+        setMenuType(type) {
+          this.activeType = type;
+          this.activeCategory = 'all'; // Always reset child category filters back to base when parent updates
+        },
+
+        // Dynamic Filtering computation logic
+        filteredItems() {
+          let items = this.menuItems.filter(item => {
+            if (this.activeType !== 'all' && item.category !== this.activeType) return false;
+            if (this.activeCategory !== 'all' && item.subCategory !== this.activeCategory) return false;
+            if (this.searchQuery.trim() !== '') {
+              const query = this.searchQuery.toLowerCase();
+              return item.name.toLowerCase().includes(query) || 
+                     item.description.toLowerCase().includes(query) || 
+                     item.subCategory.toLowerCase().includes(query);
+            }
+            return true;
+          });
+
+          // Sorting implementation mapping
+          if (this.sortOption === 'price-low') {
+            return items.sort((a, b) => a.price - b.price);
+          } else if (this.sortOption === 'price-high') {
+            return items.sort((a, b) => b.price - a.price);
+          } else {
+            return items.sort((a, b) => b.rating - a.rating); // Popularity rating sort default
+          }
+        },
+
+        // Helper function returning dynamic SVG icons
+        getCategoryIcon(name) {
+          const icons = {
+            all: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>`,
+            bakery: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+            burger: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 9s8-1.5 8-1.5M12 11c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0 6c-2.2 0-4-1.8-4-4h8c0 2.2-1.8 4-4 4z" /></svg>`,
+            beverage: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+            coffee: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1M9 9h6m-7 3h8a2 2 0 012 2v2a2 2 0 01-2 2H8a2 2 0 01-2-2v-2a2 2 0 012-2z" /></svg>`,
+            chicken: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707" /></svg>`,
+            pizza: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 22h20L12 2zm0 4l6 12H6L12 6z" /></svg>`,
+            seafood: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>`,
+            health: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`,
+            meat: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454V14c0-2.21 3.582-4 8-4s8 1.79 8 4v1.546z" /></svg>`
+          };
+          return icons[name] || icons.all;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
