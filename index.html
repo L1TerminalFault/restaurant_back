@@ -40,12 +40,116 @@
     .scrollbar-thin::-webkit-scrollbar-thumb:hover {
       background: #10b981;
     }
+
+    /* Light Theme Overrides (Applied ONLY when Light Theme is toggled on) */
+    .light-theme {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+
+    .light-theme header {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .light-theme header input {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+
+    .light-theme header input::placeholder {
+      color: #64748b !important;
+    }
+
+    .light-theme button[aria-label="Toggle Theme"] {
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #059669 !important;
+    }
+
+    .light-theme .relative.overflow-hidden.rounded-3xl.bg-gradient-to-r {
+      background: linear-gradient(to right, #ecfdf5, #f8fafc) !important;
+      border-color: #a7f3d0 !important;
+    }
+
+    .light-theme .bg-\[\#0d1410\] {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .light-theme .bg-\[\#050806\] {
+      background-color: #f1f5f9 !important;
+    }
+
+    .light-theme .bg-\[\#101b15\] {
+      background-color: #f0fdf4 !important;
+      border-color: #d1fae5 !important;
+    }
+
+    .light-theme .bg-\[\#030504\],
+    .light-theme .bg-\[\#030604\] {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .light-theme .bg-\[\#0c1611\] {
+      background-color: #ecfdf5 !important;
+      border-color: #a7f3d0 !important;
+    }
+
+    .light-theme .text-white {
+      color: #0f172a !important;
+    }
+
+    .light-theme .text-zinc-300 {
+      color: #334155 !important;
+    }
+
+    .light-theme .text-zinc-400 {
+      color: #475569 !important;
+    }
+
+    .light-theme .text-zinc-500 {
+      color: #64748b !important;
+    }
+
+    .light-theme .border-emerald-950,
+    .light-theme .border-emerald-950\/40,
+    .light-theme .border-emerald-950\/60,
+    .light-theme .border-emerald-950\/80,
+    .light-theme .border-emerald-900\/40,
+    .light-theme .border-emerald-900\/60,
+    .light-theme .border-emerald-800\/60 {
+      border-color: #e2e8f0 !important;
+    }
+
+    .light-theme .group.bg-\[\#0d1410\] {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    .light-theme .group.bg-\[\#0d1410\]:hover {
+      border-color: #059669 !important;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .light-theme footer {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    .light-theme .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+    }
+    .light-theme .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-[#050806] text-white font-sans antialiased selection:bg-emerald-500 selection:text-black">
 
   <!-- Interactive Alpine App Container -->
-  <div x-data="menuApp()" class="flex flex-col min-h-screen">
+  <div x-data="menuApp()" :class="{ 'light-theme': !isDark }" class="flex flex-col min-h-screen transition-colors duration-300">
 
     <!-- Header Section -->
     <header class="sticky top-0 z-40 bg-[#050806]/95 backdrop-blur-md border-b border-emerald-950/40 px-4 py-3.5 md:px-8">
@@ -68,27 +172,46 @@
           </div>
         </a>
 
-        <!-- Interactive Search Field -->
-        <div class="relative w-full sm:max-w-md">
-          <!-- Search Icon -->
-          <svg class="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input 
-            type="text" 
-            placeholder="Search for foods and drinks..." 
-            x-model="searchQuery"
-            class="w-full bg-[#0d1410] border border-emerald-950/80 text-white placeholder-zinc-500 rounded-xl py-2.5 pl-10 pr-10 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm"
-          />
+        <!-- Interactive Search Field & Theme Toggle Button -->
+        <div class="flex items-center gap-2.5 w-full sm:w-auto sm:max-w-md">
+          <div class="relative w-full">
+            <!-- Search Icon -->
+            <svg class="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Search for foods and drinks..." 
+              x-model="searchQuery"
+              class="w-full bg-[#0d1410] border border-emerald-950/80 text-white placeholder-zinc-500 rounded-xl py-2.5 pl-10 pr-10 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm"
+            />
+            <button 
+              x-show="searchQuery" 
+              @click="searchQuery = ''"
+              style="display: none;"
+              class="absolute right-3.5 top-3.5 text-zinc-400 hover:text-white"
+            >
+              <!-- X Icon -->
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Light / Dark Theme Toggle Button -->
           <button 
-            x-show="searchQuery" 
-            @click="searchQuery = ''"
-            style="display: none;"
-            class="absolute right-3.5 top-3.5 text-zinc-400 hover:text-white"
+            @click="toggleTheme()" 
+            type="button"
+            class="p-2.5 rounded-xl border border-emerald-950/80 bg-[#0d1410] hover:border-emerald-500 text-emerald-400 hover:text-emerald-300 transition-all flex items-center justify-center shrink-0 cursor-pointer"
+            aria-label="Toggle Theme"
           >
-            <!-- X Icon -->
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <!-- Sun Icon (Visible in Dark Theme -> Click for Light Theme) -->
+            <svg x-show="isDark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <!-- Moon Icon (Visible in Light Theme -> Click for Dark Theme) -->
+            <svg x-show="!isDark" style="display: none;" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
           </button>
         </div>
@@ -108,7 +231,7 @@
             <svg class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
             </svg>
-            Girum Burger & Pizza
+            <span x-text="currentRestaurant.name">Girum Burger & Pizza</span>
           </span>
           <!---<h2 class="text-sm md:text-4xl font-black tracking-tight text-white mb-2 leading-tight uppercase">
             Awaze Recommendations
@@ -221,15 +344,19 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" x-show="filteredItems().length > 0">
         <template x-for="item in filteredItems()" :key="item.id">
           <div 
-            @click="selectedItem = item"
-            class="group bg-[#0d1410] border border-emerald-950/60 hover:border-emerald-700/60 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald-950/10 cursor-pointer flex flex-col justify-between"
+            @click.stop="selectItem(item)"
+            @touchstart.passive=""
+            class="group bg-[#0d1410] border border-emerald-950/60 hover:border-emerald-700/60 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-emerald-950/10 cursor-pointer flex flex-col justify-between touch-manipulation active:scale-[0.98] select-none"
+            role="button"
+            tabindex="0"
+            @keydown.enter.prevent="selectItem(item)"
           >
             <!-- Card Image Box with Labels -->
             <div class="relative aspect-[4/3] overflow-hidden bg-zinc-900">
               <img 
                 :src="item.image" 
                 :alt="item.name"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
                 @error="$el.src = 'https://placehold.co/600x450/0d1410/10b981?text=' + encodeURIComponent(item.name)"
               />
               
@@ -276,13 +403,17 @@
                   <span class="font-black text-emerald-400 text-base md:text-lg" x-text="'ETB ' + item.price.toLocaleString()"></span>
                 </div>
 
-                <span class="text-zinc-400 group-hover:text-emerald-400 text-xs font-bold flex items-center space-x-1 transition-colors">
+                <button 
+                  type="button" 
+                  @click.stop="selectItem(item)"
+                  class="bg-emerald-950/60 hover:bg-emerald-800/80 text-emerald-400 hover:text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-900/60 flex items-center space-x-1 transition-colors"
+                >
                   <span>Details</span>
                   <!-- ChevronRight Icon -->
                   <svg class="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
-                </span>
+                </button>
               </div>
             </div>
 
@@ -292,97 +423,173 @@
 
     </main>
 
-    <!-- Exquisite Detail Modal Overlay -->
+    <!-- Expanded Full-Screen Detail Modal Overlay -->
     <template x-if="selectedItem">
-      <div class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click.self="closeModal()"
+        class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 md:p-8 overflow-y-auto"
+      >
+        <!-- Full-Screen Interactive Card Container -->
         <div 
-          @click.away="selectedItem = null"
-          class="bg-[#0d1410] border border-emerald-900/60 w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl relative"
+          @click.stop
+          x-transition:enter="transition ease-out duration-300 transform"
+          x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          class="bg-[#0d1410] border border-emerald-800/50 w-full max-w-5xl h-[92vh] max-h-[850px] rounded-3xl overflow-hidden shadow-2xl relative flex flex-col lg:flex-row my-auto"
         >
           
-          <!-- Close Button -->
+          <!-- Floating Close Button (Mobile & Desktop) -->
           <button 
-            @click="selectedItem = null"
-            class="absolute top-4 right-4 z-10 bg-black/70 p-2 rounded-full hover:bg-black transition text-white border border-emerald-950/40"
+            @click="closeModal()"
+            class="absolute top-4 right-4 z-20 bg-black/75 hover:bg-black p-2.5 rounded-full text-white border border-emerald-900/60 shadow-lg transition-transform hover:scale-105"
+            aria-label="Close detail view"
           >
             <!-- Close Icon -->
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          <!-- Modal Image Header -->
-          <div class="relative h-64 w-full">
+          <!-- Left Column: Hero Image & Highlights -->
+          <div class="relative w-full lg:w-1/2 h-64 lg:h-full bg-zinc-900 shrink-0 overflow-hidden">
             <img 
               :src="selectedItem.image" 
               :alt="selectedItem.name" 
               class="w-full h-full object-cover"
-              @error="$el.src = 'https://placehold.co/600x400/0d1410/10b981?text=' + encodeURIComponent(selectedItem.name)"
+              @error="$el.src = 'https://placehold.co/800x800/0d1410/10b981?text=' + encodeURIComponent(selectedItem.name)"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1410] to-transparent"></div>
-            <div class="absolute bottom-4 left-4">
-              <span class="bg-emerald-950 text-emerald-400 border border-emerald-800/60 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md" x-text="selectedItem.tag"></span>
-              <h3 class="text-xl md:text-2xl font-black text-white mt-2" x-text="selectedItem.name"></h3>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1410] via-transparent to-black/40 lg:bg-gradient-to-r lg:from-transparent lg:to-[#0d1410]"></div>
+            
+            <!-- Badges Floating Overlay -->
+            <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+              <span class="bg-emerald-600/90 text-black font-black text-xs uppercase px-3 py-1 rounded-lg backdrop-blur-md shadow-md" x-text="selectedItem.tag"></span>
+              <template x-if="selectedItem.spicy">
+                <span class="bg-red-950/90 text-red-400 border border-red-800/60 font-bold text-xs px-2.5 py-1 rounded-lg backdrop-blur-md flex items-center gap-1">
+                  <svg class="h-3.5 w-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.486 2.58c-.027.205-.052.411-.073.614C7.03 9.242 6.5 8.12 6.5 7A1 1 0 005 6.2a8.035 8.035 0 00-1.785 2.33C2.409 10.03 2 11.47 2 13a7 7 0 1014 0c0-1.502-.409-2.943-1.215-4.47a8.035 8.035 0 00-1.785-2.33s-.336.575-.61 1.258c-.287.712-.52 1.543-.655 2.378-.016.096-.03.19-.041.285a4.774 4.774 0 01-.01.077c-.1.353-.306.66-.583.874a1.004 1.004 0 01-1.218-.12 3.77 3.77 0 01-.937-2.652c.033-.902.164-1.921.393-2.966.223-1.012.545-2.029.932-2.946a9.585 9.585 0 01.91-1.636z" clip-rule="evenodd" />
+                  </svg>
+                  Spicy
+                </span>
+              </template>
+            </div>
+
+            <!-- Bottom Left Image Quick Overlay stats -->
+            <div class="absolute bottom-4 left-4 right-4 hidden lg:flex items-center justify-between text-xs text-zinc-300 bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
+              <div class="flex items-center space-x-1.5 text-amber-400">
+                <svg class="h-4 w-4 fill-amber-400 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span class="font-bold text-white" x-text="selectedItem.rating"></span>
+                <span class="text-zinc-400" x-text="'(' + selectedItem.reviews + ' reviews)'"></span>
+              </div>
+              <div class="flex items-center space-x-3 text-zinc-300 font-medium">
+                <span x-text="'⏱️ ' + selectedItem.prepTime"></span>
+                <span>•</span>
+                <span x-text="'🔥 ' + selectedItem.calories"></span>
+              </div>
             </div>
           </div>
 
-          <!-- Modal Inner Content -->
-          <div class="p-6">
+          <!-- Right Column: Rich Scrollable Details Panel -->
+          <div class="w-full lg:w-1/2 flex flex-col h-full overflow-y-auto p-5 sm:p-6 md:p-8 scrollbar-thin">
             
-            <!-- Core metrics panel -->
-            <div class="flex items-center space-x-4 text-xs text-zinc-300 mb-4 bg-[#101b15] p-3 rounded-xl border border-emerald-950">
+            <!-- Category & Title -->
+            <div class="mb-4">
+              <span class="text-emerald-400 text-xs font-black uppercase tracking-widest" x-text="selectedItem.subCategory"></span>
+              <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight mt-1" x-text="selectedItem.name"></h2>
+              
+              <!-- Price Banner -->
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-xs text-zinc-400 uppercase font-semibold">Price:</span>
+                <span class="text-2xl md:text-3xl font-black text-emerald-400" x-text="'ETB ' + selectedItem.price.toLocaleString()"></span>
+              </div>
+            </div>
+
+            <!-- Mobile Quick Stats Bar -->
+            <div class="lg:hidden flex items-center justify-between text-xs text-zinc-300 bg-[#101b15] p-3 rounded-xl border border-emerald-950 mb-5">
               <div class="flex items-center space-x-1 text-amber-400">
-                <!-- Star Icon -->
-                <svg class="h-3.5 w-3.5 fill-amber-400 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="h-3.5 w-3.5 fill-amber-400" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
                 <span class="font-bold text-white" x-text="selectedItem.rating"></span>
               </div>
-              <div class="h-3 w-[1px] bg-emerald-900/40"></div>
-              <div class="flex items-center space-x-1">
-                <!-- Clock Icon -->
-                <svg class="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span x-text="'Prep time: ' + selectedItem.prepTime"></span>
-              </div>
-              <div class="h-3 w-[1px] bg-emerald-900/40"></div>
-              <div class="flex items-center space-x-1">
-                <span class="text-emerald-400 font-bold">Calories:</span>
-                <span x-text="selectedItem.calories"></span>
-              </div>
+              <span x-text="'Prep: ' + selectedItem.prepTime"></span>
+              <span x-text="selectedItem.calories"></span>
             </div>
 
-            <!-- Item detailed description -->
+            <!-- Detailed Description / Story -->
             <div class="mb-6">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Chef's Notes</h4>
-              <p class="text-zinc-300 text-xs md:text-sm leading-relaxed" x-text="selectedItem.description"></p>
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 mb-2">Chef's Special Story & Description</h3>
+              <p class="text-zinc-300 text-sm leading-relaxed" x-text="selectedItem.description"></p>
             </div>
 
-            <!-- Information disclaimer info bar -->
-            <div class="mb-6 bg-[#050806] p-4 rounded-xl border border-emerald-950 flex items-start space-x-2.5">
-              <!-- Info Icon -->
-              <svg class="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p class="text-zinc-400 text-xs leading-relaxed">
-                Please let our dining attendants know if you have any food allergies or specific nutritional preferences before placing your order.
-              </p>
+            <!-- Key Ingredients Breakdown -->
+            <div class="mb-6" x-show="selectedItem.ingredients && selectedItem.ingredients.length > 0">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 mb-2.5">Key Ingredients</h3>
+              <div class="flex flex-wrap gap-2">
+                <template x-for="(ing, idx) in selectedItem.ingredients" :key="idx">
+                  <span class="bg-[#101b15] text-zinc-300 border border-emerald-950 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span x-text="ing"></span>
+                  </span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Recommendation / Pairings -->
+            <div class="mb-6 bg-[#101b15] p-4 rounded-2xl border border-emerald-950" x-show="selectedItem.pairing">
+              <div class="flex items-center gap-2 mb-1">
+                <svg class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">Recommended Pairing</h4>
+              </div>
+              <p class="text-xs text-zinc-300 leading-relaxed" x-text="selectedItem.pairing"></p>
+            </div>
+
+            <!-- Dietary Highlights -->
+            <div class="mb-6">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400 mb-2">Quality & Dietary Highlights</h3>
+              <div class="grid grid-cols-2 gap-2 text-xs text-zinc-300">
+                <div class="flex items-center space-x-2 bg-[#050806] p-2.5 rounded-xl border border-emerald-950">
+                  <span class="text-emerald-400">🌿</span>
+                  <span>Fresh Local Ingredients</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-[#050806] p-2.5 rounded-xl border border-emerald-950">
+                  <span class="text-emerald-400">👨‍🍳</span>
+                  <span>Made Fresh to Order</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-[#050806] p-2.5 rounded-xl border border-emerald-950">
+                  <span class="text-emerald-400">✨</span>
+                  <span>Authentic Spices</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-[#050806] p-2.5 rounded-xl border border-emerald-950">
+                  <span class="text-emerald-400">🛡️</span>
+                  <span>Hygienic Preparation</span>
+                </div>
+              </div>
             </div>
 
             <!-- Modal Action Footer -->
-            <div class="flex items-center justify-between pt-4 border-t border-emerald-950/40">
-              <div>
-                <span class="text-xs text-zinc-500 block uppercase font-semibold">Base Price</span>
-                <span class="font-extrabold text-emerald-400 text-lg md:text-xl" x-text="'ETB ' + selectedItem.price.toLocaleString()"></span>
+            <div class="mt-auto pt-4 border-t border-emerald-950/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="text-xs text-zinc-400 text-center sm:text-left">
+                Need customized spice levels or dietary adaptations? Inform your table waiter.
               </div>
 
-              <button 
-                @click="selectedItem = null"
-                class="bg-emerald-600 hover:bg-emerald-500 text-black text-xs font-extrabold px-6 py-2.5 rounded-xl transition"
-              >
-                Back to Menu
-              </button>
+              <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button 
+                  @click="closeModal()"
+                  class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-lg shadow-emerald-950/40 shrink-0"
+                >
+                  Close Detail Card
+                </button>
+              </div>
             </div>
 
           </div>
@@ -416,210 +623,347 @@
   <script>
     function menuApp() {
       return {
+        isDark: true, // Default Theme set strictly to Dark Mode as requested
+        toggleTheme() {
+          this.isDark = !this.isDark;
+        },
         activeCategory: 'all',
         activeType: 'all',
         searchQuery: '',
         sortOption: 'popular',
         selectedItem: null,
+        selectItem(item) {
+          this.selectedItem = item;
+        },
+        closeModal() {
+          this.selectedItem = null;
+        },
 
-        // Premium Menu Items Database
-        menuItems: [
-          {
-            id: 'f1',
-            name: 'Special Sizzling Tibs',
-            category: 'food',
-            subCategory: 'Meat',
-            price: 680,
-            rating: 4.9,
-            reviews: 142,
-            prepTime: '15-20 min',
-            tag: 'Chef Choice',
-            description: 'Fresh pan-fried prime beef cubes sautéed with onions, rosemary, garlic, and jalapeños, served sizzling hot on a traditional clay burner with fresh injera.',
-            image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
-            spicy: true,
-            calories: '420 kcal'
+        // --- MULTI-TENANT URL ROUTING BACKEND ---
+        // Automatically extracts restaurant slug from URL path (e.g. /girum or /dell), query string (?restaurant=girum), or hash (#girum)
+        getRestaurantSlug() {
+          const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+          const urlParams = new URLSearchParams(window.location.search);
+          const queryParam = urlParams.get('restaurant') || urlParams.get('r');
+          const hash = window.location.hash.replace('#', '').toLowerCase();
+
+          // Match against known restaurants, default to 'girum'
+          if (path && this.restaurants[path]) return path;
+          if (queryParam && this.restaurants[queryParam]) return queryParam;
+          if (hash && this.restaurants[hash]) return hash;
+          return 'girum';
+        },
+
+        init() {
+          this.currentSlug = this.getRestaurantSlug();
+          // Listen for URL hash or popstate navigation changes
+          window.addEventListener('popstate', () => {
+            this.currentSlug = this.getRestaurantSlug();
+          });
+          window.addEventListener('hashchange', () => {
+            this.currentSlug = this.getRestaurantSlug();
+          });
+        },
+
+        currentSlug: 'girum',
+
+        get currentRestaurant() {
+          return this.restaurants[this.currentSlug] || this.restaurants['girum'];
+        },
+
+        get menuItems() {
+          return this.currentRestaurant.menuItems;
+        },
+
+        // --- CENTRALIZED MULTI-RESTAURANT DATABASE ---
+        restaurants: {
+          girum: {
+            id: 'girum',
+            name: 'Girum Burger & Pizza',
+            tagline: 'Girum Recommendations',
+            menuItems: [
+              {
+                id: 'g-f1',
+                name: 'Special Sizzling Tibs',
+                category: 'food',
+                subCategory: 'Meat',
+                price: 680,
+                rating: 4.9,
+                reviews: 142,
+                prepTime: '15-20 min',
+                tag: 'Chef Choice',
+                description: 'Fresh pan-fried prime beef cubes sautéed with onions, rosemary, garlic, and jalapeños, served sizzling hot on a traditional clay burner with sourdough injera.',
+                ingredients: ['Prime Beef Cutlets', 'Organic Rosemary', 'Red Onions', 'Garlic Butter', 'Fresh Jalapeños', 'Awaze Chili Paste'],
+                pairing: 'Best enjoyed with our Aged Tej or an ice-cold Habesha Lager.',
+                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
+                spicy: true,
+                calories: '420 kcal'
+              },
+              {
+                id: 'g-f2',
+                name: 'Royal Beyaynetu Platter',
+                category: 'food',
+                subCategory: 'Health',
+                price: 490,
+                rating: 4.8,
+                reviews: 98,
+                prepTime: '10-15 min',
+                tag: 'Popular',
+                description: 'A colorful, nutritious assortment of traditional vegan stews including split peas (Kik Alicha), spicy lentil stew (Misir Wot), collard greens (Gomen), beetroot, and shiro.',
+                ingredients: ['Yellow Split Peas', 'Red Lentils', 'Collard Greens', 'Roasted Chickpea Shiro', 'Beetroot Salad', 'Sourdough Injera'],
+                pairing: 'Complements wonderfully with our fresh Spris Juice or Hibiscus Tea.',
+                image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '310 kcal'
+              },
+              {
+                id: 'g-f3',
+                name: 'Special Burger',
+                category: 'food',
+                subCategory: 'Meat',
+                price: 720,
+                rating: 4.9,
+                reviews: 210,
+                prepTime: '10-15 min',
+                tag: 'Signature',
+                description: 'Finely minced extra-lean beef gently warmed with clarified spiced butter (Niter Kibbeh) and fiery Mitmita. Served alongside house Ayib (cottage cheese) and Gomen.',
+                ingredients: ['Lean Tenderloin Beef', 'Niter Kibbeh Butter', 'Pure Mitmita Spice', 'Homemade Ayib Cheese', 'Steamed Collard Greens'],
+                pairing: 'Pairs seamlessly with cold sparkling water or draft beer.',
+                image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: true,
+                calories: '550 kcal'
+              },
+              {
+                id: 'g-f4',
+                name: 'Gourmet Sheger Burger',
+                category: 'food',
+                subCategory: 'Burger',
+                price: 420,
+                rating: 4.7,
+                reviews: 85,
+                prepTime: '15-20 min',
+                tag: 'Classic',
+                description: 'Premium grilled beef patty with sharp cheddar cheese, caramelized onions, signature burger aioli, and crisp lettuce on a toasted sesame brioche bun.',
+                ingredients: ['100% Angus Beef Patty', 'Sharp Cheddar', 'Caramelized Onions', 'Brioche Bun', 'House Garlic Aioli'],
+                pairing: 'Try with chilled craft draft lager or iced lemon tea.',
+                image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: false,
+                calories: '620 kcal'
+              },
+              {
+                id: 'g-f5',
+                name: 'Smoked yellow cocktail',
+                category: 'food',
+                subCategory: 'Bakery',
+                price: 580,
+                rating: 4.6,
+                reviews: 44,
+                prepTime: '10 min',
+                tag: 'Fresh',
+                description: 'House-baked rustic sourdough bread topped with creamy herb dill cheese spread, cold-smoked salmon slices, pickled onions, and organic microgreens.',
+                ingredients: ['Artisan Sourdough', 'Smoked Salmon Slices', 'Dill Cream Cheese', 'Capers & Pickled Onions', 'Fresh Microgreens'],
+                pairing: 'Pairs excellently with Grand Macchiato or freshly squeezed juices.',
+                image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: false,
+                calories: '280 kcal'
+              },
+              {
+                id: 'g-f6',
+                name: 'Spiced Chicken Skewers',
+                category: 'food',
+                subCategory: 'Chicken',
+                price: 490,
+                rating: 4.7,
+                reviews: 62,
+                prepTime: '20-25 min',
+                tag: 'Spicy Delight',
+                description: 'Tender chicken thighs marinated in home-blended Berbere and garlic rub, charcoal-grilled to perfection. Served with spicy avocado dips.',
+                ingredients: ['Farm Chicken Thighs', 'Berbere Blend', 'Smoked Garlic', 'Fresh Lime Juice', 'Avocado Crema'],
+                pairing: 'Great with cold craft beers or sparkling iced tea.',
+                image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600',
+                spicy: true,
+                calories: '390 kcal'
+              },
+              {
+                id: 'g-f7',
+                name: 'Smokey Pepperoni Pizza',
+                category: 'food',
+                subCategory: 'Pizza',
+                price: 540,
+                rating: 4.8,
+                reviews: 130,
+                prepTime: '15-20 min',
+                tag: 'Bestseller',
+                description: 'Artisanal thin sourdough crust layered with spicy marinara, dry-cured beef pepperoni, fresh shredded mozzarella, and dried wild oregano.',
+                ingredients: ['Sourdough Pizza Crust', 'Beef Pepperoni', 'Low-Moisture Mozzarella', 'San Marzano Tomato Sauce', 'Wild Oregano'],
+                pairing: 'Pairs ideally with soft drinks, lager beer, or iced hibiscus tea.',
+                image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '780 kcal'
+              },
+              {
+                id: 'g-f8',
+                name: 'Herb Grilled Sea Bass',
+                category: 'food',
+                subCategory: 'Seafood',
+                price: 950,
+                rating: 4.9,
+                reviews: 77,
+                prepTime: '25 min',
+                tag: 'Luxury Selection',
+                description: 'Fresh sea bass fillet marinated in lemon zest and garden herbs, oven-grilled, and accompanied with creamy buttered herbal rice.',
+                ingredients: ['Fresh Sea Bass Fillet', 'Lemon Zest & Thyme', 'Extra Virgin Olive Oil', 'Herbed Butter Rice', 'Steamed Asparagus'],
+                pairing: 'Pairs wonderfully with chilled Tej honey wine or sparkling water.',
+                image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '450 kcal'
+              },
+              {
+                id: 'g-d1',
+                name: 'Premium Aged Tej',
+                category: 'drinks',
+                subCategory: 'Beverage',
+                price: 320,
+                rating: 4.9,
+                reviews: 160,
+                prepTime: '5 min',
+                tag: 'Heritage Brew',
+                description: 'Our house-crafted organic honey wine, slowly fermented with Gesho roots. Offers a smooth, delightfully sweet and crisp finish.',
+                ingredients: ['Pure Wildflower Honey', 'Gesho (Rhamnus prinoides)', 'Natural Spring Water'],
+                pairing: 'Pairs perfectly with Special Tibs, Kitfo, or grilled spicy dishes.',
+                image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '180 kcal'
+              },
+              {
+                id: 'g-d2',
+                name: 'Spris Juice',
+                category: 'drinks',
+                subCategory: 'Beverage',
+                price: 180,
+                rating: 4.8,
+                reviews: 112,
+                prepTime: '5-10 min',
+                tag: 'Healthy',
+                description: 'Thick, beautifully layered natural fruit juice made from ripe avocados, sweet mangoes, and red papayas. Finished with a slice of lime.',
+                ingredients: ['Ripe Hass Avocado', 'Fresh Mango Puree', 'Red Papaya Pulp', 'Fresh Lime Wedge'],
+                pairing: 'Enjoy alongside Beyaynetu vegetarian platters or light bakery toasts.',
+                image: 'https://plus.unsplash.com/premium_photo-1681826664053-5f50e4a0c513?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: false,
+                calories: '210 kcal'
+              },
+              {
+                id: 'g-d3',
+                name: 'Grand Macchiato',
+                category: 'drinks',
+                subCategory: 'Coffee',
+                price: 95,
+                rating: 4.9,
+                reviews: 320,
+                prepTime: '5 min',
+                tag: 'Barista Star',
+                description: 'Our world-renowned, signature dark roast Ethiopian espresso poured through velvety steam-frothed milk layers to achieve absolute perfection.',
+                ingredients: ['Organic Single-Origin Espresso Beans', 'Whole Steam-Foamed Milk'],
+                pairing: 'Pairs wonderfully with breakfast pastries or gourmet sourdough toasts.',
+                image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: false,
+                calories: '90 kcal'
+              },
+              {
+                id: 'g-d4',
+                name: 'Chilled Hibiscus Herbal Tea',
+                category: 'drinks',
+                subCategory: 'Coffee',
+                price: 140,
+                rating: 4.7,
+                reviews: 55,
+                prepTime: '5 min',
+                tag: 'Refreshed',
+                description: 'Invigorating organic dried hibiscus leaf infusion over ice, naturally sweetened with raw sugarcane honey syrup and fresh mint leaves.',
+                ingredients: ['Dried Hibiscus Flowers', 'Raw Honey Syrup', 'Fresh Mint Leaves', 'Crushed Ice'],
+                pairing: 'Ideal for refreshing your palate between spicy dishes.',
+                image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '75 kcal'
+              },
+              {
+                id: 'g-d5',
+                name: 'Habesha Cold Lager',
+                category: 'drinks',
+                subCategory: 'Beverage',
+                price: 120,
+                rating: 4.7,
+                reviews: 189,
+                prepTime: '2 min',
+                tag: 'Chilled',
+                description: 'Premium local beer crafted from pure spring waters, featuring a deep rich malt aroma and exceptionally crisp golden bubbles.',
+                ingredients: ['Barley Malt', 'Hops', 'Pure Mountain Water'],
+                pairing: 'The classic pairing for Sizzling Tibs and burgers.',
+                image: 'https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                spicy: false,
+                calories: '140 kcal'
+              }
+            ]
           },
-          {
-            id: 'f2',
-            name: 'Royal Beyaynetu Platter',
-            category: 'food',
-            subCategory: 'Health',
-            price: 490,
-            rating: 4.8,
-            reviews: 98,
-            prepTime: '10-15 min',
-            tag: 'Popular',
-            description: 'A colorful, nutritious assortment of traditional vegan stews including split peas, lentils, collard greens, beetroot, and shiro, served over sourdough injera.',
-            image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
-            spicy: false,
-            calories: '310 kcal'
-          },
-          {
-            id: 'f3',
-            name: 'Special Burger',
-            category: 'food',
-            subCategory: 'Meat',
-            price: 720,
-            rating: 4.9,
-            reviews: 210,
-            prepTime: '10-15 min',
-            tag: 'Signature',
-            description: 'Finely minced extra-lean beef warmed with seasoned butter (Niter Kibbeh) and spiced chili powder (Mitmita). Served with Ayib (cottage cheese) and Gomen.',
-            image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: true,
-            calories: '550 kcal'
-          },
-          {
-            id: 'f4',
-            name: 'Gourmet Sheger Burger',
-            category: 'food',
-            subCategory: 'Burger',
-            price: 420,
-            rating: 4.7,
-            reviews: 85,
-            prepTime: '15-20 min',
-            tag: 'Classic',
-            description: 'Premium grilled beef patty with sharp cheddar cheese, caramelized onions, house burger sauce, and crisp lettuce on a toasted sesame brioche bun.',
-            image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: false,
-            calories: '620 kcal'
-          },
-          {
-            id: 'f5',
-            name: 'Smoked yellow cocktail',
-            category: 'food',
-            subCategory: 'Bakery',
-            price: 580,
-            rating: 4.6,
-            reviews: 44,
-            prepTime: '10 min',
-            tag: 'Fresh',
-            description: 'House-baked rustic sourdough bread topped with creamy herb dill cheese spread, cold-smoked salmon slices, pickled onions, and organic sprouts.',
-            image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: false,
-            calories: '280 kcal'
-          },
-          {
-            id: 'f6',
-            name: 'Spiced Chicken Skewers',
-            category: 'food',
-            subCategory: 'Chicken',
-            price: 490,
-            rating: 4.7,
-            reviews: 62,
-            prepTime: '20-25 min',
-            tag: 'Spicy Delight',
-            description: 'Tender chicken thighs marinated in home-blended Berbere and garlic rub, charcoal-grilled to perfection. Served with spicy avocado dips.',
-            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600',
-            spicy: true,
-            calories: '390 kcal'
-          },
-          {
-            id: 'f7',
-            name: 'Smokey Pepperoni Pizza',
-            category: 'food',
-            subCategory: 'Pizza',
-            price: 540,
-            rating: 4.8,
-            reviews: 130,
-            prepTime: '15-20 min',
-            tag: 'Bestseller',
-            description: 'Artisanal thin sourdough crust layered with spicy marinara, dry-cured pepperoni, fresh shredded mozzarella, and dried wild oregano.',
-            image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80&w=600',
-            spicy: false,
-            calories: '780 kcal'
-          },
-          {
-            id: 'f8',
-            name: 'Herb Grilled Sea Bass',
-            category: 'food',
-            subCategory: 'Seafood',
-            price: 950,
-            rating: 4.9,
-            reviews: 77,
-            prepTime: '25 min',
-            tag: 'Luxury Selection',
-            description: 'Locally caught fresh whole sea bass marinated in lemon zest and mixed garden herbs, oven-grilled, and accompanied with creamy buttered rice.',
-            image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=600',
-            spicy: false,
-            calories: '450 kcal'
-          },
-          {
-            id: 'd1',
-            name: 'Premium Aged Tej',
-            category: 'drinks',
-            subCategory: 'Beverage',
-            price: 320,
-            rating: 4.9,
-            reviews: 160,
-            prepTime: '5 min',
-            tag: 'Heritage Brew',
-            description: 'Our house-crafted organic honey wine, slowly fermented with Gesho roots. Offers a smooth, delightfully sweet and crisp finish.',
-            image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&q=80&w=600',
-            spicy: false,
-            calories: '180 kcal'
-          },
-          {
-            id: 'd2',
-            name: 'Spris Juice',
-            category: 'drinks',
-            subCategory: 'Beverage',
-            price: 180,
-            rating: 4.8,
-            reviews: 112,
-            prepTime: '5-10 min',
-            tag: 'Healthy',
-            description: 'Thick, beautifully layered natural fruit juice made from ripe avocados, sweet mangoes, and red papayas. Finished with a slice of lime.',
-            image: 'https://plus.unsplash.com/premium_photo-1681826664053-5f50e4a0c513?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: false,
-            calories: '210 kcal'
-          },
-          {
-            id: 'd3',
-            name: 'Grand Macchiato',
-            category: 'drinks',
-            subCategory: 'Coffee',
-            price: 95,
-            rating: 4.9,
-            reviews: 320,
-            prepTime: '5 min',
-            tag: 'Barista Star',
-            description: 'Our world-renowned, signature dark roast espresso poured through velvety steam-frothed milk layers to achieve absolute perfection.',
-            image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: false,
-            calories: '90 kcal'
-          },
-          {
-            id: 'd4',
-            name: 'Chilled Hibiscus Herbal Tea',
-            category: 'drinks',
-            subCategory: 'Coffee',
-            price: 140,
-            rating: 4.7,
-            reviews: 55,
-            prepTime: '5 min',
-            tag: 'Refreshed',
-            description: 'Invigorating organic dried hibiscus leaf infusion over ice, naturally sweetened with raw sugarcane honey syrup and mint leaves.',
-            image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&q=80&w=600',
-            spicy: false,
-            calories: '75 kcal'
-          },
-          {
-            id: 'd5',
-            name: 'Habesha Cold Lager',
-            category: 'drinks',
-            subCategory: 'Beverage',
-            price: 120,
-            rating: 4.7,
-            reviews: 189,
-            prepTime: '2 min',
-            tag: 'Chilled',
-            description: 'Premium local beer crafted from the purest spring waters, featuring a deep rich malt aroma and exceptionally crisp golden bubbles.',
-            image: 'https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            spicy: false,
-            calories: '140 kcal'
+          dell: {
+            id: 'dell',
+            name: 'Dell Hotel & Restaurant',
+            tagline: 'Dell Executive Culinary Experience',
+            menuItems: [
+              {
+                id: 'd-f1',
+                name: 'Dell Prime Ribeye Steak',
+                category: 'food',
+                subCategory: 'Meat',
+                price: 890,
+                rating: 4.9,
+                reviews: 115,
+                prepTime: '20-25 min',
+                tag: 'Chef Special',
+                description: '300g aged tender ribeye cooked to preference, served with garlic mashed potatoes and grilled asparagus with red wine reduction.',
+                ingredients: ['Aged Beef Ribeye', 'Garlic Butter', 'Idaho Potatoes', 'Fresh Asparagus', 'Red Wine Sauce'],
+                pairing: 'Best accompanied by chilled mineral water or house red brew.',
+                image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '650 kcal'
+              },
+              {
+                id: 'd-f2',
+                name: 'Truffle Mushroom Pizza',
+                category: 'food',
+                subCategory: 'Pizza',
+                price: 610,
+                rating: 4.8,
+                reviews: 74,
+                prepTime: '15-20 min',
+                tag: 'Gourmet',
+                description: 'Crispy stone-baked pizza crust topped with white truffle oil, wild porcini mushrooms, fresh mozzarella, and thyme.',
+                ingredients: ['Stone-Baked Dough', 'White Truffle Oil', 'Porcini Mushrooms', 'Mozzarella Cheese', 'Thyme'],
+                pairing: 'Pairs wonderfully with sparkling citrus juice.',
+                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '710 kcal'
+              },
+              {
+                id: 'd-d1',
+                name: 'Dell Iced Caramel Latte',
+                category: 'drinks',
+                subCategory: 'Coffee',
+                price: 160,
+                rating: 4.9,
+                reviews: 204,
+                prepTime: '5 min',
+                tag: 'Popular',
+                description: 'Double shot espresso shaken with ice, fresh milk, and handcrafted salted caramel drip.',
+                ingredients: ['Espresso', 'Whole Milk', 'Salted Caramel Syrup', 'Ice'],
+                pairing: 'Great with sweet pastries.',
+                image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=600',
+                spicy: false,
+                calories: '190 kcal'
+              }
+            ]
           }
-        ],
+        },
 
         // Category configurations for UI layout representation mapping
         categories: [
