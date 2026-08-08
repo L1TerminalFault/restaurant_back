@@ -34,7 +34,8 @@
             }
           },
           fontFamily: {
-            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            sans: ['Literata', 'Cormorant Garamond', 'sans-serif'],
+            serif: ['Literata', 'Cormorant Garamond', 'serif'],
           },
           boxShadow: {
             'glow-purple': '0 0 25px -5px rgba(168, 85, 247, 0.3)',
@@ -46,20 +47,24 @@
     }
   </script>
 
-  <!-- Google Fonts & FontAwesome -->
+  <!-- Google Fonts: Literata & Cormorant Garamond -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- Alpine.js & Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-  <!-- Custom CSS for Theme Refinements -->
   <style>
     [x-cloak] { display: none !important; }
     
+    body {
+      font-family: 'Literata', serif;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #050806; }
     ::-webkit-scrollbar-thumb { background: #1c2722; border-radius: 999px; }
@@ -116,8 +121,8 @@
       
       <!-- Brand Logo -->
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 p-[2px]">
-          <img src="../assets/awaze_logo.png" alt="">
+        <div class="w-10 h-10 p-[2px] rounded-xl bg-accent-purple/20 flex items-center justify-center border border-accent-purple/30">
+          <i class="fa-solid fa-utensils text-accent-purple text-lg"></i>
         </div>
         <div>
           <span class="font-black text-lg tracking-tight text-white uppercase block leading-none">AWAZE</span>
@@ -148,7 +153,7 @@
             <i class="fa-solid fa-utensils text-sm group-hover:scale-110 transition-transform" :class="currentTab === 'restaurants' ? 'text-accent-purple' : 'text-zinc-500'"></i>
             <span class="tracking-wide">Restaurants</span>
           </div>
-          <span class="text-[9px] bg-brand-500/20 text-brand-400 font-extrabold px-2 py-0.5 rounded-full border border-brand-500/30">Restaurants</span>
+          <span class="text-[9px] bg-brand-500/20 text-brand-400 font-extrabold px-2 py-0.5 rounded-full border border-brand-500/30">Venues</span>
         </button>
 
         <!-- Analysis (Revenue) Tab -->
@@ -161,7 +166,7 @@
             <i class="fa-solid fa-chart-line text-sm group-hover:scale-110 transition-transform" :class="currentTab === 'revenue' ? 'text-accent-purple' : 'text-zinc-500'"></i>
             <span class="tracking-wide">Revenue</span>
           </div>
-          <span class="text-[9px] bg-accent-purple/20 text-accent-purple font-extrabold px-2 py-0.5 rounded-full border border-accent-purple/30">Revenue</span>
+          <span class="text-[9px] bg-accent-purple/20 text-accent-purple font-extrabold px-2 py-0.5 rounded-full border border-accent-purple/30">ETB</span>
         </button>
 
         <!-- Market (Management) Tab -->
@@ -174,7 +179,7 @@
             <i class="fa-solid fa-sliders text-sm group-hover:scale-110 transition-transform" :class="currentTab === 'management' ? 'text-accent-purple' : 'text-zinc-500'"></i>
             <span class="tracking-wide">Management</span>
           </div>
-          <span class="text-[9px] bg-amber-500/20 text-amber-400 font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30">Management</span>
+          <span class="text-[9px] bg-amber-500/20 text-amber-400 font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30">Billing</span>
         </button>
 
         <!-- Community (Analytics) Tab -->
@@ -187,7 +192,7 @@
             <i class="fa-solid fa-users text-sm group-hover:scale-110 transition-transform" :class="currentTab === 'analytics' ? 'text-accent-purple' : 'text-zinc-500'"></i>
             <span class="tracking-wide">Analytics</span>
           </div>
-          <span class="text-[9px] bg-blue-500/20 text-blue-400 font-extrabold px-2 py-0.5 rounded-full border border-blue-500/30">Analytics</span>
+          <span class="text-[9px] bg-blue-500/20 text-blue-400 font-extrabold px-2 py-0.5 rounded-full border border-blue-500/30">Scans</span>
         </button>
 
       </nav>
@@ -234,14 +239,12 @@
       <!-- Right Header Tools -->
       <div class="flex items-center space-x-4">
         
-        <!-- Quick Filter Tabs (Market, Wallet, Tools style from reference image) -->
         <div class="hidden lg:flex items-center space-x-1 bg-obsidian-950 p-1 rounded-xl border border-zinc-800">
           <button @click="currentTab = 'dashboard'" :class="currentTab === 'dashboard' ? 'bg-accent-purple/30 text-white font-bold border border-accent-purple/40' : 'text-zinc-400 hover:text-white'" class="px-3 py-1.5 text-xs rounded-lg transition-all">Overview</button>
           <button @click="currentTab = 'restaurants'" :class="currentTab === 'restaurants' ? 'bg-accent-purple/30 text-white font-bold border border-accent-purple/40' : 'text-zinc-400 hover:text-white'" class="px-3 py-1.5 text-xs rounded-lg transition-all">Restaurants</button>
           <button @click="currentTab = 'revenue'" :class="currentTab === 'revenue' ? 'bg-accent-purple/30 text-white font-bold border border-accent-purple/40' : 'text-zinc-400 hover:text-white'" class="px-3 py-1.5 text-xs rounded-lg transition-all">Revenue</button>
         </div>
 
-        <!-- AI Search Input Bar (Matching 'Ask helios.ai anything') -->
         <div class="relative hidden sm:block w-64 lg:w-72">
           <i class="fa-solid fa-sparkles text-accent-purple absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
           <input 
@@ -252,13 +255,11 @@
           >
         </div>
 
-        <!-- Notification Bell -->
-        <button @click="triggerToast('Please, Shut yo bitch ass up, Respectfully!', 'info')" class="w-10 h-10 rounded-xl bg-obsidian-950 border border-zinc-800 hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all relative">
+        <button @click="triggerToast('Notification drawer updated', 'info')" class="w-10 h-10 rounded-xl bg-obsidian-950 border border-zinc-800 hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-white transition-all relative">
           <i class="fa-regular fa-bell text-sm"></i>
           <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-accent-pink"></span>
         </button>
 
-        <!-- Admin Profile -->
         <div class="flex items-center space-x-3 pl-2 border-l border-zinc-800">
           <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" class="w-9 h-9 rounded-xl object-cover ring-2 ring-accent-purple/40">
           <div class="hidden xl:block text-left">
@@ -271,51 +272,22 @@
 
     </header>
 
-    <!-- CONTENT BODY - SWITCHES BY TABS -->
+    <!-- CONTENT BODY -->
     <div class="p-6 lg:p-10 flex-1 space-y-8 max-w-[1600px] w-full mx-auto">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <!-- ======================================================== -->
       <!-- TAB 1: DASHBOARD OVERVIEW -->
       <!-- ======================================================== -->
       <div x-show="currentTab === 'dashboard'" class="space-y-8">
         
-        <!-- Top Cards Row (Reference Image Styled Grid) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
           
-          <!-- Card 1: Total Holding -> Total Restaurants (Big glowing card) -->
           <div class="lg:col-span-4 glass-card-purple p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between space-y-6">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-zinc-300 uppercase tracking-widest flex items-center space-x-2">
                 <i class="fa-solid fa-store text-accent-purple"></i>
                 <span>Total Restaurants</span>
               </span>
-              <!-- Time select pill -->
               <div class="flex items-center space-x-1 bg-black/40 px-2 py-1 rounded-lg border border-purple-500/20 text-[10px]">
                 <span class="text-zinc-400">Time:</span>
                 <span class="text-white font-bold">6M</span>
@@ -331,7 +303,6 @@
               <p class="text-xs text-zinc-400 mt-2 font-medium">Total registered venue partners across platform</p>
             </div>
 
-            <!-- Decisions Powered by Data Banner (From Reference) -->
             <div class="bg-gradient-to-r from-accent-purple/30 to-pink-500/20 p-4 rounded-2xl border border-accent-purple/40 flex items-center justify-between">
               <div>
                 <h4 class="text-xs font-bold text-white uppercase tracking-wider">Watch Restaurant Details</h4>
@@ -343,7 +314,6 @@
             </div>
           </div>
 
-          <!-- Card 2: Watchlist -> Top Restaurants (From Reference Image) -->
           <div class="lg:col-span-4 glass-card p-6 rounded-3xl flex flex-col justify-between space-y-4">
             <div class="flex items-center justify-between border-b border-zinc-800/80 pb-3">
               <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
@@ -351,16 +321,14 @@
                 <span>Top Restaurants</span>
               </span>
               
-              <!-- Tabs: Most Viewed, Gain, Lose -->
               <div class="flex items-center space-x-1 bg-obsidian-950 p-1 rounded-xl text-[10px] font-bold">
                 <button @click="watchlistFilter = 'most_viewed'" :class="watchlistFilter === 'most_viewed' ? 'bg-accent-purple/40 text-white' : 'text-zinc-400'" class="px-2 py-0.5 rounded-lg">Most Viewed</button>
                 <button @click="watchlistFilter = 'top_revenue'" :class="watchlistFilter === 'top_revenue' ? 'bg-accent-purple/40 text-white' : 'text-zinc-400'" class="px-2 py-0.5 rounded-lg">Most Revenue</button>
               </div>
             </div>
 
-            <!-- Mini List of Top Restaurants -->
             <div id="most_viewed" class="space-y-3 flex-1 overflow-y-auto max-h-[220px] pr-1">
-              <template x-for="rest in Object.values(restaurants).sort((a, b) => b.viewsThisMonth - a.viewsThisMonth).slice(0, 3)":key="rest.id">
+              <template x-for="rest in Object.values(restaurants).sort((a, b) => b.viewsThisMonth - a.viewsThisMonth).slice(0, 3)" :key="rest.id">
                 <div class="flex items-center justify-between p-2 rounded-xl bg-obsidian-950/60 hover:bg-zinc-900/60 border border-zinc-800/50 transition-colors">
                   <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-accent-purple font-black text-xs">
@@ -378,13 +346,9 @@
                 </div>
               </template>
             </div>
-            
           </div>
 
-          <!-- Card 3: Additional Theme Cards (Active, Subscription, Basic Plan, New) -->
           <div class="lg:col-span-4 grid grid-cols-2 gap-4">
-            
-            <!-- Active Restaurants Card -->
             <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-brand-500">
               <div class="flex items-center justify-between text-zinc-400 text-xs font-bold">
                 <span>Active</span>
@@ -397,7 +361,6 @@
               <span class="text-[9px] text-brand-400 font-bold">94% Operational</span>
             </div>
 
-            <!-- Subscription Customers Card -->
             <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-accent-purple">
               <div class="flex items-center justify-between text-zinc-400 text-xs font-bold">
                 <span>Subscriptions</span>
@@ -410,7 +373,6 @@
               <span class="text-[9px] text-accent-purple font-bold">High LTV Tier</span>
             </div>
 
-            <!-- Basic Plan Customers Card -->
             <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-blue-500">
               <div class="flex items-center justify-between text-zinc-400 text-xs font-bold">
                 <span>Basic Plan</span>
@@ -423,7 +385,6 @@
               <span class="text-[9px] text-blue-400 font-bold">Standard Tier</span>
             </div>
 
-            <!-- New Restaurants This Month Card -->
             <div class="glass-card p-4 rounded-2xl flex flex-col justify-between border-l-4 border-l-pink-500">
               <div class="flex items-center justify-between text-zinc-400 text-xs font-bold">
                 <span>New This Month</span>
@@ -435,18 +396,10 @@
               </div>
               <span class="text-[9px] text-pink-400 font-bold">+28% growth MoM</span>
             </div>
-
           </div>
 
         </div>
 
-
-
-
-
-
-
-        <!-- Middle Section: Portfolio Performance Chart (From Reference Image) -->
         <div class="glass-card p-6 lg:p-8 rounded-3xl space-y-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -454,7 +407,6 @@
               <h3 class="text-lg font-bold text-white tracking-tight">Platform Menu Views & Revenue Trajectory</h3>
             </div>
 
-            <!-- Time Filter Pills (1D, 1W, 1M, 6M, 1Y from reference) -->
             <div class="flex items-center space-x-1.5 bg-obsidian-950 p-1.5 rounded-xl border border-zinc-800 self-start sm:self-auto text-xs font-bold">
               <template x-for="t in ['1D', '1W', '1M', '6M', '1Y']">
                 <button 
@@ -467,70 +419,18 @@
             </div>
           </div>
 
-          <!-- Chart Viewport -->
           <div class="h-72 w-full">
             <canvas id="dashboardPerformanceChart"></canvas>
           </div>
         </div>
 
-
-
-
-        
-
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <!-- ======================================================== -->
       <!-- TAB 2: PORTFOLIO (RESTAURANTS MANAGEMENT) -->
       <!-- ======================================================== -->
       <div x-show="currentTab === 'restaurants'" class="space-y-6">
         
-        <!-- Header Controls for Table -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
           <div>
             <h2 class="text-xl font-extrabold text-white tracking-tight">Restaurant Management Portfolio</h2>
@@ -538,7 +438,6 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
-            <!-- Search bar -->
             <div class="relative">
               <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500"></i>
               <input 
@@ -549,14 +448,12 @@
               >
             </div>
 
-            <!-- Filter Plan -->
             <select x-model="filterPlan" class="bg-obsidian-950 border border-zinc-800 text-xs text-white rounded-xl px-3 py-2 outline-none focus:border-accent-purple">
               <option value="all">All Plans</option>
               <option value="Basic">Basic Plan</option>
               <option value="Premium">Premium Plan</option>
             </select>
 
-            <!-- Filter Status -->
             <select x-model="filterStatus" class="bg-obsidian-950 border border-zinc-800 text-xs text-white rounded-xl px-3 py-2 outline-none focus:border-accent-purple">
               <option value="all">All Statuses</option>
               <option value="Active">Active</option>
@@ -564,7 +461,6 @@
               <option value="Suspended">Suspended</option>
             </select>
 
-            <!-- Add Restaurant Action Button -->
             <button @click="openAddModal()" class="bg-gradient-to-r from-accent-purple to-accent-pink hover:opacity-95 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-glow-purple flex items-center space-x-2 transition-all">
               <i class="fa-solid fa-plus text-xs"></i>
               <span>Add Restaurant</span>
@@ -572,7 +468,6 @@
           </div>
         </div>
 
-        <!-- Responsive Big Table -->
         <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800/80">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
@@ -593,7 +488,6 @@
                 <template x-for="rest in filteredRestaurants" :key="rest.id">
                   <tr class="hover:bg-zinc-900/40 transition-colors">
                     
-                    <!-- Name & Logo -->
                     <td class="py-4 px-6">
                       <div class="flex items-center space-x-3">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-zinc-800 to-zinc-950 p-[1px] border border-zinc-700/60 shrink-0 overflow-hidden flex items-center justify-center font-black text-accent-purple">
@@ -606,7 +500,6 @@
                       </div>
                     </td>
 
-                    <!-- Plan Type -->
                     <td class="py-4 px-4">
                       <span 
                         :class="rest.plan === 'Premium' ? 'bg-accent-purple/20 text-accent-purple border-accent-purple/40' : 'bg-blue-500/20 text-blue-400 border-blue-500/40'"
@@ -615,7 +508,6 @@
                       ></span>
                     </td>
 
-                    <!-- Status -->
                     <td class="py-4 px-4">
                       <span 
                         :class="{
@@ -628,45 +520,30 @@
                       ></span>
                     </td>
 
-                    <!-- Foods -->
                     <td class="py-4 px-4 text-center font-bold text-zinc-200" x-text="rest.foodsCount"></td>
-
-                    <!-- Drinks -->
                     <td class="py-4 px-4 text-center font-bold text-zinc-200" x-text="rest.drinksCount"></td>
-
-                    <!-- Views -->
                     <td class="py-4 px-4 text-right font-extrabold text-white" x-text="rest.viewsThisMonth.toLocaleString()"></td>
-
-                    <!-- Location -->
                     <td class="py-4 px-4 text-zinc-300 font-medium" x-text="rest.location"></td>
-
-                    <!-- Phone -->
                     <td class="py-4 px-4 text-zinc-300 font-medium" x-text="rest.phone"></td>
 
-                    <!-- Actions -->
                     <td class="py-4 px-6">
                       <div class="flex items-center justify-center space-x-1.5">
-                        <!-- Details -->
                         <button @click="openDetailsModal(rest)" title="View Details" class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-accent-purple text-zinc-300 hover:text-white flex items-center justify-center transition-colors">
                           <i class="fa-solid fa-eye text-xs"></i>
                         </button>
                         
-                        <!-- Login as Restaurant -->
                         <button @click="loginAsRestaurant(rest)" title="Login as Restaurant" class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-brand-500 text-zinc-300 hover:text-black flex items-center justify-center transition-colors">
                           <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
                         </button>
 
-                        <!-- Edit -->
                         <button @click="openEditModal(rest)" title="Edit Restaurant" class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-blue-500 text-zinc-300 hover:text-white flex items-center justify-center transition-colors">
                           <i class="fa-solid fa-pen-to-square text-xs"></i>
                         </button>
 
-                        <!-- Suspend Toggle -->
                         <button @click="toggleSuspend(rest)" :title="rest.status === 'Suspended' ? 'Activate' : 'Suspend'" class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-amber-500 text-zinc-300 hover:text-black flex items-center justify-center transition-colors">
                           <i class="fa-solid fa-ban text-xs"></i>
                         </button>
 
-                        <!-- Delete -->
                         <button @click="confirmDelete(rest)" title="Delete Restaurant" class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-red-500 text-zinc-300 hover:text-white flex items-center justify-center transition-colors">
                           <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
@@ -679,7 +556,6 @@
             </table>
           </div>
 
-          <!-- Table Footer Pagination -->
           <div class="p-4 bg-obsidian-950/60 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400">
             <span>Showing <strong class="text-white" x-text="filteredRestaurants.length"></strong> of <strong class="text-white" x-text="restaurants.length"></strong> restaurants</span>
             <div class="flex items-center space-x-2 mt-2 sm:mt-0">
@@ -693,44 +569,13 @@
 
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- ======================================================== -->
       <!-- TAB 3: ANALYSIS (REVENUE) -->
       <!-- ======================================================== -->
       <div x-show="currentTab === 'revenue'" class="space-y-8">
         
-        <!-- Revenue Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           
-          <!-- Today's Revenue -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-brand-500 space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Today's Revenue</span>
             <div class="text-2xl font-black text-white">
@@ -739,7 +584,6 @@
             <span class="text-[9px] text-brand-400 font-bold">+12% vs yesterday</span>
           </div>
 
-          <!-- Total Revenue This Month -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-accent-purple space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">This Month</span>
             <div class="text-2xl font-black text-white">
@@ -748,7 +592,6 @@
             <span class="text-[9px] text-accent-purple font-bold">Target 88% Reached</span>
           </div>
 
-          <!-- Total Revenue This Year -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-amber-500 space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Total Revenue</span>
             <div class="text-2xl font-black text-white">
@@ -757,21 +600,18 @@
             <span class="text-[9px] text-amber-400 font-bold">YoY +34%</span>
           </div>
 
-          <!-- Basic Plans Sold -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-blue-500 space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Basic Plans Sold</span>
             <div class="text-2xl font-black text-white" x-text="basicCount"></div>
             <span class="text-[9px] text-blue-400 font-bold">17,999 ETB / Unit</span>
           </div>
 
-          <!-- Subscriptions Joined -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-pink-500 space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Subscriptions Joined</span>
             <div class="text-2xl font-black text-white" x-text="premiumCount"></div>
             <span class="text-[9px] text-pink-400 font-bold">New Monthly Recurrent</span>
           </div>
 
-          <!-- Subscriptions Paid -->
           <div class="glass-card p-5 rounded-2xl border-t-2 border-t-emerald-400 space-y-2">
             <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Subscriptions Paid</span>
             <div class="text-2xl font-black text-white" x-text="premiumPaidCount"></div>
@@ -780,7 +620,6 @@
 
         </div>
 
-        <!-- Charts Grid for Revenue -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           <div class="lg:col-span-8 glass-card p-6 rounded-3xl space-y-4">
@@ -804,35 +643,11 @@
 
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- ======================================================== -->
       <!-- TAB 4: MARKET (MANAGEMENT) -->
       <!-- ======================================================== -->
       <div x-show="currentTab === 'management'" class="space-y-6">
         
-        <!-- Header & Summary -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="glass-card p-6 rounded-3xl border-l-4 border-l-brand-500 space-y-2">
             <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Who Paid</span>
@@ -853,7 +668,6 @@
           </div>
         </div>
 
-        <!-- Payment History Table -->
         <div class="glass-card p-6 rounded-3xl space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -861,7 +675,6 @@
               <p class="text-xs text-zinc-400 font-medium">Track transaction records, issue invoices, or mark payments as settled</p>
             </div>
 
-            <!-- Search -->
             <input 
               type="text" 
               x-model="paymentSearch"
@@ -915,77 +728,31 @@
 
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <!-- ======================================================== -->
       <!-- TAB 5: COMMUNITY (ANALYTICS) -->
       <!-- ======================================================== -->
       <div x-show="currentTab === 'analytics'" class="space-y-8">
         
-        <!-- Platform View Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          <!-- Total Platform Views -->
           <div class="glass-card p-6 rounded-3xl space-y-2 border-t-2 border-t-accent-purple">
             <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest block">Total Platform Views</span>
             <div class="text-3xl font-black text-white">1,482,900</div>
             <span class="text-[10px] text-accent-purple font-bold">+18.4% vs last month</span>
           </div>
 
-          <!-- Average Platform Views -->
           <div class="glass-card p-6 rounded-3xl space-y-2 border-t-2 border-t-brand-500">
             <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest block">Average / Restaurant</span>
             <div class="text-3xl font-black text-white">35,307</div>
             <span class="text-[10px] text-brand-400 font-bold">Monthly Scan Average</span>
           </div>
 
-          <!-- Most Viewed Restaurant -->
           <div class="glass-card p-6 rounded-3xl space-y-2 border-t-2 border-t-amber-500">
             <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest block">Most Viewed Restaurant</span>
             <div class="text-xl font-black text-white truncate">Bole Hub Restaurant</div>
             <span class="text-[10px] text-amber-400 font-bold">94,200 Menu Views</span>
           </div>
 
-          <!-- Least Viewed Restaurant -->
           <div class="glass-card p-6 rounded-3xl space-y-2 border-t-2 border-t-pink-500">
             <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest block">Least Viewed Restaurant</span>
             <div class="text-xl font-black text-white truncate">Entoto Breeze Cafe</div>
@@ -994,10 +761,8 @@
 
         </div>
 
-        <!-- Analytical Details: Top Foods, Popular Categories, Peak Hours -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          <!-- Top Foods List -->
           <div class="lg:col-span-4 glass-card p-6 rounded-3xl space-y-4">
             <h3 class="text-base font-bold text-white uppercase tracking-wider flex items-center space-x-2">
               <i class="fa-solid fa-fire text-amber-400"></i>
@@ -1019,7 +784,6 @@
             </div>
           </div>
 
-          <!-- Most Popular Categories Chart -->
           <div class="lg:col-span-4 glass-card p-6 rounded-3xl space-y-4">
             <h3 class="text-base font-bold text-white uppercase tracking-wider flex items-center space-x-2">
               <i class="fa-solid fa-layer-group text-accent-purple"></i>
@@ -1030,7 +794,6 @@
             </div>
           </div>
 
-          <!-- Peak Hours Chart -->
           <div class="lg:col-span-4 glass-card p-6 rounded-3xl space-y-4">
             <h3 class="text-base font-bold text-white uppercase tracking-wider flex items-center space-x-2">
               <i class="fa-solid fa-clock text-blue-400"></i>
@@ -1190,8 +953,7 @@
   
   <script>
     function adminDashboard() {
-
-        return {
+      return {
         currentTab: 'dashboard',
         timeRange: '1M',
         watchlistFilter: 'most_viewed',
@@ -1201,7 +963,6 @@
         filterStatus: 'all',
         paymentSearch: '',
         
-        // Modals
         addEditModalOpen: false,
         isEditMode: false,
         detailsModalOpen: false,
@@ -1222,694 +983,136 @@
           phone: ''
         },
 
-        // Mock Datasets
-        restaurants: {
-          girum: {
+        restaurants: [
+          {
             id: 'girum',
             name: 'Girum Burger & Pizza',
-            amharicName: 'ግሩም በርገር እና ፒዛ',
-            tagline: 'Girum Recommendations',
             location: 'Old Airport, Addis Ababa',
             owner: 'Bethlehem Tadesse',
             phone: '+251 966 223344',
             plan: 'Premium', 
             status: 'Active',
-            viewsThisMonth: 81500, 
-            menuItems: [
-              {
-                id: 'g-f1',
-                name: 'Special Sizzling Tibs',
-                amharicName: 'ልዩ የጋለ ጥብስ',
-                category: 'food',
-                subCategory: 'Meat',
-                amharicSubCategory: 'ሥጋ',
-                price: 680,
-                rating: 4.9,
-                reviews: 142,
-                prepTime: '15-20 min',
-                tag: 'Chef Choice',
-                amharicTag: 'የሼፉ ምርጫ',
-                description: 'Fresh pan-fried prime beef cubes sautéed with onions, rosemary, garlic, and jalapeños, served sizzling hot on a traditional clay burner with sourdough injera.',
-                amharicDescription: 'በሽንኩርት፣ ሮዝመሪ፣ ነጭ ሽንኩርት እና ቃሪያ በጋለ የሸክላ ምጣድ ላይ የቀረበ ምርጥ የጥብስ ሥጋ ከእናት እንጀራ ጋር።',
-                ingredients: ['Prime Beef Cutlets', 'Organic Rosemary', 'Red Onions', 'Garlic Butter', 'Fresh Jalapeños', 'Awaze Chili Paste'],
-                amharicIngredients: ['ምርጥ የሥጋ ቁራጮች', 'ሮዝመሪ', 'ቀይ ሽንኩርት', 'የነጭ ሽንኩርት ቅቤ', 'ቃሪያ', 'አዋዜ'],
-                pairing: 'Best enjoyed with our Aged Tej or an ice-cold Habesha Lager.',
-                amharicPairing: 'ከእኛ ማር ጠጅ ወይም ከቀዘቀዘ ሐበሻ ቢራ ጋር ቢወሰድ ተመራጭ ነው።',
-                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
-                spicy: true,
-                calories: '420 kcal'
-              },
-              {
-                id: 'g-f2',
-                name: 'Royal Beyaynetu Platter',
-                amharicName: 'ሮያል የፆም በያይነቱ',
-                category: 'food',
-                subCategory: 'Health',
-                amharicSubCategory: 'ጤናማ / የፆም',
-                price: 490,
-                rating: 4.8,
-                reviews: 98,
-                prepTime: '10-15 min',
-                tag: 'Popular',
-                amharicTag: 'ተወዳጅ',
-                description: 'A colorful, nutritious assortment of traditional vegan stews including split peas (Kik Alicha), spicy lentil stew (Misir Wot), collard greens (Gomen), beetroot, and shiro.',
-                amharicDescription: 'ክክ አልጫ፣ ምስር ወጥ፣ ጎመን፣ ቀይ ስር እና የሽንብራ ሽሮ ከተለያዩ ጣፋጭ የፆም ወጦች ጋር የቀረበ።',
-                ingredients: ['Yellow Split Peas', 'Red Lentils', 'Collard Greens', 'Roasted Chickpea Shiro', 'Beetroot Salad', 'Sourdough Injera'],
-                amharicIngredients: ['ክክ አልጫ', 'ምስር ወጥ', 'ጎመን', 'የሽንብራ ሽሮ', 'ቀይ ስር', 'እንጀራ'],
-                pairing: 'Complements wonderfully with our fresh Spris Juice or Hibiscus Tea.',
-                amharicPairing: 'ከስፕሪስ ጭማቂ ወይም ከኮርከዴ ሻይ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '310 kcal'
-              },
-              {
-                id: 'g-f3',
-                name: 'Special Burger',
-                amharicName: 'ልዩ በርገር',
-                category: 'food',
-                subCategory: 'Meat',
-                amharicSubCategory: 'ሥጋ',
-                price: 720,
-                rating: 4.9,
-                reviews: 210,
-                prepTime: '10-15 min',
-                tag: 'Signature',
-                amharicTag: 'ልዩ ምልክት',
-                description: 'Finely minced extra-lean beef gently warmed with clarified spiced butter (Niter Kibbeh) and fiery Mitmita. Served alongside house Ayib (cottage cheese) and Gomen.',
-                amharicDescription: 'በለሰለሰ የበርገር ዳቦ፣ በደቀቀ በጥ በጥ ስጋ፣ አይብ እና በልዩ መሶብ ቅመሞች የተዘጋጀ ልዩ በርገር።',
-                ingredients: ['Lean Tenderloin Beef', 'Niter Kibbeh Butter', 'Pure Mitmita Spice', 'Homemade Ayib Cheese', 'Steamed Collard Greens'],
-                amharicIngredients: ['ልዩ የተቀመመ ሥጋ', 'የለሰለሰ ቅቤ', 'ሚጥሚጣ', 'የቤት አይብ', 'የተቀቀለ ጎመን'],
-                pairing: 'Pairs seamlessly with cold sparkling water or draft beer.',
-                amharicPairing: 'ከቀዘቀዘ ጋዝ ያለው ውኃ ወይም ረቂቅ ቢራ ጋር ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: true,
-                calories: '550 kcal'
-              },
-              {
-                id: 'g-f4',
-                name: 'Gourmet Sheger Burger',
-                amharicName: 'ጉርሜ ሸገር በርገር',
-                category: 'food',
-                subCategory: 'Burger',
-                amharicSubCategory: 'በርገር',
-                price: 420,
-                rating: 4.7,
-                reviews: 85,
-                prepTime: '15-20 min',
-                tag: 'Classic',
-                amharicTag: 'ክላሲክ',
-                description: 'Premium grilled beef patty with sharp cheddar cheese, caramelized onions, signature burger aioli, and crisp lettuce on a toasted sesame brioche bun.',
-                amharicDescription: 'በከሰል የተጠበሰ የከብት ሥጋ በርገር ከቼዳር አይብ፣ ከተጠበሰ ሽንኩርት እና ከልዩ ሶስ ጋር የቀረበ።',
-                ingredients: ['100% Angus Beef Patty', 'Sharp Cheddar', 'Caramelized Onions', 'Brioche Bun', 'House Garlic Aioli'],
-                amharicIngredients: ['የከብት ሥጋ በርገር', 'ቼዳር አይብ', 'የተጠበሰ ሽንኩርት', 'የበርገር ዳቦ', 'ጋርሊክ አዮሊ ሶስ'],
-                pairing: 'Try with chilled craft draft lager or iced lemon tea.',
-                amharicPairing: 'ከቀዘቀዘ ድራፍት ቢራ ወይም አይስድ ሌመን ቲ ጋር ይሞክሩት።',
-                image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: false,
-                calories: '620 kcal'
-              },
-              {
-                id: 'g-f5',
-                name: 'Smoked Yellow Cocktail',
-                amharicName: 'ስሞክድ የሎው ኮክቴል',
-                category: 'food',
-                subCategory: 'Bakery',
-                amharicSubCategory: 'ቤከሪ',
-                price: 580,
-                rating: 4.6,
-                reviews: 44,
-                prepTime: '10 min',
-                tag: 'Fresh',
-                amharicTag: 'ትኩስ',
-                description: 'House-baked rustic sourdough bread topped with creamy herb dill cheese spread, cold-smoked salmon slices, pickled onions, and organic microgreens.',
-                amharicDescription: 'በተጠበሰ የቤት ዳቦ ላይ የቀረበ የሳልሞን ዓሳ ከተለየ አይብ እና ቅጠላቅጠሎች ጋር።',
-                ingredients: ['Artisan Sourdough', 'Smoked Salmon Slices', 'Dill Cream Cheese', 'Capers & Pickled Onions', 'Fresh Microgreens'],
-                amharicIngredients: ['የቤት ዳቦ', 'ስሞክድ ሳልሞን ዓሳ', 'ዲል ክሬም አይብ', 'ቃሪያ እና የተቀመመ ሽንኩርት', 'ትኩስ ቅጠላቅጠል'],
-                pairing: 'Pairs excellently with Grand Macchiato or freshly squeezed juices.',
-                amharicPairing: 'ከግራንድ ማኪያቶ ወይም ከተፈጥሮ ጭማቂዎች ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: false,
-                calories: '280 kcal'
-              },
-              {
-                id: 'g-f6',
-                name: 'Spiced Chicken Skewers',
-                amharicName: 'የተቀመመ የዶሮ ሺሽ',
-                category: 'food',
-                subCategory: 'Chicken',
-                amharicSubCategory: 'ዶሮ',
-                price: 490,
-                rating: 4.7,
-                reviews: 62,
-                prepTime: '20-25 min',
-                tag: 'Spicy Delight',
-                amharicTag: 'የሚቃጠል ጣዕም',
-                description: 'Tender chicken thighs marinated in home-blended Berbere and garlic rub, charcoal-grilled to perfection. Served with spicy avocado dips.',
-                amharicDescription: 'በበርበሬ እና ነጭ ሽንኩርት የተቀመመ በከሰል የተጠበሰ የዶሮ ሥጋ ከልዩ አቮካዶ ሶስ ጋር።',
-                ingredients: ['Farm Chicken Thighs', 'Berbere Blend', 'Smoked Garlic', 'Fresh Lime Juice', 'Avocado Crema'],
-                amharicIngredients: ['የዶሮ ሥጋ', 'የቤት በርበሬ', 'ነጭ ሽንኩርት', 'ሎሚ', 'የአቮካዶ ክሬም'],
-                pairing: 'Great with cold craft beers or sparkling iced tea.',
-                amharicPairing: 'ከቀዘቀዘ ቢራ ወይም ከበረዶ የሻይ መጠጥ ጋር ተመራጭ ነው።',
-                image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=600',
-                spicy: true,
-                calories: '390 kcal'
-              },
-              {
-                id: 'g-f7',
-                name: 'Smokey Pepperoni Pizza',
-                amharicName: 'ስሞኪ ፔፔሮኒ ፒዛ',
-                category: 'food',
-                subCategory: 'Pizza',
-                amharicSubCategory: 'ፒዛ',
-                price: 540,
-                rating: 4.8,
-                reviews: 130,
-                prepTime: '15-20 min',
-                tag: 'Bestseller',
-                amharicTag: 'ተመራጭ',
-                description: 'Artisanal thin sourdough crust layered with spicy marinara, dry-cured beef pepperoni, fresh shredded mozzarella, and dried wild oregano.',
-                amharicDescription: 'በቀጭኑ በተጋገረ ፒዛ ላይ የተሰራ ፔፔሮኒ፣ ሞዛሬላ አይብ እና የቲማቲም ሶስ።',
-                ingredients: ['Sourdough Pizza Crust', 'Beef Pepperoni', 'Low-Moisture Mozzarella', 'San Marzano Tomato Sauce', 'Wild Oregano'],
-                amharicIngredients: ['የፒዛ ሊቅ', 'ፔፔሮኒ', 'ሞዛሬላ አይብ', 'የቲማቲም ሶስ', 'ኦሬጋኖ'],
-                pairing: 'Pairs ideally with soft drinks, lager beer, or iced hibiscus tea.',
-                amharicPairing: 'ከልስላሴ መጠጦች፣ ከቢራ ወይም ከኮርከዴ ሻይ ጋር ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '780 kcal'
-              },
-              {
-                id: 'g-f8',
-                name: 'Herb Grilled Sea Bass',
-                amharicName: 'የዓሳ ግሪል',
-                category: 'food',
-                subCategory: 'Seafood',
-                amharicSubCategory: 'የባህር ምግብ',
-                price: 950,
-                rating: 4.9,
-                reviews: 77,
-                prepTime: '25 min',
-                tag: 'Luxury Selection',
-                amharicTag: 'የላቀ መረጣ',
-                description: 'Fresh sea bass fillet marinated in lemon zest and garden herbs, oven-grilled, and accompanied with creamy buttered herbal rice.',
-                amharicDescription: 'በትኩሱ የተጠበሰ የባህር ዓሳ በሎሚ እና በቅጠላቅጠል የተቀመመ ከቅቤ ሩዝ ጋር።',
-                ingredients: ['Fresh Sea Bass Fillet', 'Lemon Zest & Thyme', 'Extra Virgin Olive Oil', 'Herbed Butter Rice', 'Steamed Asparagus'],
-                amharicIngredients: ['ትኩስ የዓሳ ሥጋ', 'ሎሚ እና ታይም', 'የወይራ ዘይት', 'የቅቤ ሩዝ', 'አስፓራገስ'],
-                pairing: 'Pairs wonderfully with chilled Tej honey wine or sparkling water.',
-                amharicPairing: 'ከቀዘቀዘ ማር ጠጅ ወይም ከጋዝ ውኃ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '450 kcal'
-              },
-              {
-                id: 'g-d1',
-                name: 'Premium Aged Tej',
-                amharicName: 'ፕሪሚየም ማር ጠጅ',
-                category: 'drinks',
-                subCategory: 'Beverage',
-                amharicSubCategory: 'መጠጦች',
-                price: 320,
-                rating: 4.9,
-                reviews: 160,
-                prepTime: '5 min',
-                tag: 'Heritage Brew',
-                amharicTag: 'የባህል መጠጥ',
-                description: 'Our house-crafted organic honey wine, slowly fermented with Gesho roots. Offers a smooth, delightfully sweet and crisp finish.',
-                amharicDescription: 'ከንጹህ ማር እና ከጌሾ ተመርቶ በባህል መንገድ የተዘጋጀ ጣፋጭ ማር ጠጅ።',
-                ingredients: ['Pure Wildflower Honey', 'Gesho (Rhamnus prinoides)', 'Natural Spring Water'],
-                amharicIngredients: ['ንጹህ የማር ጠጅ', 'ጌሾ', 'የምንጭ ውኃ'],
-                pairing: 'Pairs perfectly with Special Tibs, Kitfo, or grilled spicy dishes.',
-                amharicPairing: 'ከጋለ ጥብስ፣ ከክትፎ እና ከሚቃጠሉ ምግቦች ጋር ምርጥ ጥምረት ነው።',
-                image: 'https://images.unsplash.com/photo-1532634922-8fe0b757fb13?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '180 kcal'
-              },
-              {
-                id: 'g-d2',
-                name: 'Spris Juice',
-                amharicName: 'ስፕሪስ ጭማቂ',
-                category: 'drinks',
-                subCategory: 'Beverage',
-                amharicSubCategory: 'መጠጦች',
-                price: 180,
-                rating: 4.8,
-                reviews: 112,
-                prepTime: '5-10 min',
-                tag: 'Healthy',
-                amharicTag: 'ጤናማ',
-                description: 'Thick, beautifully layered natural fruit juice made from ripe avocados, sweet mangoes, and red papayas. Finished with a slice of lime.',
-                amharicDescription: 'ከተፈጥሮ አቮካዶ፣ ማንጎ እና ፓፓያ ተደራርቦ የተዘጋጀ አልሚ እና ጣፋጭ የፍራፍሬ ጭማቂ።',
-                ingredients: ['Ripe Hass Avocado', 'Fresh Mango Puree', 'Red Papaya Pulp', 'Fresh Lime Wedge'],
-                amharicIngredients: ['አቮካዶ', 'ማንጎ', 'ፓፓያ', 'ሎሚ'],
-                pairing: 'Enjoy alongside Beyaynetu vegetarian platters or light bakery toasts.',
-                amharicPairing: 'ከበያይነቱ ወይም ከዳቦ ምግቦች ጋር ይውሰዱት።',
-                image: 'https://plus.unsplash.com/premium_photo-1681826664053-5f50e4a0c513?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: false,
-                calories: '210 kcal'
-              },
-              {
-                id: 'g-d3',
-                name: 'Grand Macchiato',
-                amharicName: 'ግራንድ ማኪያቶ',
-                category: 'drinks',
-                subCategory: 'Coffee',
-                amharicSubCategory: 'ቡና እና ሻይ',
-                price: 95,
-                rating: 4.9,
-                reviews: 320,
-                prepTime: '5 min',
-                tag: 'Barista Star',
-                amharicTag: 'የባሪስታ ኮከብ',
-                description: 'Our world-renowned, signature dark roast Ethiopian espresso poured through velvety steam-frothed milk layers to achieve absolute perfection.',
-                amharicDescription: 'ከታወቀ የኢትዮጵያ ቡና ተቆልቶ ከለሰለሰ ወተት ጋር የተዘጋጀ ልዩ ማኪያቶ።',
-                ingredients: ['Organic Single-Origin Espresso Beans', 'Whole Steam-Foamed Milk'],
-                amharicIngredients: ['የኢትዮጵያ ቡና', 'የተነቀረ ወተት'],
-                pairing: 'Pairs wonderfully with breakfast pastries or gourmet sourdough toasts.',
-                amharicPairing: 'ከቁርስ ዳቦዎች ወይም ከኬክ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: false,
-                calories: '90 kcal'
-              },
-              {
-                id: 'g-d4',
-                name: 'Chilled Hibiscus Herbal Tea',
-                amharicName: 'የቀዘቀዘ የኮርከዴ ሻይ',
-                category: 'drinks',
-                subCategory: 'Coffee',
-                amharicSubCategory: 'ቡና እና ሻይ',
-                price: 140,
-                rating: 4.7,
-                reviews: 55,
-                prepTime: '5 min',
-                tag: 'Refreshed',
-                amharicTag: 'አያናሽ',
-                description: 'Invigorating organic dried hibiscus leaf infusion over ice, naturally sweetened with raw sugarcane honey syrup and fresh mint leaves.',
-                amharicDescription: 'ከተፈጥሮ የኮርከዴ አበባ ተፈልቶ በበረዶ፣ በማር እና በምናና ቅጠል የቀረበ ማቀዝቀዣ መጠጥ።',
-                ingredients: ['Dried Hibiscus Flowers', 'Raw Honey Syrup', 'Fresh Mint Leaves', 'Crushed Ice'],
-                amharicIngredients: ['የኮርከዴ አበባ', 'የማር ሶስ', 'የምናና ቅጠል', 'በረዶ'],
-                pairing: 'Ideal for refreshing your palate between spicy dishes.',
-                amharicPairing: 'የሚቃጠሉ ምግቦችን ከተመገቡ በኋላ አፌን ለማቀዝቀዝ ምርጥ ነው።',
-                image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '75 kcal'
-              },
-              {
-                id: 'g-d5',
-                name: 'Habesha Cold Lager',
-                amharicName: 'ሐበሻ የቀዘቀዘ ቢራ',
-                category: 'drinks',
-                subCategory: 'Beverage',
-                amharicSubCategory: 'መጠጦች',
-                price: 120,
-                rating: 4.7,
-                reviews: 189,
-                prepTime: '2 min',
-                tag: 'Chilled',
-                amharicTag: 'የቀዘቀዘ',
-                description: 'Premium local beer crafted from pure spring waters, featuring a deep rich malt aroma and exceptionally crisp golden bubbles.',
-                amharicDescription: 'ከንጹህ ምንጭ ውኃ እና ብቅል የተጠመቀ የቀዘቀዘ ባህላዊ ሐበሻ ቢራ።',
-                ingredients: ['Barley Malt', 'Hops', 'Pure Mountain Water'],
-                amharicIngredients: ['የገብስ ብቅል', 'ሆፕስ', 'የምንጭ ውኃ'],
-                pairing: 'The classic pairing for Sizzling Tibs and burgers.',
-                amharicPairing: 'ከጋለ ጥብስ እና በርገር ጋር ክላሲክ ጥምረት።',
-                image: 'https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                spicy: false,
-                calories: '140 kcal'
-              }
-            ]
+            foodsCount: 8,
+            drinksCount: 5,
+            viewsThisMonth: 81500
           },
-          dell: {
+          {
             id: 'dell',
             name: 'Dell Hotel & Restaurant',
-            amharicName: 'ዴል ሆቴል እና ሬስቶራንት',
-            tagline: 'Dell Executive Culinary Experience',
-            location: 'Old Airport, Addis Ababa',
-            owner: 'Bethlehem Tadesse',
-            phone: '+251 966 223344',
+            location: 'Bole, Addis Ababa',
+            owner: 'Ephrem Kebede',
+            phone: '+251 911 554433',
             plan: 'Premium', 
             status: 'Active',
-            viewsThisMonth: 89500, 
-            menuItems: [
-              {
-                id: 'd-f1',
-                name: 'Dell Prime Ribeye Steak',
-                amharicName: 'ዴል ፕራይም ሪባይ እስቴክ',
-                category: 'food',
-                subCategory: 'Meat',
-                amharicSubCategory: 'ሥጋ',
-                price: 890,
-                rating: 4.9,
-                reviews: 115,
-                prepTime: '20-25 min',
-                tag: 'Chef Special',
-                amharicTag: 'የሼፉ ልዩ',
-                description: '300g aged tender ribeye cooked to preference, served with garlic mashed potatoes and grilled asparagus with red wine reduction.',
-                amharicDescription: '300 ግራም የከብት ሪባይ እስቴክ በነጭ ሽንኩርት ድንች እና አስፓራገስ ከተጠበሰ ሬድ ዋይን ሶስ ጋር የቀረበ።',
-                ingredients: ['Aged Beef Ribeye', 'Garlic Butter', 'Idaho Potatoes', 'Fresh Asparagus', 'Red Wine Sauce'],
-                amharicIngredients: ['የከብት ሪባይ', 'የነጭ ሽንኩርት ቅቤ', 'ድንች', 'አስፓራገስ', 'ሬድ ዋይን ሶስ'],
-                pairing: 'Best accompanied by chilled mineral water or house red brew.',
-                amharicPairing: 'ከቀዘቀዘ ሚነራል ውኃ ወይም ከቀይ መጠጥ ጋር ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '650 kcal'
-              },
-              {
-                id: 'd-f2',
-                name: 'Truffle Mushroom Pizza',
-                amharicName: 'ትራፍል እንጉዳይ ፒዛ',
-                category: 'food',
-                subCategory: 'Pizza',
-                amharicSubCategory: 'ፒዛ',
-                price: 610,
-                rating: 4.8,
-                reviews: 74,
-                prepTime: '15-20 min',
-                tag: 'Gourmet',
-                amharicTag: 'ጉርሜ',
-                description: 'Crispy stone-baked pizza crust topped with white truffle oil, wild porcini mushrooms, fresh mozzarella, and thyme.',
-                amharicDescription: 'በተጋገረ ፒዛ ላይ የተሰራ ትራፍል ኦይል፣ እንጉዳይ እና የሞዛሬላ አይብ።',
-                ingredients: ['Stone-Baked Dough', 'White Truffle Oil', 'Porcini Mushrooms', 'Mozzarella Cheese', 'Thyme'],
-                amharicIngredients: ['የፒዛ ሊቅ', 'ትራፍል ዘይት', 'እንጉዳይ', 'ሞዛሬላ አይብ', 'ታይም'],
-                pairing: 'Pairs wonderfully with sparkling citrus juice.',
-                amharicPairing: 'ከሲትረስ ጭማቂ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '710 kcal'
-              },
-              {
-                id: 'd-d1',
-                name: 'Dell Iced Caramel Latte',
-                amharicName: 'ዴል አይስድ ካራሜል ላቴ',
-                category: 'drinks',
-                subCategory: 'Coffee',
-                amharicSubCategory: 'ቡና እና ሻይ',
-                price: 160,
-                rating: 4.9,
-                reviews: 204,
-                prepTime: '5 min',
-                tag: 'Popular',
-                amharicTag: 'ተወዳጅ',
-                description: 'Double shot espresso shaken with ice, fresh milk, and handcrafted salted caramel drip.',
-                amharicDescription: 'ድርብ ኤስፕሬሶ ከበረዶ፣ ወተት እና ጣፋጭ ካራሜል ሶስ ጋር የተቀላቀለ።',
-                ingredients: ['Espresso', 'Whole Milk', 'Salted Caramel Syrup', 'Ice'],
-                amharicIngredients: ['ኤስፕሬሶ', 'ወተት', 'ካራሜል ሶስ', 'በረዶ'],
-                pairing: 'Great with sweet pastries.',
-                amharicPairing: 'ከጣፋጭ ዳቦዎች ጋር ተመራጭ ነው።',
-                image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '190 kcal'
-              }
-            ]
+            foodsCount: 6,
+            drinksCount: 4,
+            viewsThisMonth: 89500
           },
-          bux: {
+          {
             id: 'bux',
-            name: 'Bux Hotel & Restaurant',
-            amharicName: 'ዴል ሆቴል እና ሬስቶራንት',
-            tagline: 'Dell Executive Culinary Experience',
-            location: 'Old Airport, Addis Ababa',
-            owner: 'Bethlehem Tadesse',
-            phone: '+251 966 223344',
+            name: 'Bux Lounge & Dining',
+            location: 'Kazanchis, Addis Ababa',
+            owner: 'Solomon Mulugeta',
+            phone: '+251 922 332211',
             plan: 'Premium', 
             status: 'Active',
-            viewsThisMonth: 101500, 
-            menuItems: [
-              {
-                id: 'd-f1',
-                name: 'Dell Prime Ribeye Steak',
-                amharicName: 'ዴል ፕራይም ሪባይ እስቴክ',
-                category: 'food',
-                subCategory: 'Meat',
-                amharicSubCategory: 'ሥጋ',
-                price: 890,
-                rating: 4.9,
-                reviews: 115,
-                prepTime: '20-25 min',
-                tag: 'Chef Special',
-                amharicTag: 'የሼፉ ልዩ',
-                description: '300g aged tender ribeye cooked to preference, served with garlic mashed potatoes and grilled asparagus with red wine reduction.',
-                amharicDescription: '300 ግራም የከብት ሪባይ እስቴክ በነጭ ሽንኩርት ድንች እና አስፓራገስ ከተጠበሰ ሬድ ዋይን ሶስ ጋር የቀረበ።',
-                ingredients: ['Aged Beef Ribeye', 'Garlic Butter', 'Idaho Potatoes', 'Fresh Asparagus', 'Red Wine Sauce'],
-                amharicIngredients: ['የከብት ሪባይ', 'የነጭ ሽንኩርት ቅቤ', 'ድንች', 'አስፓራገስ', 'ሬድ ዋይን ሶስ'],
-                pairing: 'Best accompanied by chilled mineral water or house red brew.',
-                amharicPairing: 'ከቀዘቀዘ ሚነራል ውኃ ወይም ከቀይ መጠጥ ጋር ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '650 kcal'
-              },
-              {
-                id: 'd-f2',
-                name: 'Truffle Mushroom Pizza',
-                amharicName: 'ትራፍል እንጉዳይ ፒዛ',
-                category: 'food',
-                subCategory: 'Pizza',
-                amharicSubCategory: 'ፒዛ',
-                price: 610,
-                rating: 4.8,
-                reviews: 74,
-                prepTime: '15-20 min',
-                tag: 'Gourmet',
-                amharicTag: 'ጉርሜ',
-                description: 'Crispy stone-baked pizza crust topped with white truffle oil, wild porcini mushrooms, fresh mozzarella, and thyme.',
-                amharicDescription: 'በተጋገረ ፒዛ ላይ የተሰራ ትራፍል ኦይል፣ እንጉዳይ እና የሞዛሬላ አይብ።',
-                ingredients: ['Stone-Baked Dough', 'White Truffle Oil', 'Porcini Mushrooms', 'Mozzarella Cheese', 'Thyme'],
-                amharicIngredients: ['የፒዛ ሊቅ', 'ትራፍል ዘይት', 'እንጉዳይ', 'ሞዛሬላ አይብ', 'ታይም'],
-                pairing: 'Pairs wonderfully with sparkling citrus juice.',
-                amharicPairing: 'ከሲትረስ ጭማቂ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '710 kcal'
-              },
-              {
-                id: 'd-d1',
-                name: 'Dell Iced Caramel Latte',
-                amharicName: 'ዴል አይስድ ካራሜል ላቴ',
-                category: 'drinks',
-                subCategory: 'Coffee',
-                amharicSubCategory: 'ቡና እና ሻይ',
-                price: 160,
-                rating: 4.9,
-                reviews: 204,
-                prepTime: '5 min',
-                tag: 'Popular',
-                amharicTag: 'ተወዳጅ',
-                description: 'Double shot espresso shaken with ice, fresh milk, and handcrafted salted caramel drip.',
-                amharicDescription: 'ድርብ ኤስፕሬሶ ከበረዶ፣ ወተት እና ጣፋጭ ካራሜል ሶስ ጋር የተቀላቀለ።',
-                ingredients: ['Espresso', 'Whole Milk', 'Salted Caramel Syrup', 'Ice'],
-                amharicIngredients: ['ኤስፕሬሶ', 'ወተት', 'ካራሜል ሶስ', 'በረዶ'],
-                pairing: 'Great with sweet pastries.',
-                amharicPairing: 'ከጣፋጭ ዳቦዎች ጋር ተመራጭ ነው።',
-                image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '190 kcal'
-              }
-            ]
+            foodsCount: 10,
+            drinksCount: 6,
+            viewsThisMonth: 101500
           },
-          pail: {
+          {
             id: 'pail',
-            name: 'Pail Hotel & Restaurant',
-            amharicName: 'ዴል ሆቴል እና ሬስቶራንት',
-            tagline: 'Dell Executive Culinary Experience',
-            location: 'Old Airport, Addis Ababa',
-            owner: 'Bethlehem Tadesse',
-            phone: '+251 966 223344',
+            name: 'Pail Cafe & Bakery',
+            location: 'Piassa, Addis Ababa',
+            owner: 'Hanna Berhane',
+            phone: '+251 944 112233',
             plan: 'Basic', 
             status: 'Active',
-            viewsThisMonth: 500, 
-            menuItems: [
-              {
-                id: 'd-f1',
-                name: 'Dell Prime Ribeye Steak',
-                amharicName: 'ዴል ፕራይም ሪባይ እስቴክ',
-                category: 'food',
-                subCategory: 'Meat',
-                amharicSubCategory: 'ሥጋ',
-                price: 890,
-                rating: 4.9,
-                reviews: 115,
-                prepTime: '20-25 min',
-                tag: 'Chef Special',
-                amharicTag: 'የሼፉ ልዩ',
-                description: '300g aged tender ribeye cooked to preference, served with garlic mashed potatoes and grilled asparagus with red wine reduction.',
-                amharicDescription: '300 ግራም የከብት ሪባይ እስቴክ በነጭ ሽንኩርት ድንች እና አስፓራገስ ከተጠበሰ ሬድ ዋይን ሶስ ጋር የቀረበ።',
-                ingredients: ['Aged Beef Ribeye', 'Garlic Butter', 'Idaho Potatoes', 'Fresh Asparagus', 'Red Wine Sauce'],
-                amharicIngredients: ['የከብት ሪባይ', 'የነጭ ሽንኩርት ቅቤ', 'ድንች', 'አስፓራገስ', 'ሬድ ዋይን ሶስ'],
-                pairing: 'Best accompanied by chilled mineral water or house red brew.',
-                amharicPairing: 'ከቀዘቀዘ ሚነራል ውኃ ወይም ከቀይ መጠጥ ጋር ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '650 kcal'
-              },
-              {
-                id: 'd-f2',
-                name: 'Truffle Mushroom Pizza',
-                amharicName: 'ትራፍል እንጉዳይ ፒዛ',
-                category: 'food',
-                subCategory: 'Pizza',
-                amharicSubCategory: 'ፒዛ',
-                price: 610,
-                rating: 4.8,
-                reviews: 74,
-                prepTime: '15-20 min',
-                tag: 'Gourmet',
-                amharicTag: 'ጉርሜ',
-                description: 'Crispy stone-baked pizza crust topped with white truffle oil, wild porcini mushrooms, fresh mozzarella, and thyme.',
-                amharicDescription: 'በተጋገረ ፒዛ ላይ የተሰራ ትራፍል ኦይል፣ እንጉዳይ እና የሞዛሬላ አይብ።',
-                ingredients: ['Stone-Baked Dough', 'White Truffle Oil', 'Porcini Mushrooms', 'Mozzarella Cheese', 'Thyme'],
-                amharicIngredients: ['የፒዛ ሊቅ', 'ትራፍል ዘይት', 'እንጉዳይ', 'ሞዛሬላ አይብ', 'ታይም'],
-                pairing: 'Pairs wonderfully with sparkling citrus juice.',
-                amharicPairing: 'ከሲትረስ ጭማቂ ጋር በጣም ይስማማል።',
-                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '710 kcal'
-              },
-              {
-                id: 'd-d1',
-                name: 'Dell Iced Caramel Latte',
-                amharicName: 'ዴል አይስድ ካራሜል ላቴ',
-                category: 'drinks',
-                subCategory: 'Coffee',
-                amharicSubCategory: 'ቡና እና ሻይ',
-                price: 160,
-                rating: 4.9,
-                reviews: 204,
-                prepTime: '5 min',
-                tag: 'Popular',
-                amharicTag: 'ተወዳጅ',
-                description: 'Double shot espresso shaken with ice, fresh milk, and handcrafted salted caramel drip.',
-                amharicDescription: 'ድርብ ኤስፕሬሶ ከበረዶ፣ ወተት እና ጣፋጭ ካራሜል ሶስ ጋር የተቀላቀለ።',
-                ingredients: ['Espresso', 'Whole Milk', 'Salted Caramel Syrup', 'Ice'],
-                amharicIngredients: ['ኤስፕሬሶ', 'ወተት', 'ካራሜል ሶስ', 'በረዶ'],
-                pairing: 'Great with sweet pastries.',
-                amharicPairing: 'ከጣፋጭ ዳቦዎች ጋር ተመራጭ ነው።',
-                image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=600',
-                spicy: false,
-                calories: '190 kcal'
-              }
-            ]
+            foodsCount: 4,
+            drinksCount: 3,
+            viewsThisMonth: 14500
           },
-          pail: {
-            id: 'pail',
-            name: 'Pail Hotel & Restaurant',
-            amharicName: 'ዴል ሆቴል እና ሬስቶራንት',
-            tagline: 'Dell Executive Culinary Experience',
-            location: 'Old Airport, Addis Ababa',
-            owner: 'Bethlehem Tadesse',
-            phone: '+251 966 223344',
+          {
+            id: 'entoto',
+            name: 'Entoto Breeze Cafe',
+            location: 'Entoto, Addis Ababa',
+            owner: 'Dawit Mekonnen',
+            phone: '+251 933 889900',
             plan: 'Basic', 
-            }
-
-        },
+            status: 'Expired',
+            foodsCount: 3,
+            drinksCount: 2,
+            viewsThisMonth: 1410
+          }
+        ],
 
         payments: [
           { id: 'INV-9021', restaurantName: 'Bole Hub Restaurant', plan: 'Premium Monthly', amount: 4500, status: 'Paid', date: '2026-07-28' },
           { id: 'INV-9022', restaurantName: 'Kazanchis Bistro', plan: 'Basic Setup', amount: 17999, status: 'Paid', date: '2026-07-25' },
-          { id: 'INV-9023', restaurantName: 'Entoto Breeze Lounge', plan: 'Premium Monthly', amount: 4500, status: 'Unpaid', date: '2026-08-01' },
-          { id: 'INV-9024', restaurantName: 'Sarbet Gourmet Kitchen', plan: 'Basic Setup', amount: 17999, status: 'Paid', date: '2026-07-15' },
-          { id: 'INV-9025', restaurantName: 'Piassa Traditional House', plan: 'Basic Setup Renewal', amount: 3500, status: 'Unpaid', date: '2026-07-02' }
+          { id: 'INV-9023', restaurantName: 'Girum Burger & Pizza', plan: 'Premium Monthly', amount: 4500, status: 'Paid', date: '2026-07-22' },
+          { id: 'INV-9024', restaurantName: 'Entoto Breeze Cafe', plan: 'Basic Setup', amount: 17999, status: 'Unpaid', date: '2026-07-10' }
         ],
 
         topFoods: [
-          { name: 'Sizzling Ribeye Tibs', category: 'Specials', views: 41200 },
-          { name: 'Doro Wat Platter', category: 'Main Courses', views: 38900 },
-          { name: 'Awaze Gourmet Burger', category: 'Fast Casual', views: 31500 },
-          { name: 'Grand Yirgacheffe Macchiato', category: 'Beverages', views: 28400 }
+          { name: 'Special Sizzling Tibs', category: 'Girum Burger', views: 24300 },
+          { name: 'Dell Prime Ribeye Steak', category: 'Dell Hotel', views: 19800 },
+          { name: 'Royal Beyaynetu Platter', category: 'Girum Burger', views: 17500 },
+          { name: 'Truffle Mushroom Pizza', category: 'Dell Hotel', views: 14200 }
         ],
 
-        revenueMetrics: {
-          today: 0,
-          thisMonth: 0,
-          thisYear: 0,
-          basicPlansSold: 16,
-          subsJoined: 7,
-          subsPaid: 24, 
-          monthsPassed:3
+        get activeCount() {
+          return this.restaurants.filter(r => r.status === 'Active').length;
+        },
+        get premiumCount() {
+          return this.restaurants.filter(r => r.plan === 'Premium').length;
+        },
+        get basicCount() {
+          return this.restaurants.filter(r => r.plan === 'Basic').length;
+        },
+        get paidCount() {
+          return this.payments.filter(p => p.status === 'Paid').length;
+        },
+        get unpaidCount() {
+          return this.payments.filter(p => p.status === 'Unpaid').length;
+        },
+        get premiumPaidCount() {
+          return this.payments.filter(p => p.status === 'Paid' && p.plan.includes('Premium')).length;
+        },
+        get estimatedTotalRevenue() {
+          const sum = this.payments.filter(p => p.status === 'Paid').reduce((acc, curr) => acc + curr.amount, 0) + 342000;
+          return sum.toLocaleString();
         },
 
-        // Computed getters
+        revenueMetrics: {
+          today: 14500,
+          thisMonth: 218900
+        },
+
         get filteredRestaurants() {
-  return Object.values(this.restaurants).filter(r => {
-    const matchesSearch =
-      !this.tableSearch ||
-      r.name.toLowerCase().includes(this.tableSearch.toLowerCase()) ||
-      r.phone.includes(this.tableSearch);
+          return this.restaurants.filter(r => {
+            const matchesSearch = r.name.toLowerCase().includes(this.tableSearch.toLowerCase()) || r.phone.includes(this.tableSearch);
+            const matchesPlan = this.filterPlan === 'all' || r.plan === this.filterPlan;
+            const matchesStatus = this.filterStatus === 'all' || r.status === this.filterStatus;
+            const matchesGlobal = !this.globalSearch || r.name.toLowerCase().includes(this.globalSearch.toLowerCase());
+            return matchesSearch && matchesPlan && matchesStatus && matchesGlobal;
+          });
+        },
 
-    const matchesPlan =
-      this.filterPlan === 'all' || r.plan === this.filterPlan;
+        get filteredPayments() {
+          return this.payments.filter(p => p.restaurantName.toLowerCase().includes(this.paymentSearch.toLowerCase()) || p.id.toLowerCase().includes(this.paymentSearch.toLowerCase()));
+        },
 
-    const matchesStatus =
-      this.filterStatus === 'all' || r.status === this.filterStatus;
-
-    return matchesSearch && matchesPlan && matchesStatus;
-  });
-},
-
-
-monthsPassed: 3,
-basicFee: 18000,
-premiumFee: 12000,
-subscriptionFee: 1100,
-
-get topWatchlist() {
-  return Object.values(this.restaurants)
-    .sort((a, b) => b.viewsThisMonth - a.viewsThisMonth)
-    .slice(0, 4);
-},
-
-get activeCount() {
-  return Object.values(this.restaurants)
-    .filter(r => r.status === 'Active')
-    .length;
-},
-
-
-
-get premiumCount() {
-  return Object.values(this.restaurants)
-    .filter(r => r.plan === 'Premium')
-    .length;
-},
-
-get premiumPaidCount(){
-    return Object.values(this.restaurants).filter(r => r.plan === 'Premium').length * this.monthsPassed;
-},
-
-get basicCount() {
-  return Object.values(this.restaurants)
-    .filter(r => r.plan === 'Basic')
-    .length;
-},
-
-get paidCount() {
-  return this.payments.filter(p => p.status === 'Paid').length;
-},
-
-get unpaidCount() {
-  return this.payments.filter(p => p.status === 'Unpaid').length;
-},
-
-get filteredPayments() {
-  if (!this.paymentSearch) return this.payments;
-
-  return this.payments.filter(
-    p =>
-      p.restaurantName
-        .toLowerCase()
-        .includes(this.paymentSearch.toLowerCase()) ||
-      p.id
-        .toLowerCase()
-        .includes(this.paymentSearch.toLowerCase())
-  );
-},
-get estimatedTotalRevenue() {
-    return (
-        this.basicCount * this.basicFee +
-        this.premiumCount * this.premiumFee +
-        this.premiumCount * this.subscriptionFee * this.monthsPassed
-    );
-},
+        triggerToast(msg, type = 'success') {
+          this.toast.message = msg;
+          this.toast.show = true;
+          setTimeout(() => {
+            this.toast.show = false;
+          }, 3500);
+        },
 
         openAddModal() {
           this.isEditMode = false;
-          this.form = { id: Date.now(), name: '', owner: '', plan: 'Basic', status: 'Active', foodsCount: 15, drinksCount: 10, viewsThisMonth: 1200, location: 'Addis Ababa', phone: '+251 9' };
+          this.form = { id: null, name: '', owner: '', plan: 'Basic', status: 'Active', foodsCount: 5, drinksCount: 3, viewsThisMonth: 1000, location: 'Addis Ababa', phone: '+251 9' };
           this.addEditModalOpen = true;
         },
 
@@ -1926,149 +1129,176 @@ get estimatedTotalRevenue() {
 
         saveRestaurantForm() {
           if (this.isEditMode) {
-            const idx = this.restaurants.findIndex(r => r.id === this.form.id);
-            if (idx !== -1) this.restaurants[idx] = { ...this.form };
-            this.triggerToast('Restaurant profile updated successfully!');
+            const index = this.restaurants.findIndex(r => r.id === this.form.id);
+            if (index !== -1) {
+              this.restaurants[index] = { ...this.form };
+            }
+            this.triggerToast('Restaurant updated successfully!');
           } else {
-            this.restaurants.unshift({ ...this.form });
-            this.triggerToast('New restaurant added to portfolio!');
+            const newRest = { ...this.form, id: 'rest-' + Date.now() };
+            this.restaurants.push(newRest);
+            this.triggerToast('New restaurant added successfully!');
           }
           this.addEditModalOpen = false;
         },
 
         toggleSuspend(rest) {
           rest.status = rest.status === 'Suspended' ? 'Active' : 'Suspended';
-          this.triggerToast(`Restaurant ${rest.name} set to ${rest.status}`);
+          this.triggerToast(`Restaurant status changed to ${rest.status}`);
         },
 
         confirmDelete(rest) {
-          if (confirm(`Are you sure you want to remove ${rest.name}?`)) {
+          if (confirm(`Are you sure you want to delete ${rest.name}?`)) {
             this.restaurants = this.restaurants.filter(r => r.id !== rest.id);
-            this.triggerToast(`${rest.name} removed from platform.`);
+            this.triggerToast('Restaurant deleted from platform.');
           }
         },
 
         loginAsRestaurant(rest) {
-          this.triggerToast(`Redirecting to ${rest.name} store portal...`);
+          this.triggerToast(`Simulating secure login session for ${rest.name}...`);
         },
 
         togglePaymentStatus(pay) {
           pay.status = pay.status === 'Paid' ? 'Unpaid' : 'Paid';
-          this.triggerToast(`Payment ${pay.id} marked as ${pay.status}`);
-        },
-
-        triggerToast(msg) {
-          this.toast.message = msg;
-          this.toast.show = true;
-          setTimeout(() => { this.toast.show = false; }, 3000);
+          this.triggerToast(`Invoice ${pay.id} marked as ${pay.status}`);
         },
 
         initCharts() {
-          this.$nextTick(() => {
-            // Dashboard Main Growth Chart
-            const ctx1 = document.getElementById('dashboardPerformanceChart')?.getContext('2d');
-            if (ctx1) {
-              new Chart(ctx1, {
-                type: 'line',
-                data: {
-                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                  datasets: [{
-                    label: 'Menu Views',
-                    data: [150000, 180000, 240000, 310000, 420000, 560000, 680000, 890000, 1020000, 1180000, 1340000, 1482900],
-                    borderColor: '#a855f7',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(168, 85, 247, 0.1)'
-                  }]
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
-                  scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#71717a' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#71717a' } }
-                  }
+          // Dashboard Performance Chart
+          const ctx1 = document.getElementById('dashboardPerformanceChart')?.getContext('2d');
+          if (ctx1) {
+            new Chart(ctx1, {
+              type: 'line',
+              data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                datasets: [{
+                  label: 'Platform Views',
+                  data: [180000, 240000, 310000, 290000, 420000, 482900],
+                  borderColor: '#a855f7',
+                  backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 3
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } },
+                  y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } }
                 }
-              });
-            }
+              }
+            });
+          }
 
-            // Revenue Breakdown Chart
-            const ctx2 = document.getElementById('revenueBreakdownChart')?.getContext('2d');
-            if (ctx2) {
-              new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                  labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                  datasets: [
-                    { label: 'Basic Plans', data: [180000, 240000, 290000, 350000], backgroundColor: '#3b82f6' },
-                    { label: 'Subscriptions', data: [120000, 190000, 280000, 410000], backgroundColor: '#a855f7' }
-                  ]
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                    x: { grid: { display: false }, ticks: { color: '#71717a' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#71717a' } }
+          // Revenue Breakdown Chart
+          const ctx2 = document.getElementById('revenueBreakdownChart')?.getContext('2d');
+          if (ctx2) {
+            new Chart(ctx2, {
+              type: 'bar',
+              data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [
+                  {
+                    label: 'Basic Setups (17,999 ETB)',
+                    data: [45000, 72000, 91000, 105000, 134000, 150000, 179990],
+                    backgroundColor: '#10b981',
+                    borderRadius: 6
+                  },
+                  {
+                    label: 'Subscriptions',
+                    data: [80000, 95000, 110000, 130000, 155000, 180000, 218900],
+                    backgroundColor: '#a855f7',
+                    borderRadius: 6
                   }
+                ]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#ffffff' } } },
+                scales: {
+                  x: { stacked: true, grid: { display: false }, ticks: { color: '#a1a1aa' } },
+                  y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } }
                 }
-              });
-            }
+              }
+            });
+          }
 
-            // Plan Distribution Chart
-            const ctx3 = document.getElementById('planDistributionChart')?.getContext('2d');
-            if (ctx3) {
-              new Chart(ctx3, {
-                type: 'doughnut',
-                data: {
-                  labels: ['Basic Plan', 'Premium Plan'],
-                  datasets: [{ data: [65, 35], backgroundColor: ['#3b82f6', '#a855f7'], borderWidth: 0 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } } }
-              });
-            }
+          // Plan Distribution Donut Chart
+          const ctx3 = document.getElementById('planDistributionChart')?.getContext('2d');
+          if (ctx3) {
+            new Chart(ctx3, {
+              type: 'doughnut',
+              data: {
+                labels: ['Premium Subscriptions', 'Basic One-Time'],
+                datasets: [{
+                  data: [65, 35],
+                  backgroundColor: ['#a855f7', '#34d399'],
+                  borderWidth: 0
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#ffffff', boxWidth: 12 } } }
+              }
+            });
+          }
 
-            // Category Distribution Chart
-            const ctx4 = document.getElementById('categoryDistributionChart')?.getContext('2d');
-            if (ctx4) {
-              new Chart(ctx4, {
-                type: 'pie',
-                data: {
-                  labels: ['Mains', 'Specials', 'Drinks', 'Desserts', 'Breakfast'],
-                  datasets: [{ data: [40, 25, 20, 10, 5], backgroundColor: ['#10b981', '#a855f7', '#f59e0b', '#ec4899', '#3b82f6'], borderWidth: 0 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } } }
-              });
-            }
+          // Category Distribution Chart
+          const ctx4 = document.getElementById('categoryDistributionChart')?.getContext('2d');
+          if (ctx4) {
+            new Chart(ctx4, {
+              type: 'doughnut',
+              data: {
+                labels: ['Meat & Tibs', 'Beverages & Tej', 'Burgers & Pizza', 'Traditional Vegan'],
+                datasets: [{
+                  data: [40, 25, 20, 15],
+                  backgroundColor: ['#a855f7', '#10b981', '#3b82f6', '#ec4899'],
+                  borderWidth: 0
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#ffffff', boxWidth: 10 } } }
+              }
+            });
+          }
 
-            // Peak Hours Chart
-            const ctx5 = document.getElementById('peakHoursChart')?.getContext('2d');
-            if (ctx5) {
-              new Chart(ctx5, {
-                type: 'bar',
-                data: {
-                  labels: ['12 PM', '1 PM', '2 PM', '6 PM', '7 PM', '8 PM', '9 PM'],
-                  datasets: [{ label: 'Scan Density', data: [65, 90, 45, 75, 98, 85, 50], backgroundColor: '#a855f7', borderRadius: 8 }]
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
-                  scales: {
-                    x: { grid: { display: false }, ticks: { color: '#71717a' } },
-                    y: { grid: { display: false }, ticks: { color: '#71717a' } }
-                  }
+          // Peak Hours Chart
+          const ctx5 = document.getElementById('peakHoursChart')?.getContext('2d');
+          if (ctx5) {
+            new Chart(ctx5, {
+              type: 'line',
+              data: {
+                labels: ['10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM'],
+                datasets: [{
+                  label: 'Scan Frequency',
+                  data: [1200, 18500, 9400, 6200, 24000, 42000, 15300],
+                  borderColor: '#3b82f6',
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                  fill: true,
+                  tension: 0.3
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { grid: { display: false }, ticks: { color: '#a1a1aa' } },
+                  y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } }
                 }
-              });
-            }
-
-          });
+              }
+            });
+          }
         }
       }
     }
   </script>
-
 </body>
 </html>

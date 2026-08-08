@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Awaze - Restaurant Management Portal</title>
   
-  <!-- Cormorant Garamond Font -->
+  <!-- Literata Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Literata"', 'serif'],
           },
         }
       }
@@ -26,9 +26,10 @@
 
   <style>
     body {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Literata', serif;
       background-color: #0b0f0d;
       color: #f1f5f9;
+      font-size: 0.925rem; /* Slightly reduced base font size */
     }
     .scrollbar-thin::-webkit-scrollbar {
       height: 6px;
@@ -63,19 +64,19 @@
     <!-- Login Screen (Feature 1: No switching hotel once logged in) -->
     <template x-if="!isLoggedIn">
       <div class="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#0d1c13] via-[#050806] to-[#020403]">
-        <div class="bg-[#111814] border border-emerald-900/60 p-8 rounded-3xl max-w-md w-full shadow-2xl relative">
+        <div class="bg-[#111814] border border-emerald-900/60 p-6 md:p-8 rounded-3xl max-w-md w-full shadow-2xl relative">
           <div class="flex flex-col items-center text-center mb-6">
-            <div class="h-16 w-16 rounded-full bg-emerald-600/20 border border-emerald-500 flex items-center justify-center mb-4">
-              <span class="text-2xl">🏨</span>
+            <div class="h-14 w-14 rounded-full bg-emerald-600/20 border border-emerald-500 flex items-center justify-center mb-3">
+              <span class="text-xl">🏨</span>
             </div>
-            <h2 class="text-3xl font-bold text-white tracking-tight">AWAZE RESTAURANT PORTAL</h2>
-            <p class="text-sm text-emerald-400 mt-1">Select your establishment to log in</p>
+            <h2 class="text-2xl font-bold text-white tracking-tight">AWAZE RESTAURANT PORTAL</h2>
+            <p class="text-xs text-emerald-400 mt-1">Select your establishment to log in</p>
           </div>
 
           <form @submit.prevent="login()" class="space-y-4">
             <div>
-              <label class="block text-sm font-bold text-zinc-300 uppercase mb-1">Select Establishment</label>
-              <select x-model="loginRestId" class="w-full bg-[#0b0f0d] border border-emerald-900 text-white text-lg rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500">
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Select Establishment</label>
+              <select x-model="loginRestId" class="w-full bg-[#0b0f0d] border border-emerald-900 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
                 <template x-for="(rest, key) in restaurants" :key="key">
                   <option :value="key" x-text="rest.name + ' (' + rest.amharicName + ')'"></option>
                 </template>
@@ -83,11 +84,11 @@
             </div>
 
             <div>
-              <label class="block text-sm font-bold text-zinc-300 uppercase mb-1">Security PIN / Password</label>
-              <input type="password" x-model="loginPin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-[#0b0f0d] border border-emerald-900 text-white text-lg rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" required />
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Security PIN / Password</label>
+              <input type="password" x-model="loginPin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-[#0b0f0d] border border-emerald-900 text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500" required />
             </div>
 
-            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-lg py-3.5 rounded-xl transition shadow-lg shadow-emerald-950/50 cursor-pointer">
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm py-3 rounded-xl transition shadow-lg shadow-emerald-950/50 cursor-pointer">
               Login to Dashboard
             </button>
           </form>
@@ -101,143 +102,143 @@
       <div class="flex flex-col lg:flex-row min-h-screen">
         
         <!-- Sidebar Navigation -->
-        <aside class="w-full lg:w-72 bg-[#0d1410] border-b lg:border-b-0 lg:border-r border-emerald-950 p-6 flex flex-col justify-between shrink-0">
+        <aside class="w-full lg:w-64 bg-[#0d1410] border-b lg:border-b-0 lg:border-r border-emerald-950 p-5 flex flex-col justify-between shrink-0">
           <div>
-            <!-- Hotel Brand (Feature 1: Fixed, no switching allowed here) -->
-            <div class="flex items-center space-x-3 mb-8 p-3 rounded-2xl bg-[#0b0f0d] border border-emerald-900/50">
-              <div class="h-12 w-12 rounded-full bg-emerald-600/20 border border-emerald-500 flex items-center justify-center shrink-0">
-                <span class="text-xl">🏢</span>
+            <!-- Hotel Brand -->
+            <div class="flex items-center space-x-3 mb-6 p-2.5 rounded-2xl bg-[#0b0f0d] border border-emerald-900/50">
+              <div class="h-10 w-10 rounded-full bg-emerald-600/20 border border-emerald-500 flex items-center justify-center shrink-0">
+                <span class="text-base">🏢</span>
               </div>
               <div class="overflow-hidden">
-                <h1 class="font-bold text-lg text-white truncate" x-text="currentRestaurant.name"></h1>
-                <span class="text-emerald-400 text-xs block truncate" x-text="currentRestaurant.location"></span>
+                <h1 class="font-bold text-sm text-white truncate" x-text="currentRestaurant.name"></h1>
+                <span class="text-emerald-400 text-[11px] block truncate" x-text="currentRestaurant.location"></span>
               </div>
             </div>
 
-            <!-- Navigation Tabs -->
-            <nav class="space-y-2">
-              <button @click="activeMainTab = 'dashboard'" :class="activeMainTab === 'dashboard' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-lg transition cursor-pointer">
+            <!-- Navigation Tabs (Reduced text & padding) -->
+            <nav class="space-y-1.5">
+              <button @click="activeMainTab = 'dashboard'" :class="activeMainTab === 'dashboard' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl text-sm transition cursor-pointer">
                 <span>📊</span>
                 <span>Dashboard</span>
               </button>
 
-              <button @click="activeMainTab = 'items'" :class="activeMainTab === 'items' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-lg transition cursor-pointer">
+              <button @click="activeMainTab = 'items'" :class="activeMainTab === 'items' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl text-sm transition cursor-pointer">
                 <span>🍽️</span>
                 <span>Items</span>
               </button>
 
-              <button @click="activeMainTab = 'identity'" :class="activeMainTab === 'identity' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-lg transition cursor-pointer">
+              <button @click="activeMainTab = 'identity'" :class="activeMainTab === 'identity' ? 'bg-emerald-600 text-black font-bold shadow-lg shadow-emerald-950/50' : 'text-zinc-300 hover:text-white hover:bg-emerald-950/30'" class="w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-xl text-sm transition cursor-pointer">
                 <span>⚙️</span>
                 <span>Identity & Profile</span>
               </button>
             </nav>
           </div>
 
-          <div class="pt-6 mt-6 border-t border-emerald-950 flex items-center justify-between">
-            <span class="text-xs text-zinc-400">Locked to session</span>
-            <button @click="logout()" class="text-sm font-bold text-red-400 hover:text-red-300 px-3 py-2 rounded-xl border border-red-950 bg-red-950/20 cursor-pointer">
+          <div class="pt-4 mt-4 border-t border-emerald-950 flex items-center justify-between">
+            <span class="text-[11px] text-zinc-400">Locked session</span>
+            <button @click="logout()" class="text-xs font-bold text-red-400 hover:text-red-300 px-2.5 py-1.5 rounded-lg border border-red-950 bg-red-950/20 cursor-pointer">
               Logout
             </button>
           </div>
         </aside>
 
         <!-- Main Content View Area -->
-        <main class="flex-grow p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
+        <main class="flex-grow p-5 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
           
-          <!-- TAB 1: DASHBOARD (Feature 2) -->
+          <!-- TAB 1: DASHBOARD -->
           <template x-if="activeMainTab === 'dashboard'">
-            <div class="space-y-8">
+            <div class="space-y-6">
               <div>
-                <h2 class="text-3xl font-bold text-white">Management Dashboard</h2>
-                <p class="text-zinc-400 text-sm">Overview of menu metrics, food/drink counts, and average pricing for <span class="text-emerald-400" x-text="currentRestaurant.name"></span>.</p>
+                <h2 class="text-2xl font-bold text-white">Management Dashboard</h2>
+                <p class="text-zinc-400 text-xs">Overview of menu metrics, food/drink counts, and average pricing for <span class="text-emerald-400" x-text="currentRestaurant.name"></span>.</p>
               </div>
 
               <!-- Metric Cards -->
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Total Foods -->
-                <div class="bg-[#111814] border border-emerald-950 p-6 rounded-2xl">
-                  <div class="flex items-center justify-between text-zinc-400 text-sm font-bold uppercase mb-2">
+                <div class="bg-[#111814] border border-emerald-950 p-5 rounded-2xl">
+                  <div class="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-2">
                     <span>Total Foods</span>
-                    <span class="text-emerald-400 text-xl">🍲</span>
+                    <span class="text-emerald-400 text-lg">🍲</span>
                   </div>
-                  <div class="text-4xl font-bold text-white" x-text="foodCount">0</div>
-                  <span class="text-xs text-emerald-400 mt-1 block">Registered food dishes</span>
+                  <div class="text-3xl font-bold text-white" x-text="foodCount">0</div>
+                  <span class="text-[11px] text-emerald-400 mt-1 block">Registered food dishes</span>
                 </div>
 
                 <!-- Total Drinks -->
-                <div class="bg-[#111814] border border-emerald-950 p-6 rounded-2xl">
-                  <div class="flex items-center justify-between text-zinc-400 text-sm font-bold uppercase mb-2">
+                <div class="bg-[#111814] border border-emerald-950 p-5 rounded-2xl">
+                  <div class="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-2">
                     <span>Total Drinks</span>
-                    <span class="text-blue-400 text-xl">🍹</span>
+                    <span class="text-blue-400 text-lg">🍹</span>
                   </div>
-                  <div class="text-4xl font-bold text-white" x-text="drinkCount">0</div>
-                  <span class="text-xs text-blue-400 mt-1 block">Registered beverages</span>
+                  <div class="text-3xl font-bold text-white" x-text="drinkCount">0</div>
+                  <span class="text-[11px] text-blue-400 mt-1 block">Registered beverages</span>
                 </div>
 
                 <!-- Average Food Price -->
-                <div class="bg-[#111814] border border-emerald-950 p-6 rounded-2xl">
-                  <div class="flex items-center justify-between text-zinc-400 text-sm font-bold uppercase mb-2">
+                <div class="bg-[#111814] border border-emerald-950 p-5 rounded-2xl">
+                  <div class="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-2">
                     <span>Avg Food Price</span>
-                    <span class="text-amber-400 text-xl">💰</span>
+                    <span class="text-amber-400 text-lg">💰</span>
                   </div>
-                  <div class="text-3xl font-bold text-amber-400">ETB <span x-text="avgFoodPrice">0</span></div>
-                  <span class="text-xs text-zinc-400 mt-1 block">Average menu cost for food</span>
+                  <div class="text-2xl font-bold text-amber-400">ETB <span x-text="avgFoodPrice">0</span></div>
+                  <span class="text-[11px] text-zinc-400 mt-1 block">Average menu cost for food</span>
                 </div>
 
                 <!-- Average Drink Price -->
-                <div class="bg-[#111814] border border-emerald-950 p-6 rounded-2xl">
-                  <div class="flex items-center justify-between text-zinc-400 text-sm font-bold uppercase mb-2">
+                <div class="bg-[#111814] border border-emerald-950 p-5 rounded-2xl">
+                  <div class="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-2">
                     <span>Avg Drink Price</span>
-                    <span class="text-purple-400 text-xl">🥤</span>
+                    <span class="text-purple-400 text-lg">🥤</span>
                   </div>
-                  <div class="text-3xl font-bold text-purple-400">ETB <span x-text="avgDrinkPrice">0</span></div>
-                  <span class="text-xs text-zinc-400 mt-1 block">Average menu cost for drinks</span>
+                  <div class="text-2xl font-bold text-purple-400">ETB <span x-text="avgDrinkPrice">0</span></div>
+                  <span class="text-[11px] text-zinc-400 mt-1 block">Average menu cost for drinks</span>
                 </div>
               </div>
 
               <!-- Quick Summary Table -->
-              <div class="bg-[#111814] border border-emerald-950 rounded-2xl p-6">
-                <h3 class="text-xl font-bold text-white mb-4">Establishment Quick Facts</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="bg-[#111814] border border-emerald-950 rounded-2xl p-5">
+                <h3 class="text-lg font-bold text-white mb-3">Establishment Quick Facts</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                   <div class="p-3 bg-[#0b0f0d] rounded-xl border border-emerald-950">
-                    <span class="text-zinc-400 block">Amharic Name:</span>
-                    <span class="text-emerald-400 font-bold text-base" x-text="currentRestaurant.amharicName"></span>
+                    <span class="text-zinc-400 block mb-0.5">Amharic Name:</span>
+                    <span class="text-emerald-400 font-bold text-sm" x-text="currentRestaurant.amharicName"></span>
                   </div>
                   <div class="p-3 bg-[#0b0f0d] rounded-xl border border-emerald-950">
-                    <span class="text-zinc-400 block">Primary Location:</span>
-                    <span class="text-white font-bold text-base" x-text="currentRestaurant.location"></span>
+                    <span class="text-zinc-400 block mb-0.5">Primary Location:</span>
+                    <span class="text-white font-bold text-sm" x-text="currentRestaurant.location"></span>
                   </div>
                   <div class="p-3 bg-[#0b0f0d] rounded-xl border border-emerald-950">
-                    <span class="text-zinc-400 block">Tagline:</span>
-                    <span class="text-zinc-200 font-bold text-base" x-text="currentRestaurant.tagline"></span>
+                    <span class="text-zinc-400 block mb-0.5">Tagline:</span>
+                    <span class="text-zinc-200 font-bold text-sm" x-text="currentRestaurant.tagline"></span>
                   </div>
                   <div class="p-3 bg-[#0b0f0d] rounded-xl border border-emerald-950">
-                    <span class="text-zinc-400 block">Total Menu Items:</span>
-                    <span class="text-emerald-400 font-bold text-base" x-text="currentRestaurant.menuItems.length"></span>
+                    <span class="text-zinc-400 block mb-0.5">Total Menu Items:</span>
+                    <span class="text-emerald-400 font-bold text-sm" x-text="currentRestaurant.menuItems.length"></span>
                   </div>
                 </div>
               </div>
             </div>
           </template>
 
-          <!-- TAB 2: ITEMS (Feature 3) -->
+          <!-- TAB 2: ITEMS -->
           <template x-if="activeMainTab === 'items'">
-            <div class="space-y-6">
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="space-y-5">
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                  <h2 class="text-3xl font-bold text-white">Menu Items & Categorization</h2>
-                  <p class="text-zinc-400 text-sm">Browse all foods and drinks with filtering options.</p>
+                  <h2 class="text-2xl font-bold text-white">Menu Items & Categorization</h2>
+                  <p class="text-zinc-400 text-xs">Browse all foods and drinks with filtering options.</p>
                 </div>
 
                 <!-- Filters -->
-                <div class="flex items-center gap-3 w-full sm:w-auto">
-                  <select x-model="itemFilterCategory" class="bg-[#111814] border border-emerald-900 text-sm font-bold text-emerald-400 rounded-xl px-4 py-2.5 focus:outline-none">
+                <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                  <select x-model="itemFilterCategory" class="bg-[#111814] border border-emerald-900 text-xs font-bold text-emerald-400 rounded-xl px-3.5 py-2 focus:outline-none">
                     <option value="all">All Categories</option>
                     <option value="food">Foods Only</option>
                     <option value="drinks">Drinks Only</option>
                   </select>
 
-                  <select x-model="itemFilterSub" class="bg-[#111814] border border-emerald-900 text-sm font-bold text-zinc-300 rounded-xl px-4 py-2.5 focus:outline-none">
+                  <select x-model="itemFilterSub" class="bg-[#111814] border border-emerald-900 text-xs font-bold text-zinc-300 rounded-xl px-3.5 py-2 focus:outline-none">
                     <option value="all">All Sub-Categories</option>
                     <template x-for="sub in uniqueSubCategories" :key="sub">
                       <option :value="sub" x-text="sub"></option>
@@ -246,25 +247,25 @@
                 </div>
               </div>
 
-              <!-- Item Grid (Using the visual layout style inspired by Image 1) -->
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Item Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <template x-for="item in filteredMenuItems" :key="item.id">
                   <div class="bg-[#111814] border border-emerald-950 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between hover:border-emerald-500/50 transition">
                     <div>
-                      <div class="relative h-48 w-full overflow-hidden">
+                      <div class="relative h-40 w-full overflow-hidden">
                         <img :src="item.image" :alt="item.name" class="w-full h-full object-cover" @error="$el.src='https://placehold.co/600x400/111814/10b981?text=Food'">
-                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold uppercase" :class="item.category === 'food' ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-blue-950 text-blue-300 border border-blue-800'" x-text="item.subCategory"></span>
+                        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase" :class="item.category === 'food' ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-blue-950 text-blue-300 border border-blue-800'" x-text="item.subCategory"></span>
                       </div>
-                      <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                          <h3 class="text-xl font-bold text-white" x-text="item.name"></h3>
-                          <span class="text-emerald-400 font-bold text-lg">ETB <span x-text="item.price"></span></span>
+                      <div class="p-4">
+                        <div class="flex justify-between items-start mb-1.5">
+                          <h3 class="text-base font-bold text-white" x-text="item.name"></h3>
+                          <span class="text-emerald-400 font-bold text-sm">ETB <span x-text="item.price"></span></span>
                         </div>
-                        <div class="text-emerald-300 text-sm mb-2" x-text="item.amharicName"></div>
-                        <p class="text-zinc-400 text-xs line-clamp-2" x-text="item.description"></p>
+                        <div class="text-emerald-300 text-xs mb-1.5" x-text="item.amharicName"></div>
+                        <p class="text-zinc-400 text-[11px] line-clamp-2 leading-relaxed" x-text="item.description"></p>
                       </div>
                     </div>
-                    <div class="px-5 py-4 bg-[#0b0f0d] border-t border-emerald-950 flex items-center justify-between text-xs text-zinc-400">
+                    <div class="px-4 py-3 bg-[#0b0f0d] border-t border-emerald-950 flex items-center justify-between text-[11px] text-zinc-400">
                       <span>Prep: <strong class="text-white" x-text="item.prepTime"></strong></span>
                       <span>⭐ <strong class="text-white" x-text="item.rating"></strong> (<span x-text="item.reviews"></span>)</span>
                     </div>
@@ -274,73 +275,73 @@
             </div>
           </template>
 
-          <!-- TAB 3: IDENTITY & PROFILE (Feature 4 with 4 Horizontal Sub-tabs) -->
+          <!-- TAB 3: IDENTITY & PROFILE -->
           <template x-if="activeMainTab === 'identity'">
-            <div class="space-y-6">
+            <div class="space-y-5">
               
-              <!-- 4 Horizontal Sub-Tabs on top -->
-              <div class="flex flex-wrap gap-2 bg-[#111814] p-2 rounded-2xl border border-emerald-950">
-                <button @click="identitySubTab = 'informations'" :class="identitySubTab === 'informations' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-5 py-2.5 rounded-xl text-sm transition cursor-pointer">
+              <!-- 4 Horizontal Sub-Tabs on top (Reduced text size & padding) -->
+              <div class="flex flex-wrap gap-1.5 bg-[#111814] p-1.5 rounded-2xl border border-emerald-950">
+                <button @click="identitySubTab = 'informations'" :class="identitySubTab === 'informations' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">
                   Informations
                 </button>
-                <button @click="identitySubTab = 'edit_profile'" :class="identitySubTab === 'edit_profile' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-5 py-2.5 rounded-xl text-sm transition cursor-pointer">
+                <button @click="identitySubTab = 'edit_profile'" :class="identitySubTab === 'edit_profile' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">
                   Edit Profile
                 </button>
-                <button @click="identitySubTab = 'notifications'" :class="identitySubTab === 'notifications' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-5 py-2.5 rounded-xl text-sm transition cursor-pointer">
+                <button @click="identitySubTab = 'notifications'" :class="identitySubTab === 'notifications' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">
                   Notifications
                 </button>
-                <button @click="identitySubTab = 'change_password'" :class="identitySubTab === 'change_password' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-5 py-2.5 rounded-xl text-sm transition cursor-pointer">
+                <button @click="identitySubTab = 'change_password'" :class="identitySubTab === 'change_password' ? 'bg-emerald-600 text-black font-bold' : 'text-zinc-300 hover:text-white'" class="px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">
                   Change Password
                 </button>
               </div>
 
               <!-- SUB-TAB 1: Informations -->
               <template x-if="identitySubTab === 'informations'">
-                <div class="space-y-6 bg-[#111814] border border-emerald-950 p-6 md:p-8 rounded-3xl">
-                  <div class="flex flex-col md:flex-row items-start md:items-center gap-6 border-b border-emerald-950 pb-6">
-                    <div class="h-24 w-24 rounded-full overflow-hidden border-2 border-emerald-500 shrink-0">
+                <div class="space-y-5 bg-[#111814] border border-emerald-950 p-5 md:p-7 rounded-3xl">
+                  <div class="flex flex-col md:flex-row items-start md:items-center gap-5 border-b border-emerald-950 pb-5">
+                    <div class="h-20 w-20 rounded-full overflow-hidden border-2 border-emerald-500 shrink-0">
                       <img :src="currentRestaurant.logo" alt="Logo" class="w-full h-full object-cover" @error="$el.src='https://placehold.co/150x150/111814/10b981?text=Logo'">
                     </div>
                     <div>
-                      <h2 class="text-3xl font-bold text-white" x-text="currentRestaurant.name"></h2>
-                      <div class="text-xl text-emerald-400 font-bold mb-1" x-text="currentRestaurant.amharicName"></div>
-                      <p class="text-zinc-400 text-sm">📍 <span x-text="currentRestaurant.location"></span></p>
+                      <h2 class="text-2xl font-bold text-white" x-text="currentRestaurant.name"></h2>
+                      <div class="text-lg text-emerald-400 font-bold mb-0.5" x-text="currentRestaurant.amharicName"></div>
+                      <p class="text-zinc-400 text-xs">📍 <span x-text="currentRestaurant.location"></span></p>
                     </div>
                   </div>
 
                   <!-- Descriptions -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-4 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
-                      <h4 class="text-xs uppercase font-bold text-emerald-400 mb-2">Description (English)</h4>
-                      <p class="text-sm text-zinc-300" x-text="currentRestaurant.aboutDescriptionEn"></p>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-3.5 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
+                      <h4 class="text-[11px] uppercase font-bold text-emerald-400 mb-1.5">Description (English)</h4>
+                      <p class="text-xs text-zinc-300 leading-relaxed" x-text="currentRestaurant.aboutDescriptionEn"></p>
                     </div>
-                    <div class="p-4 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
-                      <h4 class="text-xs uppercase font-bold text-emerald-400 mb-2">Description (Amharic - አማርኛ)</h4>
-                      <p class="text-sm text-zinc-300" x-text="currentRestaurant.aboutDescriptionAm"></p>
+                    <div class="p-3.5 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
+                      <h4 class="text-[11px] uppercase font-bold text-emerald-400 mb-1.5">Description (Amharic - አማርኛ)</h4>
+                      <p class="text-xs text-zinc-300 leading-relaxed" x-text="currentRestaurant.aboutDescriptionAm"></p>
                     </div>
                   </div>
 
                   <!-- Subtitles -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-4 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
-                      <h4 class="text-xs uppercase font-bold text-emerald-400 mb-2">Subtitle / Vision (English)</h4>
-                      <p class="text-sm text-zinc-300" x-text="currentRestaurant.aboutSubtitleEn"></p>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-3.5 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
+                      <h4 class="text-[11px] uppercase font-bold text-emerald-400 mb-1.5">Subtitle / Vision (English)</h4>
+                      <p class="text-xs text-zinc-300 leading-relaxed" x-text="currentRestaurant.aboutSubtitleEn"></p>
                     </div>
-                    <div class="p-4 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
-                      <h4 class="text-xs uppercase font-bold text-emerald-400 mb-2">Subtitle / Vision (Amharic)</h4>
-                      <p class="text-sm text-zinc-300" x-text="currentRestaurant.aboutSubtitleAm"></p>
+                    <div class="p-3.5 bg-[#0b0f0d] rounded-2xl border border-emerald-950">
+                      <h4 class="text-[11px] uppercase font-bold text-emerald-400 mb-1.5">Subtitle / Vision (Amharic)</h4>
+                      <p class="text-xs text-zinc-300 leading-relaxed" x-text="currentRestaurant.aboutSubtitleAm"></p>
                     </div>
                   </div>
 
                   <!-- Stats -->
                   <div>
-                    <h3 class="text-xl font-bold text-white mb-3">Establishment Statistics</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <h3 class="text-base font-bold text-white mb-2.5">Establishment Statistics</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <template x-for="stat in currentRestaurant.stats" :key="stat.num">
-                        <div class="bg-[#0b0f0d] p-4 rounded-xl border border-emerald-950 text-center">
-                          <div class="text-3xl font-bold text-emerald-400" x-text="stat.num"></div>
-                          <div class="text-xs text-white font-bold mt-1" x-text="stat.text"></div>
-                          <div class="text-[11px] text-zinc-400" x-text="stat.amharicText"></div>
+                        <div class="bg-[#0b0f0d] p-3.5 rounded-xl border border-emerald-950 text-center">
+                          <div class="text-2xl font-bold text-emerald-400" x-text="stat.num"></div>
+                          <div class="text-xs text-white font-bold mt-0.5" x-text="stat.text"></div>
+                          <div class="text-[10px] text-zinc-400" x-text="stat.amharicText"></div>
                         </div>
                       </template>
                     </div>
@@ -348,12 +349,12 @@
 
                   <!-- Images List -->
                   <div>
-                    <h3 class="text-xl font-bold text-white mb-3">Gallery Images List</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <h3 class="text-base font-bold text-white mb-2.5">Gallery Images List</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <template x-for="slide in currentRestaurant.aboutSlides" :key="slide.title">
                         <div class="bg-[#0b0f0d] rounded-2xl border border-emerald-950 overflow-hidden">
-                          <img :src="slide.image" class="h-36 w-full object-cover">
-                          <div class="p-3 text-center text-sm font-bold text-white" x-text="slide.title"></div>
+                          <img :src="slide.image" class="h-28 w-full object-cover">
+                          <div class="p-2.5 text-center text-xs font-bold text-white" x-text="slide.title"></div>
                         </div>
                       </template>
                     </div>
@@ -361,55 +362,55 @@
                 </div>
               </template>
 
-              <!-- SUB-TAB 2: Edit Profile (Inspired by Image 2 UI style) -->
+              <!-- SUB-TAB 2: Edit Profile -->
               <template x-if="identitySubTab === 'edit_profile'">
-                <div class="bg-[#111814] border border-emerald-950 p-6 md:p-8 rounded-3xl space-y-6">
+                <div class="bg-[#111814] border border-emerald-950 p-5 md:p-7 rounded-3xl space-y-5">
                   <div>
-                    <h3 class="text-2xl font-bold text-white">Edit Establishment Profile</h3>
-                    <p class="text-zinc-400 text-sm">Update name, tagline, location, logo, and descriptions shown on the information tab.</p>
+                    <h3 class="text-xl font-bold text-white">Edit Establishment Profile</h3>
+                    <p class="text-zinc-400 text-xs">Update name, tagline, location, logo, and descriptions shown on the information tab.</p>
                   </div>
 
-                  <form @submit.prevent="saveProfileChanges()" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <form @submit.prevent="saveProfileChanges()" class="space-y-3.5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Restaurant Name (English)</label>
-                        <input type="text" x-model="editForm.name" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500" required>
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Restaurant Name (English)</label>
+                        <input type="text" x-model="editForm.name" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-emerald-500" required>
                       </div>
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Restaurant Name (Amharic)</label>
-                        <input type="text" x-model="editForm.amharicName" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Restaurant Name (Amharic)</label>
+                        <input type="text" x-model="editForm.amharicName" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-emerald-500">
                       </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Location / Branch</label>
-                        <input type="text" x-model="editForm.location" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500" required>
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Location / Branch</label>
+                        <input type="text" x-model="editForm.location" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-emerald-500" required>
                       </div>
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Logo URL</label>
-                        <input type="url" x-model="editForm.logo" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Logo URL</label>
+                        <input type="url" x-model="editForm.logo" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-emerald-500">
                       </div>
                     </div>
 
                     <div>
-                      <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Tagline</label>
-                      <input type="text" x-model="editForm.tagline" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                      <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Tagline</label>
+                      <input type="text" x-model="editForm.tagline" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none focus:border-emerald-500">
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Description (English)</label>
-                        <textarea x-model="editForm.aboutDescriptionEn" rows="3" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl p-3 text-white text-sm focus:outline-none"></textarea>
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Description (English)</label>
+                        <textarea x-model="editForm.aboutDescriptionEn" rows="3" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl p-3 text-white text-xs focus:outline-none"></textarea>
                       </div>
                       <div>
-                        <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Description (Amharic)</label>
-                        <textarea x-model="editForm.aboutDescriptionAm" rows="3" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl p-3 text-white text-sm focus:outline-none"></textarea>
+                        <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Description (Amharic)</label>
+                        <textarea x-model="editForm.aboutDescriptionAm" rows="3" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl p-3 text-white text-xs focus:outline-none"></textarea>
                       </div>
                     </div>
 
-                    <div class="pt-4 flex justify-end">
-                      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm px-6 py-3 rounded-xl cursor-pointer">
+                    <div class="pt-3 flex justify-end">
+                      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-xs px-5 py-2.5 rounded-xl cursor-pointer">
                         Save Profile Updates
                       </button>
                     </div>
@@ -419,21 +420,21 @@
 
               <!-- SUB-TAB 3: Notifications -->
               <template x-if="identitySubTab === 'notifications'">
-                <div class="bg-[#111814] border border-emerald-950 p-6 md:p-8 rounded-3xl space-y-4">
-                  <h3 class="text-2xl font-bold text-white mb-2">New Food & Drink Comments</h3>
-                  <p class="text-zinc-400 text-sm mb-4">Customer reviews and feedback submitted on your menu items.</p>
+                <div class="bg-[#111814] border border-emerald-950 p-5 md:p-7 rounded-3xl space-y-3.5">
+                  <h3 class="text-xl font-bold text-white mb-1">New Food & Drink Comments</h3>
+                  <p class="text-zinc-400 text-xs mb-3">Customer reviews and feedback submitted on your menu items.</p>
                   
-                  <div class="space-y-3">
+                  <div class="space-y-2.5">
                     <template x-for="notif in notifications" :key="notif.id">
-                      <div class="p-4 bg-[#0b0f0d] rounded-2xl border border-emerald-950 flex items-start space-x-4">
-                        <span class="text-2xl">💬</span>
+                      <div class="p-3.5 bg-[#0b0f0d] rounded-2xl border border-emerald-950 flex items-start space-x-3">
+                        <span class="text-xl">💬</span>
                         <div class="flex-grow">
                           <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-white text-base" x-text="notif.user"></span>
-                            <span class="text-xs text-zinc-500" x-text="notif.time"></span>
+                            <span class="font-bold text-white text-sm" x-text="notif.user"></span>
+                            <span class="text-[11px] text-zinc-500" x-text="notif.time"></span>
                           </div>
-                          <p class="text-sm text-emerald-300 mb-1">Item: <strong x-text="notif.item"></strong></p>
-                          <p class="text-sm text-zinc-300" x-text="notif.comment"></p>
+                          <p class="text-xs text-emerald-300 mb-0.5">Item: <strong x-text="notif.item"></strong></p>
+                          <p class="text-xs text-zinc-300" x-text="notif.comment"></p>
                         </div>
                       </div>
                     </template>
@@ -443,24 +444,24 @@
 
               <!-- SUB-TAB 4: Change Password -->
               <template x-if="identitySubTab === 'change_password'">
-                <div class="bg-[#111814] border border-emerald-950 p-6 md:p-8 rounded-3xl max-w-lg mx-auto space-y-4">
-                  <h3 class="text-2xl font-bold text-white mb-1">Change Security PIN</h3>
-                  <p class="text-zinc-400 text-sm mb-4">Update your administrative login password.</p>
+                <div class="bg-[#111814] border border-emerald-950 p-5 md:p-7 rounded-3xl max-w-md mx-auto space-y-3.5">
+                  <h3 class="text-xl font-bold text-white mb-0.5">Change Security PIN</h3>
+                  <p class="text-zinc-400 text-xs mb-3">Update your administrative login password.</p>
 
-                  <form @submit.prevent="updatePassword()" class="space-y-4">
+                  <form @submit.prevent="updatePassword()" class="space-y-3.5">
                     <div>
-                      <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Current Password</label>
-                      <input type="password" x-model="passForm.current" placeholder="Enter current PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none" required>
+                      <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Current Password</label>
+                      <input type="password" x-model="passForm.current" placeholder="Enter current PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none" required>
                     </div>
                     <div>
-                      <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">New Password</label>
-                      <input type="password" x-model="passForm.newPass" placeholder="Enter new PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none" required>
+                      <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">New Password</label>
+                      <input type="password" x-model="passForm.newPass" placeholder="Enter new PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none" required>
                     </div>
                     <div>
-                      <label class="block text-xs font-bold text-zinc-400 uppercase mb-1">Confirm New Password</label>
-                      <input type="password" x-model="passForm.confirm" placeholder="Confirm new PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-4 py-3 text-white text-sm focus:outline-none" required>
+                      <label class="block text-[11px] font-bold text-zinc-400 uppercase mb-1">Confirm New Password</label>
+                      <input type="password" x-model="passForm.confirm" placeholder="Confirm new PIN" class="w-full bg-[#0b0f0d] border border-emerald-900 rounded-xl px-3.5 py-2.5 text-white text-xs focus:outline-none" required>
                     </div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold py-3 rounded-xl cursor-pointer">
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-xs py-2.5 rounded-xl cursor-pointer">
                       Update Password
                     </button>
                   </form>
@@ -491,7 +492,6 @@
         passForm: { current: '', newPass: '', confirm: '' },
         editForm: {},
 
-        // Feature 7: Exact object structure requested
         restaurants: {
           girum: {
             id: 'girum',
@@ -575,8 +575,8 @@
                 prepTime: '3 min',
                 tag: 'Traditional',
                 amharicTag: 'ባህላዊ',
-                description: 'Aged traditional Ethiopian honey wine brewed withgesho leaves.',
-                amharicDescription: 'ከተመረጠ ማር እናጌሾ የተዘጋጀባህላዊየጠጅመጠጥ።',
+                description: 'Aged traditional Ethiopian honey wine brewed with gesho leaves.',
+                amharicDescription: 'ከተመረጠ ማር እና ጌሾ የተዘጋጀ ባህላዊ የጠጅ መጠጥ።',
                 image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80&w=600',
                 spicy: false
               },
@@ -594,7 +594,7 @@
                 tag: 'Refreshing',
                 amharicTag: 'አዲስ',
                 description: 'Freshly blended creamy avocado with a hint of lime and layered mango.',
-                amharicDescription: 'ከተፈጥሮአቮካዶየተዘጋጀጣፋጭጭማቂ።',
+                amharicDescription: 'ከተፈጥሮ አቮካዶ የተዘጋጀ ጣፋጭ ጭማቂ።',
                 image: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&q=80&w=600',
                 spicy: false
               }

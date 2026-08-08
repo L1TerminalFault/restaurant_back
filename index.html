@@ -177,7 +177,7 @@
       setTimeout(() => { this.showToast = false; }, 3000);
     },
     navigateToRestaurant() {
-      window.location.href = 'src/rest.html';
+      window.location.href = 'src/menu.html';
     },
     submitLead() {
       if(!this.contactForm.restaurant || !this.contactForm.phone) return;
@@ -207,7 +207,7 @@
 
       <!-- Primary Action CTA -->
       <div class="flex items-center space-x-4">
-        <a href="src/rest.html" class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">
+        <a href="src/menu.html" class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">
           Look at sample <br><span class="font-bold">ናሙና ይመልከቱ</span>
         </a>
       </div>
@@ -256,10 +256,10 @@
           </div>
         </div>
 
-        <!-- The Smartphone Container (Redirects to rest.html on click) -->
+        <!-- The Smartphone Container (Redirects to menu.html on click) -->
         <div 
           @click="navigateToRestaurant()"
-          title="Click to enter rest.html demo"
+          title="Click to enter menu.html demo"
           class="phone-body cursor-pointer relative w-[280px] sm:w-[310px] h-[570px] bg-zinc-950 rounded-[48px] p-3 border-[4px] border-zinc-700/80 group overflow-hidden select-none"
         >
           <!-- Outer Titanium Rim / Button Accents -->
@@ -350,7 +350,7 @@
 
       <!-- Action Button below Hero Mockup -->
       <div class="pt-2">
-        <a href="src/rest.html" class="bg-zinc-900 hover:bg-zinc-800 text-brand-400 border border-brand-500/30 font-black px-8 py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-xl">
+        <a href="src/menu.html" class="bg-zinc-900 hover:bg-zinc-800 text-brand-400 border border-brand-500/30 font-black px-8 py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-xl">
           Explore Sample Modal
         </a>
       </div>
