@@ -731,24 +731,13 @@
         <div class="lg:col-span-5 flex flex-col justify-center space-y-6 z-10">
           <div class="space-y-2">
             <span class="text-emerald-400 font-black text-sm tracking-widest uppercase"> / <span x-text="t('aboutUsTag')"></span></span>
-            <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight uppercase" x-text="currentRestaurant.name"></h2>
+            <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight uppercase" x-text="lang === 'am' ? currentRestaurant.amharicName : currentRestaurant.name"></h2>
           </div>
 
           <p class="text-zinc-300 text-sm leading-relaxed" x-text="lang === 'am' ? currentRestaurant.aboutDescriptionAm : currentRestaurant.aboutDescriptionEn"></p>
           <p class="text-zinc-400 text-xs leading-relaxed" x-text="lang === 'am' ? currentRestaurant.aboutSubtitleAm : currentRestaurant.aboutSubtitleEn"></p>
 
-          <div class="pt-2">
-            <a 
-              href="#menu-list-section" 
-              @click="scrollToMenu()"
-              class="inline-flex items-center space-x-2 text-xs font-extrabold text-emerald-400 hover:text-emerald-300 uppercase tracking-wider transition-colors cursor-pointer"
-            >
-              <span x-text="t('watchMenuVideo')"></span>
-              <svg class="h-4 w-4 transform rotate-[-45deg]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </div>
+          
         </div>
 
         <!-- Right Column: Slide-able Image Gallery dynamic from currentRestaurant.aboutSlides -->
@@ -901,8 +890,7 @@
             ratingLabel: "Rating",
             yourCommentPlaceholder: "Write your dining experience...",
             postCommentBtn: "Submit Review",
-            aboutUsTag: "A LITTLE ABOUT US",
-            watchMenuVideo: "WATCH MENU VIDEO"
+            aboutUsTag: "A LITTLE ABOUT US"
           },
           am: {
             searchPlaceholder: "ምግብ እና መጠጦችን ይፈልጉ...",
@@ -940,8 +928,7 @@
             ratingLabel: "ደረጃ",
             yourCommentPlaceholder: "ስለ ምግቡ ያለዎትን ስሜት ይፃፉ...",
             postCommentBtn: "አስተያየት ላክ",
-            aboutUsTag: "ስለ ኩባንያችን",
-            watchMenuVideo: "የሜኑ ቪዲዮ ይመልከቱ"
+            aboutUsTag: "ስለ ኩባንያችን"
           }
         },
 
@@ -1555,7 +1542,6 @@
             ],
             stats: [
               { num: '10', text: 'years of excellence', amharicText: 'የላቀ አገልግሎት ዓመታት' },
-              { num: '120', text: 'gourmet recipes', amharicText: 'ልዩ የምግብ አዘገጃጀቶች' },
               { num: '85', text: 'expert staff', amharicText: 'ባለሙያ ሰራተኞች' }
             ],
             menuItems: [
@@ -1603,7 +1589,7 @@
                 amharicPairing: 'ከሲትረስ ጭማቂ ጋር በጣም ይስማማል።',
                 image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
                 spicy: false,
-                calories: '710 kcal'
+                calories: '580 kcal'
               }
             ]
           }
