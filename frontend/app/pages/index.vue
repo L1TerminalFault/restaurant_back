@@ -1,196 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Awaze Digitals</title>
-  <link rel="icon" type="png" href="assets/awaze_logo.png">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              200: '#a7f3d0',
-              300: '#6ee7b7',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-              900: '#064e3b',
-              950: '#022c22',
-            },
-            amber: {
-              400: '#fbbf24',
-              500: '#f59e0b',
-            },
-            obsidian: {
-              800: '#121a14',
-              900: '#090e0b',
-              950: '#030604',
-            }
-          },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
-            serif: ['Playfair Display', 'serif'],
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'float-delayed': 'float 6s ease-in-out 3s infinite',
-            'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
-            'shimmer': 'shimmer 3s infinite linear',
-          },
-          keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-              '50%': { transform: 'translateY(-14px) rotate(1deg)' },
-            },
-            pulseGlow: {
-              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
-              '50%': { opacity: '0.8', transform: 'scale(1.08)' },
-            },
-            shimmer: {
-              '0%': { transform: 'translateX(-100%)' },
-              '100%': { transform: 'translateX(100%)' }
-            }
-          }
-        }
-      }
-    }
-  </script>
+<script setup lang="ts">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">    
-  <!-- Alpine.js -->
-  <script src="https://unpkg.com/alpinejs" defer></script>
+</script>
 
-  <style>
-    [x-cloak] { display: none !important; }
-    
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #030604; }
-    ::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
-
-    /* Radial Spotlight Background */
-    .spotlight-hero {
-      background: radial-gradient(circle at 50% 35%, rgba(16, 185, 129, 0.16) 0%, rgba(245, 158, 11, 0.08) 35%, rgba(3, 6, 4, 1) 75%);
-    }
-
-    /* Modern Glass Effects */
-    .glass-panel {
-      background: rgba(12, 18, 14, 0.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(16, 185, 129, 0.12);
-    }
-
-    /* Realistic Smartphone Mockup Styling */
-    .phone-body {
-      box-shadow: 
-        0 25px 60px -15px rgba(0, 0, 0, 0.9),
-        0 0 40px 2px rgba(16, 185, 129, 0.25),
-        inset 0 0 0 2px rgba(255, 255, 255, 0.15),
-        inset 0 0 0 4px rgba(40, 45, 42, 0.8);
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
-    }
-
-    .phone-body:hover {
-      transform: translateY(-8px) scale(1.02) rotate(-0.5deg);
-      box-shadow: 
-        0 35px 75px -15px rgba(0, 0, 0, 0.95),
-        0 0 60px 8px rgba(16, 185, 129, 0.4),
-        inset 0 0 0 2px rgba(255, 255, 255, 0.25);
-    }
-
-    .phone-screen-glare {
-      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 40%, transparent 60%);
-    }
-
-    .shimmer-button {
-      position: relative;
-      overflow: hidden;
-    }
-    .shimmer-button::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transform: translateX(-100%);
-    }
-    .shimmer-button:hover::after {
-      animation: shimmer 1.5s infinite;
-    }
-
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
-</head>
-
-<body 
-  class="bg-obsidian-950 text-zinc-100 font-sans antialiased selection:bg-brand-500 selection:text-black min-h-screen relative overflow-x-hidden"
-  x-data="{ 
-    sampleModalOpen: false,
-    contactModalOpen: false,
-    activeDishModal: null,
-    contactSuccess: false,
-    toastMessage: '',
-    showToast: false,
-    activeTab: 'all',
-    searchQuery: '',
-    roiTables: 24,
-    roiAvgBill: 750,
-    contactForm: { restaurant: '', phone: '', plan: 'Basic Plan (17,999 ETB)' },
-    cart: [],
-    dishes: [
-      { id: 1, category: 'specials', nameEn: 'Sizzling Ribeye Tibs', nameAm: 'የስጋ ጥብስ', descEn: 'Sautéed prime ribeye beef cubes with rosemary, garlic, sliced jalapenos & warm spiced butter.', price: 680, image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=500&auto=format&fit=crop', ingredients: ['Prime Ribeye', 'Nitir Qibe', 'Rosemary'] },
-      { id: 2, category: 'mains', nameEn: 'Awaze Gourmet Burger', nameAm: 'አዋዜ ጉርሜ በርገር', descEn: 'Double aged beef patties, sharp cheddar cheese, house chili jam, caramelized onions.', price: 420, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500&auto=format&fit=crop', ingredients: ['Angus Beef', 'Brioche', 'Cheddar'] },
-      { id: 3, category: 'mains', nameEn: 'Doro Wat Platter', nameAm: 'ልዩ የዶሮ ወጥ', descEn: 'Slow-cooked spiced chicken stew with eggs, served with organic teff injera.', price: 750, image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=500&auto=format&fit=crop', ingredients: ['Chicken', 'Berbere', 'Injera'] },
-      { id: 4, category: 'drinks', nameEn: 'Grand Yirgacheffe Macchiato', nameAm: 'ይርጋጨፌ ማኪያቶ', descEn: 'Single-origin southern highland espresso with velvet steamed micro-foam milk.', price: 95, image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?q=80&w=500&auto=format&fit=crop', ingredients: ['Yirgacheffe Coffee', 'Steamed Milk'] }
-    ],
-    get filteredDishes() {
-      return this.dishes.filter(d => {
-        const matchesCat = this.activeTab === 'all' || d.category === this.activeTab;
-        const q = this.searchQuery.toLowerCase().trim();
-        return matchesCat && (!q || d.nameEn.toLowerCase().includes(q) || d.nameAm.toLowerCase().includes(q));
-      });
-    },
-    addToCart(dish) {
-      const existing = this.cart.find(i => i.id === dish.id);
-      if(existing) { existing.qty++; } else { this.cart.push({ ...dish, qty: 1 }); }
-      this.triggerToast('Added ' + dish.nameEn + ' to sample order');
-    },
-    get cartCount() { return this.cart.reduce((s, i) => s + i.qty, 0); },
-    get cartSubtotal() { return this.cart.reduce((s, i) => s + (i.price * i.qty), 0); },
-    triggerToast(msg) {
-      this.toastMessage = msg;
-      this.showToast = true;
-      setTimeout(() => { this.showToast = false; }, 3000);
-    },
-    navigateToRestaurant() {
-      window.location.href = 'src/menu.html';
-    },
-    submitLead() {
-      if(!this.contactForm.restaurant || !this.contactForm.phone) return;
-      this.contactSuccess = true;
-      setTimeout(() => { 
-        this.contactSuccess = false; 
-        this.contactModalOpen = false;
-        this.triggerToast('Request sent successfully! We will contact you shortly.');
-      }, 2500);
-    }
-  }"
->
-
+<template>
+  <div class="bg-black">
   <!-- Top Header Bar -->
   <header class="sticky top-0 z-50 bg-obsidian-950/85 backdrop-blur-md border-b border-brand-900/30 px-6 lg:px-12 py-4">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
@@ -198,7 +11,7 @@
       <!-- Brand Logo -->
       <a href="#" class="flex items-center space-x-3 group">
         <div class="w-10 h-10 p-[2px] group-hover:scale-105 transition-transform">
-          <img src="/assets/awaze_logo.png" alt="Logo">
+          <img src="/assets/images/awaze_logo.png" alt="Logo">
         </div>
         <div class="flex flex-col">
           <span class="font-black text-xl tracking-tight text-white uppercase leading-none">AWAZE <span class="text-transparent text-[1px]">.</span><span class="text-brand-400 text-xl uppercase font-bold tracking-widest mt-1"> አዋዜ</span></span>
@@ -228,7 +41,7 @@
       <div class="space-y-3 max-w-3xl">
         <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight uppercase leading-none">
           Digital Menus <br/>
-          <span class="font-bold block sm:inline bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-emerald-200 to-amber-400">ዲጂታል የምግብ ዝርዝሮች</span><br>
+          <span class="font-bold block sm:inline-block bg-clip-text text-transparent bg-linear-to-r from-brand-400 via-emerald-200 to-amber-400">ዲጂታል የምግብ ዝርዝሮች</span><br>
         </h1>
         <p class="text-xs sm:text-sm text-zinc-400 uppercase tracking-widest font-semibold max-w-md mx-auto pt-2">
           Create Appetite. Eliminate Printing Costs.<br><span class="normal-case font-normal text-zinc-300 text-[11px]">ምግብዎን ማራኪ ያድርጉ • የታተመ ወረቀት ወጪን ያስወግዱ</span>
@@ -257,9 +70,8 @@
         </div>
 
         <!-- The Smartphone Container (Redirects to menu.html on click) -->
+        <NuxtLink to="/menu">
         <div 
-          @click="navigateToRestaurant()"
-          title="Click to enter menu.html demo"
           class="phone-body cursor-pointer relative w-[280px] sm:w-[310px] h-[570px] bg-zinc-950 rounded-[48px] p-3 border-[4px] border-zinc-700/80 group overflow-hidden select-none"
         >
           <!-- Outer Titanium Rim / Button Accents -->
@@ -299,7 +111,7 @@
               <!-- Hero Dish Item inside Phone Screen -->
               <div class="relative h-36 rounded-2xl overflow-hidden border border-brand-900/40 group-hover:scale-[1.02] transition-transform">
                 <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent"></div>
                 <div class="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-end">
                   <div>
                     <span class="text-[7px] font-black uppercase text-amber-400 bg-black/60 px-1.5 py-0.5 rounded">Chef's Choice</span>
@@ -336,8 +148,8 @@
             </div>
 
             <!-- Tap Overlay Trigger Callout inside Phone Screen -->
-            <div class="z-20 w-full py-2.5 bg-gradient-to-r from-brand-500 to-amber-500 rounded-xl text-black font-black text-[10px] uppercase tracking-widest text-center shadow-lg group-hover:brightness-110 transition-all flex items-center justify-center space-x-2">
-              <span>Touch Screen to Open</span>
+            <div class="z-20 text-black! w-full py-2.5 bg-linear-to-r from-brand-500 to-amber-500 rounded-xl  font-black text-[10px] uppercase tracking-widest text-center shadow-lg group-hover:brightness-110 transition-all flex items-center justify-center space-x-2">
+              <span >Touch Screen to Open</span>
               <span class="text-xs">→</span>
             </div>
 
@@ -346,8 +158,8 @@
 
           </div>
         </div>
+      </NuxtLink>
       </div>
-
       <!-- Action Button below Hero Mockup -->
       <div class="pt-2">
         <a href="src/menu.html" class="bg-zinc-900 hover:bg-zinc-800 text-brand-400 border border-brand-500/30 font-black px-8 py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-xl">
@@ -499,7 +311,7 @@
                 <span class="text-brand-400">+22.4% Average</span>
               </div>
               <div class="w-full h-3 bg-zinc-900 rounded-full overflow-hidden p-0.5 border border-zinc-800">
-                <div class="h-full bg-gradient-to-r from-brand-500 to-amber-400 rounded-full transition-all duration-300" :style="'width: ' + Math.min(100, (roiTables * roiAvgBill) / 500) + '%'"></div>
+                <div class="h-full bg-linear-to-r from-brand-500 to-amber-400 rounded-full transition-all duration-300" :style="'width: ' + Math.min(100, (roiTables * roiAvgBill) / 500) + '%'"></div>
               </div>
             </div>
 
@@ -556,7 +368,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
       
       <!-- Basic Plan -->
-      <div class="bg-gradient-to-b from-brand-950/80 to-obsidian-900 border-2 border-brand-500 p-8 rounded-[36px] flex flex-col justify-between shadow-2xl relative">
+      <div class="bg-linear-to-b from-brand-950/80 to-obsidian-900 border-2 border-brand-500 p-8 rounded-[36px] flex flex-col justify-between shadow-2xl relative">
         <div class="absolute -top-3.5 right-8 bg-brand-500 text-black px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
           Recommended / ተመራጭ
         </div>
@@ -693,7 +505,7 @@
         
         <!-- Partner 1 -->
         <div class="bg-[#0d1410] border border-emerald-950/80 hover:border-emerald-600/60 rounded-2xl p-6 text-center transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
+          <div class="w-16 h-16 mx-auto rounded-full bg-linear-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
             K
           </div>
           <h3 class="text-lg font-extrabold text-white">Kaldi's Coffee</h3>
@@ -702,7 +514,7 @@
 
         <!-- Partner 2 -->
         <div class="bg-[#0d1410] border border-emerald-950/80 hover:border-emerald-600/60 rounded-2xl p-6 text-center transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
+          <div class="w-16 h-16 mx-auto rounded-full bg-linear-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
             F
           </div>
           <h3 class="text-lg font-extrabold text-white">Fikre Kunspagna</h3>
@@ -711,7 +523,7 @@
 
         <!-- Partner 3 -->
         <div class="bg-[#0d1410] border border-emerald-950/80 hover:border-emerald-600/60 rounded-2xl p-6 text-center transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
+          <div class="w-16 h-16 mx-auto rounded-full bg-linear-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
             L
           </div>
           <h3 class="text-lg font-extrabold text-white">London Cafe</h3>
@@ -720,7 +532,7 @@
 
         <!-- Partner 4 -->
         <div class="bg-[#0d1410] border border-emerald-950/80 hover:border-emerald-600/60 rounded-2xl p-6 text-center transition-all group">
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
+          <div class="w-16 h-16 mx-auto rounded-full bg-linear-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-black font-black text-xl mb-4 group-hover:scale-110 transition-transform">
             L
           </div>
           <h3 class="text-lg font-extrabold text-white">London Cafe</h3>
@@ -783,7 +595,7 @@
       <!-- Column 1: Brand Info -->
       <div class="md:col-span-5 space-y-4">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-amber-500 p-[2px] shadow-lg shadow-brand-500/20">
+          <div class="w-10 h-10 rounded-xl bg-linear-to-tr from-brand-500 to-amber-500 p-[2px] shadow-lg shadow-brand-500/20">
             <div class="w-full h-full bg-obsidian-950 rounded-[9px] flex items-center justify-center font-black text-brand-400 text-lg">A</div>
           </div>
           <div>
@@ -876,20 +688,184 @@
   </footer>
 
   <!-- Toast Notification Bar -->
-  <div 
-    x-show="showToast" 
-    x-cloak 
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 translate-y-4"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 translate-y-4"
-    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[130] bg-brand-500 text-black font-black text-xs px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-2"
-  >
-    <span>✦</span>
-    <span x-text="toastMessage"></span>
-  </div>
+  <!-- <div  -->
+  <!--   x-show="showToast"  -->
+  <!--   x-cloak  -->
+  <!--   x-transition:enter="transition ease-out duration-300" -->
+  <!--   x-transition:enter-start="opacity-0 translate-y-4" -->
+  <!--   x-transition:enter-end="opacity-100 translate-y-0" -->
+  <!--   x-transition:leave="transition ease-in duration-200" -->
+  <!--   x-transition:leave-start="opacity-100 translate-y-0" -->
+  <!--   x-transition:leave-end="opacity-0 translate-y-4" -->
+  <!--   class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[130] bg-brand-500 text-black font-black text-xs px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-2" -->
+  <!-- > -->
+  <!--   <span>✦</span> -->
+  <!--   <span x-text="toastMessage"></span> -->
+  <!-- </div> -->
+    </div>
+</template>
 
-</body>
-</html>
+<style>
+/* CSS Variables */
+:root {
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
+  --color-brand-950: #022c22;
+
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+
+  --color-obsidian-800: #121a14;
+  --color-obsidian-900: #090e0b;
+  --color-obsidian-950: #030604;
+
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-serif: "Playfair Display", serif;
+}
+
+/* Global Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #030604;
+}
+::-webkit-scrollbar-thumb {
+  background: #064e3b;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Animations */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out 3s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite linear;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Custom UI Utilities */
+.spotlight-hero {
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(16, 185, 129, 0.16) 0%,
+    rgba(245, 158, 11, 0.08) 35%,
+    rgba(3, 6, 4, 1) 75%
+  );
+}
+
+.glass-panel {
+  background: rgba(12, 18, 14, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+.phone-body {
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.9),
+    0 0 40px 2px rgba(16, 185, 129, 0.25),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.15),
+    inset 0 0 0 4px rgba(40, 45, 42, 0.8);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.phone-body:hover {
+  transform: translateY(-8px) scale(1.02) rotate(-0.5deg);
+  box-shadow:
+    0 35px 75px -15px rgba(0, 0, 0, 0.95),
+    0 0 60px 8px rgba(16, 185, 129, 0.4),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+.phone-screen-glare {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    transparent 60%
+  );
+}
+
+.shimmer-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%);
+}
+
+.shimmer-button:hover::after {
+  animation: shimmer 1.5s infinite;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+</style>
