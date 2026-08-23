@@ -19,11 +19,11 @@
       </a>
 
       <!-- Primary Action CTA -->
+      <NuxtLink to="/menu">
       <div class="flex items-center space-x-4">
-        <a href="src/menu.html" class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">
-          Look at sample <br><span class="font-bold">ናሙና ይመልከቱ</span>
-        </a>
+          <h1 class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">Look at sample <br><span class="font-bold">ናሙና ይመልከቱ</span></h1>
       </div>
+      </NuxtLink>
 
     </div>
   </header>
