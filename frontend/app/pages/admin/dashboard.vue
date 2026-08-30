@@ -111,7 +111,7 @@
             <div class="mgmt-cards">
               <div class="mgmt-card green"><span>Who Paid</span><div class="mgmt-value">{{ paidCount }}</div><p>Subscriptions active & up-to-date</p></div>
               <div class="mgmt-card red"><span>Who Didn't Pay</span><div class="mgmt-value">{{ unpaidCount }}</div><p>Pending or past-due renewal</p></div>
-              <div class="mgmt-card purple"><span>Upcoming Renewals</span><div class="mgmt-value">12</div><p>Due within next 7 days</p></div>
+              <div class="mgmt-card purple"><span>Upcoming Renewals</span><div class="mgmt-value">{{ upcomingRenewalsCount }}</div><p>Due within next 7 days</p></div>
             </div>
             <div class="table-wrap">
               <table>
@@ -134,22 +134,22 @@
           <!-- TAB: ANALYTICS -->
           <div v-show="currentTab === 'analytics'" class="tab-section">
             <div class="rev-metrics">
-              <div class="rev-card"><span class="rev-label">Total Platform Views</span><div class="rev-value">1,482,900</div><span class="rev-sub" style="color:#a855f7">+18.4% vs last month</span></div>
-              <div class="rev-card"><span class="rev-label">Average / Restaurant</span><div class="rev-value">35,307</div><span class="rev-sub" style="color:#34d399">Monthly Scan Average</span></div>
-              <div class="rev-card"><span class="rev-label">Most Viewed</span><div class="rev-value" style="font-size:1.1rem">Bole Hub Restaurant</div><span class="rev-sub" style="color:#f59e0b">94,200 Menu Views</span></div>
-              <div class="rev-card"><span class="rev-label">Least Viewed</span><div class="rev-value" style="font-size:1.1rem">Entoto Breeze Cafe</div><span class="rev-sub" style="color:#ec4899">1,410 Menu Views</span></div>
+              <div class="rev-card"><span class="rev-label">Total Venues</span><div class="rev-value">{{ restaurants.length }}</div><span class="rev-sub" style="color:#a855f7">Registered in platform</span></div>
+              <div class="rev-card"><span class="rev-label">Average Items / Venue</span><div class="rev-value">{{ avgItemsPerRestaurant }}</div><span class="rev-sub" style="color:#34d399">Menu density</span></div>
+              <div class="rev-card"><span class="rev-label">Top Venue</span><div class="rev-value" style="font-size:1.1rem" v-text="topVenue?.name || 'N/A'"></div><span class="rev-sub" style="color:#f59e0b">{{ topVenue?.foodsCount || 0 }} Items</span></div>
+              <div class="rev-card"><span class="rev-label">Latest Venue</span><div class="rev-value" style="font-size:1.1rem" v-text="restaurants[restaurants.length - 1]?.name || 'N/A'"></div><span class="rev-sub" style="color:#ec4899">Active Partner</span></div>
             </div>
             <div class="chart-row triple">
-              <div class="chart-card"><h3><i class="fa-solid fa-fire" style="color:#f59e0b"></i> Top Viewed Foods</h3>
+              <div class="chart-card"><h3><i class="fa-solid fa-fire" style="color:#f59e0b"></i> Active Venues Portfolio</h3>
                 <div class="top-foods">
-                  <div v-for="(food, idx) in topFoods" :key="idx" class="top-food-item">
-                    <div class="top-food-left"><span class="top-food-rank">#{{ idx + 1 }}</span><div><h5>{{ food.name }}</h5><span>{{ food.category }}</span></div></div>
-                    <span class="top-food-views">{{ food.views.toLocaleString() }} views</span>
+                  <div v-for="(rest, idx) in restaurants" :key="rest.id" class="top-food-item">
+                    <div class="top-food-left"><span class="top-food-rank">#{{ idx + 1 }}</span><div><h5>{{ rest.name }}</h5><span>{{ rest.location }}</span></div></div>
+                    <span class="top-food-views">{{ rest.foodsCount }} items</span>
                   </div>
                 </div>
               </div>
-              <div class="chart-card"><h3>Popular Categories</h3><div class="chart-wrap"><canvas ref="catChart"></canvas></div></div>
-              <div class="chart-card"><h3>Peak Scanning Hours</h3><div class="chart-wrap"><canvas ref="peakChart"></canvas></div></div>
+              <div class="chart-card"><h3>Plan Breakdown</h3><div class="chart-wrap"><canvas ref="catChart"></canvas></div></div>
+              <div class="chart-card"><h3>Platform Overview</h3><div class="chart-wrap"><canvas ref="peakChart"></canvas></div></div>
             </div>
           </div>
         </div>
@@ -252,6 +252,14 @@ async function loadBackendDashboard() {
         drinksCount: 0,
         viewsThisMonth: 0
       }))
+      payments.value = list.map((r: any, idx: number) => ({
+        id: `INV-2026-${100 + idx}`,
+        restaurantName: r.name_en || r.name || 'Restaurant',
+        plan: r.subscription?.plan === 'premium' ? 'Premium' : 'Basic',
+        amount: r.subscription?.plan === 'premium' ? 3500 : 17999,
+        status: r.subscription?.status === 'active' || r.subscription?.status === 'Paid' ? 'Paid' : 'Unpaid',
+        date: new Date().toLocaleDateString()
+      }))
     }
   } catch (e) {
     console.warn('Dashboard fetch error:', e)
@@ -262,26 +270,36 @@ onMounted(() => {
   loadBackendDashboard()
 })
 
-
 const activeCount = computed(() => restaurants.value.filter(r => r.status === 'Active').length)
 const premiumCount = computed(() => restaurants.value.filter(r => r.plan === 'Premium').length)
 const basicCount = computed(() => restaurants.value.filter(r => r.plan === 'Basic').length)
 const paidCount = computed(() => payments.value.filter(p => p.status === 'Paid').length)
 const unpaidCount = computed(() => payments.value.filter(p => p.status === 'Unpaid').length)
+const upcomingRenewalsCount = computed(() => payments.value.filter(p => p.status === 'Unpaid').length)
+
+const avgItemsPerRestaurant = computed(() => {
+  if (restaurants.value.length === 0) return 0
+  const total = restaurants.value.reduce((acc, r) => acc + (r.foodsCount || 0), 0)
+  return Math.round(total / restaurants.value.length)
+})
+
+const topVenue = computed(() => {
+  if (restaurants.value.length === 0) return null
+  return restaurants.value.reduce((prev, curr) => (curr.foodsCount > prev.foodsCount ? curr : prev), restaurants.value[0])
+})
 
 const miniMetrics = computed(() => [
-  { label: 'Active', value: activeCount.value, sub: '94% Operational', icon: 'fa-solid fa-circle-check', color: '#34d399' },
-  { label: 'Subscriptions', value: premiumCount.value, sub: 'High LTV Tier', icon: 'fa-solid fa-crown', color: '#a855f7' },
+  { label: 'Active Venues', value: activeCount.value, sub: 'Operational', icon: 'fa-solid fa-circle-check', color: '#34d399' },
+  { label: 'Premium Subscriptions', value: premiumCount.value, sub: 'High Tier', icon: 'fa-solid fa-crown', color: '#a855f7' },
   { label: 'Basic Plan', value: basicCount.value, sub: 'Standard Tier', icon: 'fa-solid fa-seedling', color: '#3b82f6' },
-  { label: 'New This Month', value: '+18', sub: '+28% growth MoM', icon: 'fa-solid fa-sparkles', color: '#ec4899' },
+  { label: 'Total Menu Items', value: restaurants.value.reduce((acc, r) => acc + (r.foodsCount || 0), 0), sub: 'Backend items', icon: 'fa-solid fa-utensils', color: '#ec4899' },
 ])
 
 const revMetricCards = computed(() => [
-  { label: "Today's Revenue", value: 'ETB 14,500', sub: '+12% vs yesterday', color: '#34d399' },
-  { label: 'This Month', value: 'ETB 218,900', sub: 'Target 88% Reached', color: '#a855f7' },
-  { label: 'Total Revenue', value: `ETB ${(payments.value.filter(p => p.status === 'Paid').reduce((a, c) => a + c.amount, 0) + 342000).toLocaleString()}`, sub: 'YoY +34%', color: '#f59e0b' },
-  { label: 'Basic Plans Sold', value: String(basicCount.value), sub: '17,999 ETB / Unit', color: '#3b82f6' },
-  { label: 'Subscriptions Joined', value: String(premiumCount.value), sub: 'New Monthly Recurrent', color: '#ec4899' },
+  { label: "Active Venues", value: String(restaurants.value.length), sub: "Registered partners", color: "#34d399" },
+  { label: "Premium Tier", value: String(premiumCount.value), sub: "Premium subscribers", color: "#a855f7" },
+  { label: "Basic Tier", value: String(basicCount.value), sub: "Basic plan partners", color: "#3b82f6" },
+  { label: "Avg Items / Partner", value: String(avgItemsPerRestaurant.value), sub: "Menu coverage", color: "#ec4899" },
 ])
 
 const filteredRestaurants = computed(() => restaurants.value.filter(r => {
@@ -373,11 +391,60 @@ function destroyCharts() { chartInstances.forEach(c => c.destroy()); chartInstan
 function initCharts() {
   destroyCharts()
   const chartOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } } } }
-  if (perfChart.value) chartInstances.push(new Chart(perfChart.value, { type: 'line', data: { labels: ['W1','W2','W3','W4','W5','W6'], datasets: [{ label: 'Views', data: [180000,240000,310000,290000,420000,482900], borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,0.1)', fill: true, tension: 0.4, borderWidth: 3 }] }, options: chartOpts }))
-  if (revChart.value) chartInstances.push(new Chart(revChart.value, { type: 'bar', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul'], datasets: [{ label: 'Basic', data: [45000,72000,91000,105000,134000,150000,179990], backgroundColor: '#10b981', borderRadius: 6 }, { label: 'Subs', data: [80000,95000,110000,130000,155000,180000,218900], backgroundColor: '#a855f7', borderRadius: 6 }] }, options: { ...chartOpts, plugins: { legend: { labels: { color: '#fff' } } }, scales: { x: { stacked: true, grid: { display: false }, ticks: { color: '#a1a1aa' } }, y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } } } } }))
-  if (planChart.value) chartInstances.push(new Chart(planChart.value, { type: 'doughnut', data: { labels: ['Premium','Basic'], datasets: [{ data: [65,35], backgroundColor: ['#a855f7','#34d399'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', boxWidth: 12 } } } } }))
-  if (catChart.value) chartInstances.push(new Chart(catChart.value, { type: 'doughnut', data: { labels: ['Meat & Tibs','Beverages','Burgers','Vegan'], datasets: [{ data: [40,25,20,15], backgroundColor: ['#a855f7','#10b981','#3b82f6','#ec4899'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', boxWidth: 10 } } } } }))
-  if (peakChart.value) chartInstances.push(new Chart(peakChart.value, { type: 'line', data: { labels: ['10AM','12PM','2PM','4PM','6PM','8PM','10PM'], datasets: [{ label: 'Scans', data: [1200,18500,9400,6200,24000,42000,15300], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 }] }, options: chartOpts }))
+  
+  const restNames = restaurants.value.map(r => r.name)
+  const restFoods = restaurants.value.map(r => r.foodsCount)
+  
+  if (perfChart.value) {
+    chartInstances.push(new Chart(perfChart.value, {
+      type: 'line',
+      data: {
+        labels: restNames.length > 0 ? restNames : ['No Venues'],
+        datasets: [{ label: 'Foods Count', data: restFoods.length > 0 ? restFoods : [0], borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,0.1)', fill: true, tension: 0.4, borderWidth: 3 }]
+      },
+      options: chartOpts
+    }))
+  }
+  if (revChart.value) {
+    chartInstances.push(new Chart(revChart.value, {
+      type: 'bar',
+      data: {
+        labels: ['Basic Tier', 'Premium Tier'],
+        datasets: [{ label: 'Venues', data: [basicCount.value, premiumCount.value], backgroundColor: ['#10b981', '#a855f7'], borderRadius: 6 }]
+      },
+      options: { ...chartOpts, plugins: { legend: { labels: { color: '#fff' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#a1a1aa' } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#a1a1aa' } } } }
+    }))
+  }
+  if (planChart.value) {
+    chartInstances.push(new Chart(planChart.value, {
+      type: 'doughnut',
+      data: {
+        labels: ['Premium Plan', 'Basic Plan'],
+        datasets: [{ data: [premiumCount.value, basicCount.value], backgroundColor: ['#a855f7', '#34d399'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', boxWidth: 12 } } } }
+    }))
+  }
+  if (catChart.value) {
+    chartInstances.push(new Chart(catChart.value, {
+      type: 'doughnut',
+      data: {
+        labels: ['Premium', 'Basic'],
+        datasets: [{ data: [premiumCount.value, basicCount.value], backgroundColor: ['#a855f7', '#10b981'], borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff', boxWidth: 10 } } } }
+    }))
+  }
+  if (peakChart.value) {
+    chartInstances.push(new Chart(peakChart.value, {
+      type: 'line',
+      data: {
+        labels: restNames.length > 0 ? restNames : ['No Venues'],
+        datasets: [{ label: 'Menu Items', data: restFoods.length > 0 ? restFoods : [0], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 }]
+      },
+      options: chartOpts
+    }))
+  }
 }
 
 onMounted(() => { nextTick(() => initCharts()) })
