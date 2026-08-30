@@ -81,7 +81,7 @@
               <!-- Awaze Score -->
               <div class="card">
                 <div class="score-header">
-                  <div><h3>⭐ Awaze Score Breakdown</h3><p>Algorithmic quality rating across 6 critical vectors.</p></div>
+                  <div><h3>⭐ Awaze Score Breakdown</h3><p>Algorithmic quality rating across critical vectors.</p></div>
                   <div class="score-badge">Overall: {{ awazeScores.overall }}/100</div>
                 </div>
                 <div class="score-grid">
@@ -96,30 +96,35 @@
               <div class="two-col">
                 <div class="card">
                   <h3>🤖 AI Recommendations</h3>
-                  <p class="card-sub">Actionable revenue insights from scanning patterns.</p>
-                  <div class="ai-rec highlight-rec">"Your coffee menu receives 3× more attention than pastries. Consider creating a <strong>Coffee + Pastry combo</strong>."</div>
-                  <div class="ai-rec">"Breakfast traffic is surging by 22% week-over-week. Ensure your morning staff is fully scheduled by 7:30 AM."</div>
-                  <div class="card-footer">Updated 2 hours ago by Awaze AI Engine</div>
+                  <p class="card-sub">Actionable insights from active backend menu data.</p>
+                  <div v-for="(rec, idx) in aiRecommendations" :key="idx" class="ai-rec" :class="{ 'highlight-rec': idx === 0 }" v-html="rec"></div>
+                  <div class="card-footer">Updated live from backend data</div>
                 </div>
                 <div class="card">
-                  <h3>📈 Monthly Performance Report</h3>
-                  <p class="card-sub">Summary of key business indicators.</p>
+                  <h3>📈 Menu Performance Overview</h3>
+                  <p class="card-sub">Summary of live menu indicators.</p>
                   <div class="report-grid">
-                    <div class="report-item"><span>Visits:</span><strong class="green">↑ 18% growth</strong></div>
-                    <div class="report-item"><span>Top Dish:</span><strong v-text="currentRestaurant?.menuItems?.[0]?.name || 'N/A'"></strong></div>
-                    <div class="report-item"><span>Best / Worst Day:</span><strong>Friday / Tuesday</strong></div>
-                    <div class="report-item"><span>Hidden Opportunity:</span><strong class="amber">Dessert cross-sell</strong></div>
+                    <div class="report-item"><span>Total Items:</span><strong class="green">{{ currentRestaurant?.menuItems?.length || 0 }} items</strong></div>
+                    <div class="report-item"><span>Top Dish:</span><strong v-text="topViewedItem?.name || 'N/A'"></strong></div>
+                    <div class="report-item"><span>Categories:</span><strong v-text="uniqueSubCategories.length"></strong></div>
+                    <div class="report-item"><span>Customer Reviews:</span><strong class="amber">{{ notifications.length }} comments</strong></div>
                   </div>
-                  <div class="card-footer">Overall Score: <strong class="green">91/100 (Top Tier)</strong></div>
+                  <div class="card-footer">Overall Score: <strong class="green">{{ awazeScores.overall }}/100</strong></div>
                 </div>
               </div>
 
               <!-- Analytics Cards -->
               <div class="three-col">
                 <div class="card">
-                  <h3>🔥 Food View Analysis</h3>
-                  <div class="analysis-item good"><span class="analysis-label">Most Viewed: Special Sizzling Tibs</span><p>High viewer interest due to vibrant food photography and top placement.</p></div>
-                  <div class="analysis-item bad"><span class="analysis-label red">Least Viewed: Vegetable Soup</span><p>Buried under beverages section and lacks an appetizing thumbnail.</p></div>
+                  <h3>🔥 Food Popularity Analysis</h3>
+                  <div class="analysis-item good" v-if="topViewedItem">
+                    <span class="analysis-label">Highest Rated: {{ topViewedItem.name }}</span>
+                    <p>Rating: {{ topViewedItem.rating }} ⭐ with {{ topViewedItem.reviews }} reviews.</p>
+                  </div>
+                  <div class="analysis-item bad" v-if="leastViewedItem && leastViewedItem !== topViewedItem">
+                    <span class="analysis-label red">Needs Attention: {{ leastViewedItem.name }}</span>
+                    <p>Price: ETB {{ leastViewedItem.price }}. Consider enhancing description or photo.</p>
+                  </div>
                 </div>
                 <div class="card">
                   <h3>📊 Category View Percentages</h3>
@@ -131,12 +136,12 @@
                   </div>
                 </div>
                 <div class="card">
-                  <h3>🔄 Customer Comparison Pairs</h3>
-                  <p class="card-sub">Dishes viewed consecutively in single sessions.</p>
+                  <h3>🔄 Menu Item Pairings</h3>
+                  <p class="card-sub">Items available in current menu structure.</p>
                   <div class="compare-list">
-                    <div class="compare-item"><span>Sizzling Tibs vs. Doro Wot</span><span class="green">42% match</span></div>
-                    <div class="compare-item"><span>Avocado Smoothie vs. Honey Tej</span><span class="green">31% match</span></div>
-                    <div class="compare-item"><span>Veggie Platter vs. Special Tibs</span><span class="green">25% match</span></div>
+                    <div v-for="pair in comparisonPairs" :key="pair.pair" class="compare-item">
+                      <span v-text="pair.pair"></span><span class="green" v-text="pair.match"></span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -144,30 +149,28 @@
               <!-- Peak Hours + Arrangement -->
               <div class="two-col">
                 <div class="card">
-                  <h3>⏰ Peak Scan Hours</h3>
+                  <h3>⏰ Active Categories Summary</h3>
                   <div class="peak-grid">
-                    <div class="peak-item"><span>12:00 - 14:00</span><strong class="green">Lunch Rush</strong></div>
-                    <div class="peak-item"><span>16:00 - 18:00</span><strong class="blue">Coffee Peak</strong></div>
-                    <div class="peak-item"><span>19:00 - 22:00</span><strong class="amber">Dinner Rush</strong></div>
-                    <div class="peak-item"><span>Other Hours</span><strong class="muted">Standard</strong></div>
+                    <div v-for="sub in uniqueSubCategories" :key="sub" class="peak-item">
+                      <span v-text="sub"></span><strong class="green">Active</strong>
+                    </div>
                   </div>
                 </div>
                 <div class="card">
-                  <h3>📈 Arrangement Impact Analysis</h3>
+                  <h3>📈 Menu Health Analysis</h3>
                   <div class="analysis-item good">
-                    <p>✓ Moving Sizzling Tibs to the top banner increased order clicks by <strong>34%</strong>.</p>
-                    <p class="muted-text">Refining high-res photography and placing traditional honey drinks first yielded a 28% increase in beverage basket sizes.</p>
+                    <p v-html="arrangementImpact"></p>
                   </div>
                 </div>
               </div>
 
               <!-- Competitor -->
               <div class="card">
-                <h3>🏢 Competitor Benchmarking Insights (Anonymous)</h3>
-                <p class="card-sub">Market comparison against neighboring establishments.</p>
+                <h3>🏢 Establishment Status Insights</h3>
+                <p class="card-sub">Data overview derived from backend records.</p>
                 <div class="two-col">
-                  <div class="competitor-box"><span class="green label">Market Standard Average</span><p>Most neighborhood restaurants average 120 QR scans daily with 45s viewing and 4 dessert items.</p></div>
-                  <div class="competitor-box"><span class="amber label">Areas Competitors Outperform</span><p>Higher cocktail variety and faster checkout. Your establishment excels in photography and food quality.</p></div>
+                  <div class="competitor-box"><span class="green label">Current Setup</span><p v-text="competitorInsights.standard"></p></div>
+                  <div class="competitor-box"><span class="amber label">Recommendation</span><p v-text="competitorInsights.outperform"></p></div>
                 </div>
               </div>
             </div>
@@ -326,28 +329,114 @@ const loadedRestaurant = ref<any>({
 })
 const currentRestaurant = computed(() => loadedRestaurant.value)
 
-const dashboardInsights = { bannerHighlight: "Live analytics connected to backend API." }
-const awazeScores = { overall: 90, photography: 90, menuQuality: 90, popularity: 90, customerEngagement: 90, completeness: 100, menuFreshness: 90 }
-const categoryPercentages = []
-
-const dashMetrics = [
-  { label: 'Total QR Scans', emoji: '📱', value: '0', color: '#fff', sub: 'Live metric', subColor: '#34d399' },
-  { label: 'Menu Scans', emoji: '📋', value: '0', color: '#fff', sub: 'Unique digital menu sessions', subColor: '#60a5fa' },
-  { label: 'Daily Visitors', emoji: '👥', value: '0 /day', color: '#f59e0b', sub: 'This week', subColor: '#a1a1aa' },
-  { label: 'Avg Viewing Time', emoji: '⏱️', value: '0s', color: '#a855f7', sub: 'Engagement span', subColor: '#a1a1aa' },
-]
-const scoreItems = [
-  { label: 'Photography', value: awazeScores.photography, color: '#34d399' },
-  { label: 'Menu Quality', value: awazeScores.menuQuality, color: '#34d399' },
-  { label: 'Popularity', value: awazeScores.popularity, color: '#34d399' },
-  { label: 'Engagement', value: awazeScores.customerEngagement, color: '#34d399' },
-  { label: 'Completeness', value: awazeScores.completeness, color: '#34d399' },
-  { label: 'Freshness', value: awazeScores.menuFreshness, color: '#f59e0b' },
-]
-
-const notifications = ref<any[]>([])
-
 const uniqueSubCategories = computed(() => [...new Set((currentRestaurant.value?.menuItems || []).map((i: any) => i.subCategory))])
+
+const dashboardInsights = computed(() => {
+  const top = topViewedItem.value
+  return {
+    bannerHighlight: top
+      ? `Live Analytics: "${top.name}" is currently your highest rated item (${top.rating} ⭐ with ${top.reviews} reviews).`
+      : "Live analytics connected to backend API."
+  }
+})
+
+const categoryPercentages = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  if (items.length === 0) return []
+  const counts: Record<string, number> = {}
+  items.forEach((item: any) => {
+    const cat = item.subCategory || 'General'
+    counts[cat] = (counts[cat] || 0) + 1
+  })
+  return Object.keys(counts).map(cat => ({
+    name: cat,
+    percentage: Math.round((counts[cat] / items.length) * 100)
+  }))
+})
+
+const topViewedItem = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  if (items.length === 0) return null
+  return items.reduce((prev: any, curr: any) => (Number(curr.reviews) > Number(prev.reviews) ? curr : prev), items[0])
+})
+
+const leastViewedItem = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  if (items.length === 0) return null
+  return items.reduce((prev: any, curr: any) => (Number(curr.reviews) < Number(prev.reviews) ? curr : prev), items[0])
+})
+
+const awazeScores = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  const hasLogo = Boolean(currentRestaurant.value?.logo)
+  const hasDesc = Boolean(currentRestaurant.value?.aboutDescriptionEn)
+  const itemsWithPics = items.filter((i: any) => Boolean(i.image)).length
+  const photoScore = items.length > 0 ? Math.round((itemsWithPics / items.length) * 100) : 50
+  const completeness = (hasLogo ? 30 : 0) + (hasDesc ? 30 : 0) + (items.length > 0 ? 40 : 0)
+  return {
+    overall: Math.round((photoScore + completeness) / 2),
+    photography: photoScore,
+    menuQuality: items.length > 5 ? 90 : items.length * 15,
+    popularity: notifications.value.length > 0 ? 85 : 50,
+    customerEngagement: notifications.value.length > 0 ? 90 : 60,
+    completeness: completeness,
+    menuFreshness: 85
+  }
+})
+
+const scoreItems = computed(() => [
+  { label: 'Photography', value: awazeScores.value.photography, color: '#34d399' },
+  { label: 'Menu Quality', value: awazeScores.value.menuQuality, color: '#34d399' },
+  { label: 'Popularity', value: awazeScores.value.popularity, color: '#34d399' },
+  { label: 'Engagement', value: awazeScores.value.customerEngagement, color: '#34d399' },
+  { label: 'Completeness', value: awazeScores.value.completeness, color: '#34d399' },
+  { label: 'Freshness', value: awazeScores.value.menuFreshness, color: '#f59e0b' },
+])
+
+const dashMetrics = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  return [
+    { label: 'Total Items', emoji: '🍽️', value: String(items.length), color: '#fff', sub: 'Live menu items', subColor: '#34d399' },
+    { label: 'Customer Reviews', emoji: '💬', value: String(notifications.value.length), color: '#fff', sub: 'Submitted comments', subColor: '#60a5fa' },
+    { label: 'Categories', emoji: '📂', value: String(uniqueSubCategories.value.length), color: '#f59e0b', sub: 'Active food groups', subColor: '#a1a1aa' },
+    { label: 'Avg Rating', emoji: '⭐', value: items.length > 0 ? (items.reduce((acc: number, i: any) => acc + Number(i.rating || 0), 0) / items.length).toFixed(1) : 'N/A', color: '#a855f7', sub: 'Based on feedback', subColor: '#a1a1aa' },
+  ]
+})
+
+const aiRecommendations = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  if (items.length === 0) return ["Add your first menu items to unlock AI menu insights."]
+  const top = topViewedItem.value
+  const recs = []
+  if (top) {
+    recs.push(`"<strong>${top.name}</strong> is your top dish with an average rating of ${top.rating} ⭐. Feature it prominently on your landing page."`)
+  }
+  recs.push(`"Your establishment has ${items.length} items spread across ${uniqueSubCategories.value.length} categories."`)
+  return recs
+})
+
+const comparisonPairs = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  if (items.length < 2) return []
+  return [
+    { pair: `${items[0]?.name} & ${items[1]?.name}`, match: 'Active Menu Pair' },
+    ...(items.length > 3 ? [{ pair: `${items[2]?.name} & ${items[3]?.name}`, match: 'Active Menu Pair' }] : [])
+  ]
+})
+
+const arrangementImpact = computed(() => {
+  const top = topViewedItem.value
+  if (!top) return "No menu data active."
+  return `Top item <strong>${top.name}</strong> has received ${top.reviews || 0} customer reviews and an average rating of ${top.rating || 5.0} stars.`
+})
+
+const competitorInsights = computed(() => {
+  const items = currentRestaurant.value?.menuItems || []
+  return {
+    standard: `Currently presenting ${items.length} total items across ${uniqueSubCategories.value.length} menu categories.`,
+    outperform: items.length > 5 ? 'Comprehensive menu coverage available to diners.' : 'Consider adding more items to expand your selection.'
+  }
+})
 const filteredMenuItems = computed(() => (currentRestaurant.value?.menuItems || []).filter((item: any) => {
   if (itemFilterCategory.value !== 'all' && item.category !== itemFilterCategory.value) return false
   if (itemFilterSub.value !== 'all' && item.subCategory !== itemFilterSub.value) return false
@@ -366,12 +455,27 @@ async function fetchBackendData() {
       const detailed: any = await apiFetch(`/public/restaurants/${targetId}`)
       if (detailed) {
         let menuItems: any[] = []
+        let liveNotifications: any[] = []
+        let cats: any[] = []
         if (detailed.categories) {
+          cats = detailed.categories.map((c: any) => ({ id: c.id, name: c.name }))
           for (const cat of detailed.categories) {
             if (cat.foods) {
               for (const f of cat.foods) {
+                if (f.comments && f.comments.length > 0) {
+                  for (const c of f.comments) {
+                    liveNotifications.push({
+                      id: c.id,
+                      user: c.author_name || 'Diner',
+                      item: f.name,
+                      comment: c.message || `Rating: ${c.rating}/5 stars`,
+                      time: c.created_at ? new Date(c.created_at).toLocaleTimeString() : 'Recently'
+                    })
+                  }
+                }
                 menuItems.push({
                   id: f.id,
+                  categoryId: cat.id,
                   name: f.name,
                   amharicName: f.name_am || f.name,
                   category: cat.name?.toLowerCase().includes('drink') || cat.name?.toLowerCase().includes('beverage') ? 'drinks' : 'food',
@@ -386,6 +490,13 @@ async function fetchBackendData() {
               }
             }
           }
+        }
+        categoriesList.value = cats
+        if (cats.length > 0 && !foodForm.value.categoryId) {
+          foodForm.value.categoryId = cats[0].id
+        }
+        if (liveNotifications.length > 0) {
+          notifications.value = liveNotifications
         }
         loadedRestaurant.value = {
           id: detailed.id,
