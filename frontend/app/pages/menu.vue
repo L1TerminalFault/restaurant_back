@@ -636,8 +636,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+<script setup lang="ts">
+import { ref, computed, watch, onMounted, onUnmounted, nextTick, reactive } from 'vue'
 
 const isDark = ref(true)
 const lang = ref('en')
@@ -735,8 +735,9 @@ const i18n = {
   }
 }
 
-const categories = [
+const categories = reactive([
   { id: 'all', name: 'All Items', amharicName: 'ሁሉም እቃዎች', iconName: 'grid' },
+  /*
   { id: 'Meat', name: 'Meat', amharicName: 'ሥጋ', iconName: 'utensils' },
   { id: 'Burger', name: 'Burger', amharicName: 'በርገር', iconName: 'utensils' },
   { id: 'Pizza', name: 'Pizza', amharicName: 'ፒዛ', iconName: 'utensils' },
@@ -746,9 +747,11 @@ const categories = [
   { id: 'Seafood', name: 'Seafood', amharicName: 'የባህር ምግብ', iconName: 'fish' },
   { id: 'Beverage', name: 'Beverage', amharicName: 'መጠጦች', iconName: 'cup' },
   { id: 'Coffee', name: 'Coffee & Tea', amharicName: 'ቡና እና ሻይ', iconName: 'cup' }
-]
+  */
+])
 
 const restaurants = ref({
+  /*
   girum: {
     id: 'girum',
     name: 'Girum Burger & Pizza',
@@ -1132,18 +1135,23 @@ const restaurants = ref({
       }
     ]
   }
+  */
 })
 
 const currentRestaurant = computed(() => {
-  return restaurants.value[currentSlug.value] || restaurants.value['girum']
+  return restaurants.value[currentSlug.value] || {
+    name: '', amharicName: '', logo: '', aboutSlides: [], stats: [], menuItems: []
+  }
 })
 
 const visibleCategories = computed(() => {
+  /*
   if (activeType.value === 'food') {
     return categories.filter(c => c.id === 'all' || ['Meat', 'Burger', 'Pizza', 'Chicken', 'Health', 'Bakery', 'Seafood'].includes(c.id))
   } else if (activeType.value === 'drinks') {
     return categories.filter(c => c.id === 'all' || ['Beverage', 'Coffee'].includes(c.id))
   }
+  */
   return categories
 })
 
@@ -1242,35 +1250,35 @@ function getCategoryIcon(iconName) {
 }
 
 function getComments(item) {
-  if (!item) return []
-  if (!item.comments) {
-    item.comments = [
-      {
-        id: 1,
-        author: 'Samuel Kebede',
-        rating: 5,
-        text: 'Absolutely delicious! The preparation and flavor exceeded expectations.',
-        date: '2 days ago'
-      },
-      {
-        id: 2,
-        author: 'Hanna Mulugeta',
-        rating: Math.floor(item.rating),
-        text: 'Fresh ingredients and wonderful presentation. Will definitely order again.',
-        date: '1 week ago'
-      }
-    ]
-  }
+  if (!item || !item.comments) return []
   return item.comments
 }
 
 function getLatestComment(item) {
   const list = getComments(item)
-  return list.length > 0 ? list[0] : { author: 'Guest', rating: 5, text: 'No reviews yet. Be the first to comment!', date: 'Today' }
+  return list.length > 0 ? list[0] : null
 }
 
-function submitComment(item) {
+async function submitComment(item) {
   if (!newCommentAuthor.value.trim() || !newCommentText.value.trim()) return
+  const config = useRuntimeConfig()
+  
+  if (item.id) {
+    try {
+      await $fetch(`/public/foods/${item.id}/comments`, {
+        method: 'POST',
+        baseURL: config.public.apiBase,
+        body: {
+          author_name: newCommentAuthor.value.trim(),
+          rating: Number(newCommentRating.value),
+          message: newCommentText.value.trim()
+        }
+      })
+    } catch(e) {
+      console.error('Error submitting comment to backend:', e)
+    }
+  }
+
   const newComment = {
     id: Date.now(),
     author: newCommentAuthor.value.trim(),
@@ -1328,18 +1336,105 @@ function onImgError(event, fallback) {
   event.target.src = fallback
 }
 
-function updateRestaurantSlug() {
+async function updateRestaurantSlug() {
+  let queryParam = 'girum'
   if (process.client) {
-    const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase()
     const urlParams = new URLSearchParams(window.location.search)
-    const queryParam = urlParams.get('restaurant') || urlParams.get('r')
-    const hash = window.location.hash.replace('#', '').toLowerCase()
-
-    if (path && restaurants.value[path]) currentSlug.value = path
-    else if (queryParam && restaurants.value[queryParam]) currentSlug.value = queryParam
-    else if (hash && restaurants.value[hash]) currentSlug.value = hash
-    else currentSlug.value = 'girum'
+    queryParam = urlParams.get('id') || urlParams.get('restaurant') || urlParams.get('r') || ''
   }
+  
+  const config = useRuntimeConfig()
+  let restData: any = null
+
+  // 1. Try fetching requested restaurant by id/slug
+  if (queryParam) {
+    try {
+      restData = await $fetch(`/public/restaurants/${queryParam}`, { baseURL: config.public.apiBase })
+    } catch(e) {
+      console.warn(`Could not find restaurant '${queryParam}', fetching first available restaurant...`)
+    }
+  }
+
+  // 2. If no queryParam or not found, fetch list of restaurants and take the first one
+  if (!restData) {
+    try {
+      const list: any = await $fetch('/public/restaurants', { baseURL: config.public.apiBase })
+      if (list && list.length > 0) {
+        const firstTarget = list[0].custom_sub_link || list[0].id || list[0].ID
+        restData = await $fetch(`/public/restaurants/${firstTarget}`, { baseURL: config.public.apiBase })
+      }
+    } catch(e) {
+      console.error('Failed to load restaurants from API backend:', e)
+    }
+  }
+
+  if (!restData) {
+    restaurants.value = {}
+    return
+  }
+
+  const restId = restData.id || restData.ID || restData.custom_sub_link || 'default'
+  currentSlug.value = restId
+
+  const newRest = {
+    id: restId,
+    name: restData.name_en || restData.NameEn || restData.name || 'Restaurant',
+    amharicName: restData.name_am || restData.NameAm || '',
+    tagline: restData.slogan || '',
+    location: restData.location || '',
+    logo: restData.logo || '/assets/images/awaze_logo.png',
+    aboutDescriptionEn: restData.longer_description || restData.LongerDescription || '',
+    aboutDescriptionAm: restData.longer_description || restData.LongerDescription || '',
+    aboutSubtitleEn: restData.food_specifications || restData.FoodSpecifications || '',
+    aboutSubtitleAm: restData.food_specifications || restData.FoodSpecifications || '',
+    aboutSlides: (restData.images || restData.Images || []).map((img: string) => ({ title: 'Gallery', image: img })),
+    stats: [],
+    menuItems: [] as any[]
+  }
+
+  categories.length = 0
+  categories.push({ id: 'all', name: 'All Items', amharicName: 'ሁሉም እቃዎች', iconName: 'grid' })
+
+  if (restData.categories && Array.isArray(restData.categories)) {
+    for (const cat of restData.categories) {
+      const cId = cat.id || cat.ID || cat.name
+      const cName = cat.name || cat.Name || 'General'
+      categories.push({ id: cId, name: cName, amharicName: cName, iconName: 'utensils' })
+
+      if (cat.foods && Array.isArray(cat.foods)) {
+        for (const food of cat.foods) {
+          const isDrink = cName.toLowerCase().includes('drink') || cName.toLowerCase().includes('beverage')
+          newRest.menuItems.push({
+            id: food.id || food.ID,
+            name: food.name || food.Name || 'Food Item',
+            amharicName: food.name_am || food.NameAm || food.name || food.Name,
+            category: isDrink ? 'drinks' : 'food',
+            subCategory: cId,
+            price: food.price || food.Price || 0,
+            rating: food.rating_amount && food.rating_count ? Number((food.rating_amount / food.rating_count).toFixed(1)) : 5.0,
+            reviews: food.rating_count || 0,
+            prepTime: food.prep_time_minutes ? `${food.prep_time_minutes} min` : '15 min',
+            tag: food.tag || food.Tag || '',
+            description: food.description || food.Description || '',
+            ingredients: food.ingredients || food.Ingredients || [],
+            pairing: (food.best_pairings || food.BestPairings || []).join(', '),
+            image: food.pic || food.Pic || 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
+            spicy: food.spicy_or_not || food.IsSpicy || false,
+            calories: food.calories ? `${food.calories} kcal` : '',
+            comments: (food.comments || food.Comments || []).map((c: any) => ({
+              id: c.id || c.ID,
+              author: c.author_name || c.AuthorName || 'Guest',
+              rating: c.rating || c.Rating || 5,
+              text: c.message || c.Message || '',
+              date: 'Recently'
+            }))
+          })
+        }
+      }
+    }
+  }
+
+  restaurants.value = { [restId]: newRest }
 }
 
 watch(searchQuery, (val) => {

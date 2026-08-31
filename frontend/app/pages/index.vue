@@ -1,5 +1,25 @@
 <script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
 
+const config = useRuntimeConfig()
+const firstRestaurantId = ref('')
+
+onMounted(async () => {
+  try {
+    const res: any = await $fetch('/public/restaurants', {
+      baseURL: config.public.apiBase
+    })
+    if (res && res.length > 0) {
+      firstRestaurantId.value = res[0].id || res[0].ID || res[0].custom_sub_link
+    }
+  } catch (err) {
+    console.error('Failed to fetch restaurants', err)
+  }
+})
+
+const menuLink = computed(() => {
+  return firstRestaurantId.value ? `/menu?id=${firstRestaurantId.value}` : '/menu'
+})
 </script>
 
 <template>
@@ -19,7 +39,7 @@
       </a>
 
       <!-- Primary Action CTA -->
-      <NuxtLink to="/menu">
+      <NuxtLink :to="menuLink">
       <div class="flex items-center space-x-4">
           <h1 class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">Look at sample <br><span class="font-bold">ናሙና ይመልከቱ</span></h1>
       </div>
@@ -70,7 +90,7 @@
         </div>
 
         <!-- The Smartphone Container (Redirects to menu.html on click) -->
-        <NuxtLink to="/menu">
+        <NuxtLink :to="menuLink">
         <div 
           class="phone-body cursor-pointer relative w-[280px] sm:w-[310px] h-[570px] bg-zinc-950 rounded-[48px] p-3 border-[4px] border-zinc-700/80 group overflow-hidden select-none"
         >
@@ -162,9 +182,9 @@
       </div>
       <!-- Action Button below Hero Mockup -->
       <div class="pt-2">
-        <a href="src/menu.html" class="bg-zinc-900 hover:bg-zinc-800 text-brand-400 border border-brand-500/30 font-black px-8 py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-xl">
+        <NuxtLink :to="menuLink" class="bg-zinc-900 inline-block hover:bg-zinc-800 text-brand-400 border border-brand-500/30 font-black px-8 py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-xl">
           Explore Sample Modal
-        </a>
+        </NuxtLink>
       </div>
 
     </div>
