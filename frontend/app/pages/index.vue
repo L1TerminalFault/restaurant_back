@@ -17,9 +17,7 @@ onMounted(async () => {
   }
 })
 
-const menuLink = computed(() => {
-  return firstRestaurantId.value ? `/menu?id=${firstRestaurantId.value}` : '/menu'
-})
+const menuLink = '/sample-menu'
 </script>
 
 <template>
