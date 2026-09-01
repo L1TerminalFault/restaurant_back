@@ -7,6 +7,7 @@
 ## Pages Added
 
 - Kitchen Page (Needs Login system, Full Integration with backend)
+  - Can copy the login system from the basic login page or sth.
 
 - Games Page
 
