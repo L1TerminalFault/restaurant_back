@@ -162,14 +162,16 @@
         <div class="modal-header"><h3>{{ isEditMode ? 'Edit Restaurant' : 'Add New Restaurant' }}</h3><button @click="addEditModalOpen = false">✕</button></div>
         <form @submit.prevent="saveRestaurantForm" class="modal-form">
           <div class="form-grid">
-            <div><label>Restaurant Name</label><input v-model="form.name" required /></div>
-            <div><label>Owner Name</label><input v-model="form.owner" required /></div>
+            <div><label>Restaurant Name (English)</label><input v-model="form.name" required /></div>
+            <div><label>Restaurant Name (Amharic)</label><input v-model="form.name" required /></div>
+            <div><label>Restaurant Email</label><input v-model="form.owner" required /></div>
+            <div><label>Custom Link</label><input v-model="form.owner" required /></div>
+            <div><label>Slogan</label><input v-model="form.owner" required /></div>
+            <div><label>Description</label><input v-model="form.owner" required /></div>
             <div><label>Plan Type</label><select v-model="form.plan"><option value="Basic">Basic (17,999 ETB)</option><option value="Premium">Premium (Subscription)</option></select></div>
-            <div><label>Status</label><select v-model="form.status"><option value="Active">Active</option><option value="Expired">Expired</option><option value="Suspended">Suspended</option></select></div>
-            <div><label>Foods Count</label><input type="number" v-model.number="form.foodsCount" min="0" /></div>
-            <div><label>Drinks Count</label><input type="number" v-model.number="form.drinksCount" min="0" /></div>
             <div><label>Location</label><input v-model="form.location" required /></div>
             <div><label>Phone Number</label><input v-model="form.phone" required /></div>
+            <div><label>Password</label><input v-model="form.owner" required /></div>
           </div>
           <div class="modal-actions">
             <button type="button" @click="addEditModalOpen = false" class="btn-cancel">Cancel</button>
