@@ -214,7 +214,7 @@
             <div class="flex items-center justify-between pt-3 mt-3 border-t border-emerald-950/40">
               <div>
                 <span class="text-[10px] text-zinc-500 block uppercase font-semibold">{{ t('price') }}</span>
-                <span class="font-black text-emerald-400 text-base md:text-lg">{{ item.price.toLocaleString() }} Birr</span>
+                <span class="font-black text-emerald-400 text-base md:text-lg">{{ (Number(item.price) || 0).toLocaleString() }} Birr</span>
               </div>
 
               <button 
@@ -297,7 +297,7 @@
             
             <div class="mt-3 flex items-baseline gap-2">
               <span class="text-xs text-zinc-400 uppercase font-semibold">{{ t('price') }}:</span>
-              <span class="text-2xl md:text-3xl font-black text-emerald-400">{{ selectedItem.price.toLocaleString() }} Birr</span>
+              <span class="text-2xl md:text-3xl font-black text-emerald-400">{{ (Number(selectedItem.price) || 0).toLocaleString() }} Birr</span>
             </div>
           </div>
 
@@ -1336,32 +1336,39 @@ function onImgError(event, fallback) {
   event.target.src = fallback
 }
 
+const route = useRoute()
+
 async function updateRestaurantSlug() {
-  let queryParam = 'girum'
-  if (process.client) {
-    const urlParams = new URLSearchParams(window.location.search)
-    queryParam = urlParams.get('id') || urlParams.get('restaurant') || urlParams.get('r') || ''
-  }
+  const queryParam = String(route.params.id || route.query.id || route.query.restaurant || route.query.r || '')
   
   const config = useRuntimeConfig()
   let restData: any = null
 
-  // 1. Try fetching requested restaurant by id/slug
+  // 1. Try fetching requested restaurant directly by id/slug
   if (queryParam) {
     try {
       restData = await $fetch(`/public/restaurants/${queryParam}`, { baseURL: config.public.apiBase })
     } catch(e) {
-      console.warn(`Could not find restaurant '${queryParam}', fetching first available restaurant...`)
+      console.warn(`Could not find restaurant '${queryParam}' directly, checking full list...`)
     }
   }
 
-  // 2. If no queryParam or not found, fetch list of restaurants and take the first one
+  // 2. If no queryParam or direct lookup failed, fetch list and find matching or fallback to first
   if (!restData) {
     try {
       const list: any = await $fetch('/public/restaurants', { baseURL: config.public.apiBase })
-      if (list && list.length > 0) {
-        const firstTarget = list[0].custom_sub_link || list[0].id || list[0].ID
-        restData = await $fetch(`/public/restaurants/${firstTarget}`, { baseURL: config.public.apiBase })
+      if (list && Array.isArray(list) && list.length > 0) {
+        let match = null
+        if (queryParam) {
+          match = list.find((r: any) => 
+            (r.id && String(r.id) === queryParam) || 
+            (r.ID && String(r.ID) === queryParam) || 
+            (r.custom_sub_link && r.custom_sub_link === queryParam)
+          )
+        }
+        const target = match || list[0]
+        const targetId = target.id || target.ID || target.custom_sub_link
+        restData = await $fetch(`/public/restaurants/${targetId}`, { baseURL: config.public.apiBase })
       }
     } catch(e) {
       console.error('Failed to load restaurants from API backend:', e)
@@ -1434,6 +1441,99 @@ async function updateRestaurantSlug() {
     }
   }
 
+  if (newRest.menuItems.length === 0) {
+    const defaultCategories = [
+      { id: 'Meat', name: 'Meat & Grills', amharicName: 'ሥጋ እና ጥብስ', iconName: 'fire' },
+      { id: 'Burger', name: 'Gourmet Burgers', amharicName: 'በርገር', iconName: 'hamburger' },
+      { id: 'Health', name: 'Healthy & Vegan', amharicName: 'ጤናማ / የፆም', iconName: 'leaf' },
+      { id: 'Beverage', name: 'Beverages & Drinks', amharicName: 'መጠጦች', iconName: 'glass' }
+    ]
+    categories.push(...defaultCategories)
+    
+    newRest.menuItems = [
+      {
+        id: 'default-f1',
+        name: 'Sizzling Beef Tibs',
+        amharicName: 'የጋለ የጥብስ ሥጋ',
+        category: 'food',
+        subCategory: 'Meat',
+        amharicSubCategory: 'ሥጋ',
+        price: 680,
+        rating: 4.9,
+        reviews: 142,
+        prepTime: '15-20 min',
+        tag: "Chef's Choice",
+        amharicTag: 'የሼፉ መራጭ',
+        description: 'Tender cubed prime beef sauteed with rosemary, red onions, garlic, and fresh green peppers on a piping hot clay skillet. Served with authentic injera.',
+        ingredients: ['Prime Beef Cutlets', 'Rosemary', 'Red Onions', 'Garlic Butter', 'Fresh Jalapeños', 'Awaze Chili Paste'],
+        pairing: 'Best enjoyed with cold draft beer or tej.',
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600',
+        spicy: true,
+        calories: '420 kcal'
+      },
+      {
+        id: 'default-f2',
+        name: 'Royal Beyaynetu Platter',
+        amharicName: 'ሮያል የፆም በያይነቱ',
+        category: 'food',
+        subCategory: 'Health',
+        amharicSubCategory: 'ጤናማ / የፆም',
+        price: 490,
+        rating: 4.8,
+        reviews: 98,
+        prepTime: '10-15 min',
+        tag: 'Popular',
+        amharicTag: 'ተወዳጅ',
+        description: 'A colorful assortment of traditional vegan stews including Kik Alicha, Misir Wot, Gomen, beetroot salad, and chickpea Shiro served over fresh sourdough injera.',
+        ingredients: ['Yellow Split Peas', 'Red Lentils', 'Collard Greens', 'Roasted Chickpea Shiro', 'Beetroot Salad', 'Sourdough Injera'],
+        pairing: 'Complements wonderfully with fresh fruit juices.',
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
+        spicy: false,
+        calories: '310 kcal'
+      },
+      {
+        id: 'default-f3',
+        name: 'Awaze Sheger Burger',
+        amharicName: 'አዋዜ ሸገር በርገር',
+        category: 'food',
+        subCategory: 'Burger',
+        amharicSubCategory: 'በርገር',
+        price: 520,
+        rating: 4.7,
+        reviews: 85,
+        prepTime: '15 min',
+        tag: 'Classic',
+        amharicTag: 'ክላሲክ',
+        description: 'Premium grilled beef patty with sharp cheddar cheese, caramelized onions, signature burger aioli, and crisp lettuce on a toasted sesame brioche bun.',
+        ingredients: ['Angus Beef Patty', 'Sharp Cheddar', 'Caramelized Onions', 'Brioche Bun', 'Garlic Aioli'],
+        pairing: 'Try with iced lemon tea or cold lager.',
+        image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=999&auto=format&fit=crop',
+        spicy: false,
+        calories: '620 kcal'
+      },
+      {
+        id: 'default-d1',
+        name: 'Habesha Cold Lager',
+        amharicName: 'ሐበሻ የቀዘቀዘ ቢራ',
+        category: 'drinks',
+        subCategory: 'Beverage',
+        amharicSubCategory: 'መጠጦች',
+        price: 120,
+        rating: 4.7,
+        reviews: 189,
+        prepTime: '2 min',
+        tag: 'Chilled',
+        amharicTag: 'የቀዘቀዘ',
+        description: 'Premium local beer crafted from pure spring waters, featuring a deep rich malt aroma and exceptionally crisp golden bubbles.',
+        ingredients: ['Barley Malt', 'Hops', 'Pure Mountain Water'],
+        pairing: 'The classic pairing for Sizzling Tibs and burgers.',
+        image: 'https://images.unsplash.com/photo-1500217052183-bc01eee1a74e?q=80&w=688&auto=format&fit=crop',
+        spicy: false,
+        calories: '140 kcal'
+      }
+    ]
+  }
+
   restaurants.value = { [restId]: newRest }
 }
 
@@ -1442,6 +1542,10 @@ watch(searchQuery, (val) => {
     scrollToMenu()
   }
 })
+
+watch(() => route.query, () => {
+  updateRestaurantSlug()
+}, { deep: true })
 
 onMounted(() => {
   updateRestaurantSlug()
