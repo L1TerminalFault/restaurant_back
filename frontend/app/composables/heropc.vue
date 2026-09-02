@@ -8,12 +8,12 @@ import SampleMenu from '~/pages/sample-menu.vue';
     <!-- Ambient Background Glow Circles -->
     <div class="absolute -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-emerald-800 rounded-full blur-[120px] pointer-events-none animate-pulse-glow"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-transparent rounded-full blur-[90px] pointer-events-none"></div>
-    <div class="md:pl-20 md:pr-80 mx-auto flex flex-row items-center text-left z-10 space-y-6 gap-80">
+    <div class="mt-15 mx-auto max-w-350 pr-20 flex flex-row items-center text-left z-10 space-y-6 gap-80">
       
       <!-- Concise Pill Badge -->
       <!-- Ultra-Brief Typography Headline -->
-      <div class="space-y-3 max-w-7xl text-left mt-auto">
-        <h1 class="block sm:inline-block bg-clip-text text-transparent bg-linear-to-r from-brand-400 via-emerald-200 to-amber-400 uppercase tracking-widest font-semibold max-w-md hidden md:block ">************  ************  ************  ************</h1>
+      <div class="relative space-y-3 max-w-7xl text-left mt-auto">
+        <h1 class="bg-clip-text text-transparent bg-linear-to-r from-brand-400 via-emerald-200 to-amber-400 uppercase tracking-widest font-semibold max-w-md">************  ************  ************  ************</h1>
         <h1 class="sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight uppercase leading-none">
           Digital infrastructure<br> for Ethiopian hospitality<br/>
           <!--<span class="font-bold block sm:inline-block bg-clip-text text-transparent bg-linear-to-r from-brand-400 via-emerald-200 to-amber-400">ዲጂታል የምግብ ዝርዝሮች</span><br>-->
@@ -116,7 +116,7 @@ import SampleMenu from '~/pages/sample-menu.vue';
               </div>
 
               <!-- Hero Dish Item inside Phone Screen -->
-              <div class="relative h-36 rounded-2xl overflow-hidden border border-brand-900/40 group-hover:scale-[1.02] transition-transform">
+              <div class="relative h-36 rounded-2xl overflow-hidden border border-brand-700/40 group-hover:scale-[1.02] transition-transform">
                 <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent"></div>
                 <div class="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-end">
