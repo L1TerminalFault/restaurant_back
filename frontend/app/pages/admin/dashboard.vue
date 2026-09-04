@@ -726,14 +726,14 @@ const topFoods = ref<any[]>([]);
 
 async function loadBackendDashboard() {
   try {
-    const list: any = await apiFetch("/public/restaurants");
+    const list: any = await apiFetch("/admin/restaurants");
     if (list && Array.isArray(list)) {
       restaurants.value = list.map((r: any) => ({
         id: r.id || r.ID || r.custom_sub_link,
         name: r.name_en || r.name || "Restaurant",
         name_am: r.name_am || "",
         location: r.location || "Addis Ababa",
-        owner: r.owner?.email || r.owner?.full_name || "Owner",
+        owner: r.owner?.email || r.owner?.full_name || "No owner",
         phone: r.phone || "+251 9",
         plan: r.subscription?.plan === "premium" ? "Premium" : "Basic",
         status: "Active",
@@ -1018,11 +1018,8 @@ function openDetailsModal(rest: any) {
 }
 
 function openRestaurantDashboard(rest: any) {
-  setAuth("admin_bypass_token", {
-    id: rest.id,
-    name: rest.name,
-    email: rest.owner,
-  });
+  // Keep the existing SuperAdmin JWT token - don't overwrite it
+  // Just set the restaurant session so basic.vue knows which restaurant to load
   if (typeof window !== "undefined") {
     localStorage.setItem(
       "awaze_restaurant_session",
@@ -1080,6 +1077,7 @@ async function saveRestaurantForm() {
       custom_sub_link: slug,
       location: form.value.location || "Addis Ababa",
       phone: form.value.phone || "+251 911 000000",
+      email: form.value.owner,
       password: form.value.password || "123456",
       slogan: form.value.slogan || "Welcome",
       longer_description: form.value.longer_description || "",
