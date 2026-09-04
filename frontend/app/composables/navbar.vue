@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import SampleMenu from '~/pages/sample-menu.vue';
 
 </script>
 
@@ -18,9 +17,9 @@ import SampleMenu from '~/pages/sample-menu.vue';
       </a>
 
       <!-- Primary Action CTA -->
-      <NuxtLink :to="SampleMenu">
+      <NuxtLink to="/menu">
       <div class="flex items-center space-x-4">
-          <h1 class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">Look at sample</h1>
+          <h1 class="shimmer-button bg-brand-500 hover:bg-brand-400 text-center text-black font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all active:scale-95">Browse restaurants</h1>
       </div>
       </NuxtLink>
 
