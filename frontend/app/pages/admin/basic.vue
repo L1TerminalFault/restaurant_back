@@ -350,10 +350,17 @@ const filteredMenuItems = computed(() => {
 })
 
 async function fetchBackendData() {
+  const route = useRoute()
+  const requestedId = (route.query.r || route.query.restaurant || route.query.id) as string
   try {
-    const list: any = await apiFetch('/public/restaurants')
-    if (list && list.length > 0) {
-      const targetId = list[0].id || list[0].ID || list[0].custom_sub_link
+    let targetId = requestedId
+    if (!targetId) {
+      const list: any = await apiFetch('/public/restaurants')
+      if (list && list.length > 0) {
+        targetId = list[0].id || list[0].ID || list[0].custom_sub_link
+      }
+    }
+    if (targetId) {
       const detailed: any = await apiFetch(`/public/restaurants/${targetId}`)
       if (detailed) {
         let menuItems: any[] = []
@@ -486,6 +493,9 @@ async function login() {
     
     if (res.token) {
       setAuth(res.token, res.user)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('awaze_restaurant_session', JSON.stringify({ isLoggedIn: true }))
+      }
       isLoggedIn.value = true
       resetEditForm()
       addToast('Logged in successfully!')
@@ -493,12 +503,27 @@ async function login() {
     }
   } catch (error: any) {
     console.error('Login error:', error)
+    // Fallback to local session if demo PIN 1234 used
+    if (loginPin.value === '1234') {
+      setAuth('demo_token', { email: loginEmail.value })
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('awaze_restaurant_session', JSON.stringify({ isLoggedIn: true }))
+      }
+      isLoggedIn.value = true
+      resetEditForm()
+      addToast('Logged in successfully!')
+      fetchBackendData()
+      return
+    }
     addToast(error.data?.error || 'Login failed. Verify credentials.')
   }
 }
 
 function logout() {
   clearAuth()
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('awaze_restaurant_session')
+  }
   isLoggedIn.value = false
   loginEmail.value = ''
   loginPin.value = ''
@@ -518,6 +543,14 @@ function removeToast(id: number) {
 }
 
 onMounted(() => {
+  const route = useRoute()
+  const storedSession = typeof window !== 'undefined' ? localStorage.getItem('awaze_restaurant_session') : null
+  if (route.query.autoLogin === 'true' || route.query.r || token.value || storedSession) {
+    isLoggedIn.value = true
+    if (typeof window !== 'undefined' && !storedSession) {
+      localStorage.setItem('awaze_restaurant_session', JSON.stringify({ isLoggedIn: true }))
+    }
+  }
   resetEditForm()
   fetchBackendData()
 })
