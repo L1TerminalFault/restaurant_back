@@ -20,7 +20,7 @@ onMounted(async () => {
   }
 })
 
-const menuLink = '/sample-menu'
+const menuLink = '/menu'
 </script>
 
 <template>
