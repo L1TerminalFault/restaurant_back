@@ -1,15 +1,21 @@
 import { ref } from 'vue'
 
+const token = ref<string | null>(typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
+const user = ref<any>(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('auth_user') || 'null') : null)
+
 export const useAuth = () => {
-  const token = ref<string | null>(typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
-  const user = ref<any>(typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('auth_user') || 'null') : null)
+  // Sync with localStorage on client
+  if (typeof window !== 'undefined' && !token.value && localStorage.getItem('auth_token')) {
+    token.value = localStorage.getItem('auth_token')
+    user.value = JSON.parse(localStorage.getItem('auth_user') || 'null')
+  }
 
   function setAuth(newToken: string, newUser: any) {
     token.value = newToken
     user.value = newUser
     if (typeof window !== 'undefined') {
       localStorage.setItem('auth_token', newToken)
-      localStorage.setItem('auth_user', JSON.stringify(newUser))
+      localStorage.setItem('auth_user', JSON.stringify(newUser || {}))
     }
   }
 
@@ -36,8 +42,10 @@ export const useApi = () => {
       ...(options.headers || {})
     }
 
-    if (token.value) {
-      headers['Authorization'] = `Bearer ${token.value}`
+    // Only send Authorization header if token exists and is a valid 3-part JWT token
+    const isJwt = (t: any) => typeof t === 'string' && t.split('.').length === 3
+    if (token.value && isJwt(token.value)) {
+      headers['Authorization'] = token.value.startsWith('Bearer ') ? token.value : `Bearer ${token.value}`
     }
 
     return await $fetch<T>(endpoint, {
