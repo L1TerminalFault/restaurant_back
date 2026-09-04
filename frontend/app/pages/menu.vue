@@ -217,16 +217,25 @@
                 <span class="font-black text-emerald-400 text-base md:text-lg">{{ (Number(item.price) || 0).toLocaleString() }} Birr</span>
               </div>
 
-              <button 
-                type="button" 
-                @click.stop="selectItem(item)"
-                class="bg-emerald-950/60 hover:bg-emerald-800/80 text-emerald-400 hover:text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-900/60 flex items-center space-x-1 transition-colors"
-              >
-                <span>{{ t('details') }}</span>
-                <svg class="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              <div class="flex items-center gap-1.5">
+                <button 
+                  type="button" 
+                  @click.stop="triggerOrder(item)"
+                  class="bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black px-3 py-1.5 rounded-lg flex items-center space-x-1 transition-colors shadow-md cursor-pointer"
+                >
+                  <span>🛒 Order</span>
+                </button>
+                <button 
+                  type="button" 
+                  @click.stop="selectItem(item)"
+                  class="bg-emerald-950/60 hover:bg-emerald-800/80 text-emerald-400 hover:text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-900/60 flex items-center space-x-1 transition-colors cursor-pointer"
+                >
+                  <span>{{ t('details') }}</span>
+                  <svg class="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -372,26 +381,26 @@
             >
               <div class="flex items-start gap-3">
                 <div class="w-10 h-10 rounded-full bg-emerald-950 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold shrink-0">
-                  <span>{{ getLatestComment(selectedItem).author ? getLatestComment(selectedItem).author.charAt(0).toUpperCase() : '⭐' }}</span>
+                  <span>{{ getLatestComment(selectedItem)?.author ? getLatestComment(selectedItem).author.charAt(0).toUpperCase() : '⭐' }}</span>
                 </div>
                 <div>
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-xs text-white">{{ getLatestComment(selectedItem).author }}</span>
-                    <span class="text-[10px] text-zinc-400">{{ getLatestComment(selectedItem).date }}</span>
+                    <span class="font-bold text-xs text-white">{{ getLatestComment(selectedItem)?.author || 'Anonymous' }}</span>
+                    <span class="text-[10px] text-zinc-400">{{ getLatestComment(selectedItem)?.date || '' }}</span>
                   </div>
                   <div class="flex items-center space-x-1 text-amber-400 my-0.5">
                     <svg 
                       v-for="i in 5" 
                       :key="i"
                       class="h-3 w-3" 
-                      :class="i <= getLatestComment(selectedItem).rating ? 'fill-amber-400 text-amber-400' : 'text-zinc-600'" 
+                      :class="i <= (getLatestComment(selectedItem)?.rating || 5) ? 'fill-amber-400 text-amber-400' : 'text-zinc-600'" 
                       viewBox="0 0 20 20" 
                       fill="currentColor"
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   </div>
-                  <p class="text-xs text-zinc-300 italic line-clamp-1">{{ getLatestComment(selectedItem).text }}</p>
+                  <p class="text-xs text-zinc-300 italic line-clamp-1">{{ getLatestComment(selectedItem)?.text || 'No comments yet' }}</p>
                 </div>
               </div>
 
@@ -409,8 +418,14 @@
 
             <div class="flex items-center gap-2 w-full sm:w-auto">
               <button 
+                @click="triggerOrder(selectedItem)"
+                class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs px-6 py-3 rounded-lg transition shadow-lg shadow-emerald-950/40 shrink-0 cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <span>🛒 Order Dish</span>
+              </button>
+              <button 
                 @click="closeModal"
-                class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-black font-extrabold text-xs px-6 py-3 rounded-lg transition shadow-lg shadow-emerald-950/40 shrink-0 cursor-pointer"
+                class="w-full sm:w-auto bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold text-xs px-6 py-3 rounded-lg transition shrink-0 cursor-pointer border border-zinc-800"
               >
                 {{ t('closeCard') }}
               </button>
@@ -633,6 +648,96 @@
       </div>
     </footer>
 
+    <!-- ORDER MODAL -->
+    <div 
+      v-if="openOrderModal && orderItem"
+      @click.self="openOrderModal = false"
+      class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <div class="bg-[#0d1410] border border-emerald-800/80 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+        <button 
+          @click="openOrderModal = false"
+          class="absolute top-4 right-4 text-zinc-400 hover:text-white font-bold text-lg"
+        >
+          ✕
+        </button>
+        <div v-if="!orderSuccess">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-emerald-950">
+            <span class="text-2xl">🍲</span>
+            <div>
+              <h3 class="font-bold text-white text-base">{{ getItemMainTitle(orderItem) }}</h3>
+              <span class="text-xs text-emerald-400 font-semibold">{{ (Number(orderItem.price) || 0).toLocaleString() }} Birr</span>
+            </div>
+          </div>
+
+          <form @submit.prevent="submitOrder" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Table Number</label>
+              <input 
+                type="number" 
+                v-model.number="orderForm.tableNumber" 
+                min="1"
+                max="100"
+                required 
+                class="w-full bg-[#050806] border border-emerald-950 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Quantity / Amount</label>
+              <div class="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  @click="orderForm.quantity = Math.max(1, orderForm.quantity - 1)"
+                  class="w-10 h-10 bg-[#050806] border border-emerald-950 text-white font-bold rounded-xl text-sm hover:border-emerald-500 cursor-pointer"
+                >-</button>
+                <input 
+                  type="number" 
+                  v-model.number="orderForm.quantity" 
+                  min="1"
+                  required 
+                  class="w-20 text-center bg-[#050806] border border-emerald-950 text-white font-bold rounded-xl py-2 text-sm focus:outline-none focus:border-emerald-500"
+                />
+                <button 
+                  type="button" 
+                  @click="orderForm.quantity += 1"
+                  class="w-10 h-10 bg-[#050806] border border-emerald-950 text-white font-bold rounded-xl text-sm hover:border-emerald-500 cursor-pointer"
+                >+</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Notes / Special Instructions</label>
+              <textarea 
+                v-model="orderForm.notes" 
+                placeholder="e.g. Extra spicy, no onions, extra injera..." 
+                rows="3"
+                class="w-full bg-[#050806] border border-emerald-950 text-white placeholder-zinc-600 rounded-xl p-3 text-xs focus:outline-none focus:border-emerald-500 resize-none"
+              ></textarea>
+            </div>
+
+            <div class="pt-2 flex justify-end gap-2">
+              <button 
+                type="button" 
+                @click="openOrderModal = false"
+                class="px-4 py-2.5 bg-zinc-900 text-zinc-400 text-xs font-bold rounded-xl border border-zinc-800 cursor-pointer"
+              >Cancel</button>
+              <button 
+                type="submit"
+                class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-extrabold rounded-xl transition shadow-lg shadow-emerald-950/50 cursor-pointer"
+              >Send Order to Kitchen</button>
+            </div>
+          </form>
+        </div>
+
+        <div v-else class="text-center py-6">
+          <div class="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl mx-auto mb-3">✓</div>
+          <h3 class="font-bold text-white text-base">Order Sent to Kitchen!</h3>
+          <p class="text-xs text-zinc-400 mt-1">Table #{{ orderForm.tableNumber }} • {{ orderForm.quantity }}x {{ getItemMainTitle(orderItem) }}</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -646,6 +751,61 @@ const activeType = ref('all')
 const searchQuery = ref('')
 const selectedItem = ref(null)
 const openCommentsModal = ref(false)
+const openOrderModal = ref(false)
+const orderItem = ref<any>(null)
+const orderForm = ref({
+  tableNumber: 1,
+  quantity: 1,
+  notes: ''
+})
+const orderSuccess = ref(false)
+
+function triggerOrder(item: any) {
+  orderItem.value = item
+  orderForm.value = {
+    tableNumber: 1,
+    quantity: 1,
+    notes: ''
+  }
+  openOrderModal.value = true
+}
+
+function submitOrder() {
+  if (!orderItem.value) return
+  
+  const newOrder = {
+    id: Date.now(),
+    tableNumber: Number(orderForm.value.tableNumber) || 1,
+    timeLeftMins: 15,
+    isDelayed: false,
+    status: 'New',
+    createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    items: [
+      {
+        name: getItemMainTitle(orderItem.value),
+        quantity: Number(orderForm.value.quantity) || 1,
+        notes: orderForm.value.notes.trim(),
+        isUnavailable: false
+      }
+    ]
+  }
+
+  try {
+    const existingStr = localStorage.getItem('awaze_kitchen_orders')
+    const existing = existingStr ? JSON.parse(existingStr) : []
+    existing.unshift(newOrder)
+    localStorage.setItem('awaze_kitchen_orders', JSON.stringify(existing))
+  } catch (e) {
+    console.error('Error saving order to localStorage:', e)
+  }
+
+  orderSuccess.value = true
+  setTimeout(() => {
+    orderSuccess.value = false
+    openOrderModal.value = false
+  }, 2000)
+}
+
 const currentSlide = ref(0)
 const currentSlug = ref('girum')
 const menuListSection = ref(null)
@@ -654,7 +814,7 @@ const newCommentAuthor = ref('')
 const newCommentRating = ref(5)
 const newCommentText = ref('')
 
-let slideInterval = null
+let slideInterval: Number | null = null
 
 const i18n = {
   en: {
