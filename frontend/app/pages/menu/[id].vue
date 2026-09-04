@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import MenuPage from '../menu.vue'
+import RestaurantMenuPage from '~/components/RestaurantMenuPage.vue'
 </script>
 
 <template>
-  <MenuPage />
+  <RestaurantMenuPage />
 </template>
