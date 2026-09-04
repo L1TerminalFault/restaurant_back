@@ -9,22 +9,22 @@
             <span class="text-2xl">👨‍🍳</span>
           </div>
           <h2 class="text-2xl font-bold text-white tracking-tight">KITCHEN TERMINAL LOGIN</h2>
-          <p class="text-xs text-emerald-400 mt-1 mb-6">Enter kitchen staff PIN or email to access orders</p>
+          <p class="text-xs text-emerald-400 mt-1 mb-6">Sign in with the restaurant owner email and password</p>
           
           <form @submit.prevent="login" class="space-y-4 text-left">
             <div>
-              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Email / Staff Code</label>
-              <input type="text" v-model="loginEmail" placeholder="kitchen@restaurant.com" class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" />
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Owner Email</label>
+              <input type="email" v-model="loginEmail" placeholder="owner@example.com" required class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">PIN Code</label>
-              <input type="password" v-model="loginPin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" required />
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Password</label>
+              <input type="password" v-model="loginPin" placeholder="Owner password" class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" required />
             </div>
             <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm py-3 rounded-xl transition shadow-lg cursor-pointer">
               Enter Kitchen Terminal
             </button>
           </form>
-          <div class="mt-4 text-xs text-zinc-500">Default PIN: <strong class="text-emerald-400">1234</strong></div>
+          <div class="mt-4 text-xs text-zinc-500">Use the owner email/password set when the restaurant was created in the admin dashboard.</div>
         </div>
       </div>
     </template>
@@ -209,8 +209,12 @@
       <!-- Empty State -->
       <div v-else class="flex flex-col items-center justify-center py-20 bg-[#0c1611]/50 border border-emerald-950/40 rounded-3xl text-center px-4">
         <div class="text-4xl mb-3">📋</div>
-        <h3 class="text-lg font-bold text-white mb-1">No orders found</h3>
-        <p class="text-xs text-zinc-400 max-w-sm">There are no orders matching this filter criterion right now.</p>
+        <h3 class="text-lg font-bold text-white mb-1">{{ activeRestaurantId ? 'No orders found' : 'No restaurant linked' }}</h3>
+        <p class="text-xs text-zinc-400 max-w-sm">
+          {{ activeRestaurantId
+            ? 'There are no orders matching this filter criterion right now.'
+            : 'This account has no restaurant. As super admin, create a restaurant with this owner email and password.' }}
+        </p>
       </div>
 
     </main>
@@ -222,66 +226,17 @@
 <script>
 export default {
   name: 'KitchenTerminal',
+  setup() {
+    const { apiFetch } = useApi()
+    const { setAuth, clearAuth, user } = useAuth()
+    return { apiFetch, setAuth, clearAuth, user }
+  },
   data() {
     return {
       isDark: true,
       restaurantName: 'AWAZE Kitchen',
       selectedCategory: 'all',
-      orders: [
-        {
-          id: 101,
-          tableNumber: 4,
-          timeLeftMins: 2,
-          isDelayed: true,
-          status: 'New',
-          items: [
-            { name: 'Traditional Doro Wat', quantity: 2, notes: 'Extra spicy', isUnavailable: false },
-            { name: 'Injera Platter', quantity: 1, notes: '', isUnavailable: false }
-          ]
-        },
-        {
-          id: 102,
-          tableNumber: 7,
-          timeLeftMins: 12,
-          isDelayed: false,
-          status: 'Preparing',
-          items: [
-            { name: 'Kitfo Special', quantity: 1, notes: 'Lebleb (medium rare)', isUnavailable: false },
-            { name: 'Ayibe with Gomen', quantity: 1, notes: '', isUnavailable: false }
-          ]
-        },
-        {
-          id: 103,
-          tableNumber: 2,
-          timeLeftMins: 5,
-          isDelayed: false,
-          status: 'New',
-          items: [
-            { name: 'Tibs Firfir', quantity: 3, notes: '', isUnavailable: false }
-          ]
-        },
-        {
-          id: 104,
-          tableNumber: 12,
-          timeLeftMins: 0,
-          isDelayed: true,
-          status: 'Ready',
-          items: [
-            { name: 'Shiro Special', quantity: 2, notes: 'No butter (Vegan)', isUnavailable: false }
-          ]
-        },
-        {
-          id: 105,
-          tableNumber: 9,
-          timeLeftMins: 18,
-          isDelayed: false,
-          status: 'Preparing',
-          items: [
-            { name: 'Bozena Shiro', quantity: 1, notes: '', isUnavailable: false },
-            { name: 'Spiced Honey Wine (Tej)', quantity: 2, notes: '', isUnavailable: false }
-          ]
-        }
-      ],
+      orders: [],
       isLoggedIn: false,
       loginEmail: '',
       loginPin: ''
@@ -290,21 +245,32 @@ export default {
   mounted() {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
-      const autoLogin = urlParams.get('autoLogin') === 'true' || urlParams.get('r')
-      const savedAuth = localStorage.getItem('awaze_kitchen_auth')
-      if (autoLogin || savedAuth === 'true') {
+      const autoLogin = urlParams.get('autoLogin') === 'true'
+      const hasToken = !!localStorage.getItem('auth_token')
+      const savedAuth = localStorage.getItem('awaze_kitchen_auth') === 'true'
+      if ((autoLogin || savedAuth) && hasToken && this.user) {
         this.isLoggedIn = true
+        this.refreshSession()
+      } else if (savedAuth && !hasToken) {
+        localStorage.removeItem('awaze_kitchen_auth')
       }
     }
-    this.loadSavedOrders()
     this.pollInterval = setInterval(() => {
-      this.loadSavedOrders()
+      if (this.isLoggedIn) this.loadSavedOrders()
     }, 3000)
   },
   beforeUnmount() {
     if (this.pollInterval) clearInterval(this.pollInterval)
   },
   computed: {
+    ownedRestaurants() {
+      const list = this.user?.restaurants || this.user?.Restaurants || []
+      return Array.isArray(list) ? list : []
+    },
+    activeRestaurantId() {
+      const r = this.ownedRestaurants[0]
+      return r ? (r.id || r.ID || r.custom_sub_link) : null
+    },
     pendingCount() {
       return this.orders.filter(o => o.status !== 'Delivered').length;
     },
@@ -330,21 +296,50 @@ export default {
     }
   },
   methods: {
-    loadSavedOrders() {
+    async refreshSession() {
       try {
-        const savedStr = localStorage.getItem('awaze_kitchen_orders')
-        if (savedStr) {
-          const saved = JSON.parse(savedStr)
-          if (Array.isArray(saved) && saved.length > 0) {
-            const existingIds = new Set(this.orders.map(o => o.id))
-            const newOrders = saved.filter(o => !existingIds.has(o.id))
-            if (newOrders.length > 0) {
-              this.orders.unshift(...newOrders)
-            }
+        const profile = await this.apiFetch('/user/profile')
+        if (profile) {
+          const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
+          this.setAuth(token || '', profile)
+          const r = (profile.restaurants || profile.Restaurants || [])[0]
+          if (r) {
+            this.restaurantName = r.name_en || r.NameEn || r.name || 'Kitchen'
           }
         }
       } catch (e) {
-        console.warn('Failed to load kitchen orders:', e)
+        console.warn('Failed to refresh kitchen session:', e)
+      }
+      await this.loadSavedOrders()
+    },
+    async loadSavedOrders() {
+      if (!this.isLoggedIn) return;
+      const rId = this.activeRestaurantId;
+      if (!rId) {
+        this.orders = [];
+        return;
+      }
+      try {
+        const list = await this.apiFetch(`/restaurants/${rId}/orders`);
+        if (list && Array.isArray(list)) {
+          this.orders = list.map(o => ({
+            ...o,
+            id: o.id || o.ID,
+            tableNumber: o.table_number ?? o.TableNumber ?? o.tableNumber ?? 0,
+            timeLeftMins: o.time_left_mins ?? o.TimeLeftMins ?? o.timeLeftMins ?? 15,
+            isDelayed: o.is_delayed ?? o.IsDelayed ?? o.isDelayed ?? false,
+            status: o.status || o.Status || 'New',
+            items: (o.items || o.Items || []).map(i => ({
+              ...i,
+              name: i.name || i.Name || 'Item',
+              quantity: i.quantity ?? i.Quantity ?? 1,
+              notes: i.notes || i.Notes || '',
+              isUnavailable: i.is_unavailable ?? i.IsUnavailable ?? i.isUnavailable ?? false
+            }))
+          }));
+        }
+      } catch (e) {
+        console.warn('Failed to load kitchen orders from API:', e);
       }
     },
     onImgError(event, fallbackUrl) {
@@ -391,35 +386,73 @@ export default {
           return 'bg-emerald-500 text-black font-bold';
       }
     },
+    async setOrderStatus(order, nextStatus) {
+      const rId = this.activeRestaurantId;
+      if (!rId) return;
+      try {
+        await this.apiFetch(`/restaurants/${rId}/orders/${order.id || order.ID}/status`, {
+          method: 'PUT',
+          body: { status: nextStatus }
+        });
+        order.status = nextStatus;
+      } catch(e) {
+        console.error('Failed to update status', e);
+      }
+    },
     handleActionClick(order) {
       if (order.status === 'New') {
-        order.status = 'Preparing';
+        this.setOrderStatus(order, 'Preparing');
       } else if (order.status === 'Preparing') {
-        order.status = 'Ready';
+        this.setOrderStatus(order, 'Ready');
       } else if (order.status === 'Ready') {
-        order.status = 'Delivered';
+        this.setOrderStatus(order, 'Delivered');
       }
     },
     markNotDelivered(order) {
       if (order.status === 'Delivered') {
-        order.status = 'Ready';
+        this.setOrderStatus(order, 'Ready');
       } else if (order.status === 'Ready') {
-        order.status = 'Preparing';
+        this.setOrderStatus(order, 'Preparing');
       }
     },
     toggleItemUnavailable(item) {
       item.isUnavailable = !item.isUnavailable;
     },
-    login() {
-      if (this.loginPin === '1234' || this.loginEmail.trim() || true) {
-        this.isLoggedIn = true;
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('awaze_kitchen_auth', 'true');
+    async login() {
+      if (!this.loginEmail.trim() || !this.loginPin.trim()) {
+        alert("Please enter both email and password.");
+        return;
+      }
+      try {
+        const res = await this.apiFetch("/auth/login", {
+          method: "POST",
+          body: {
+            email: this.loginEmail.trim(),
+            password: this.loginPin.trim()
+          }
+        });
+        if (res && res.token) {
+          this.setAuth(res.token, res.user);
+          this.isLoggedIn = true;
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('awaze_kitchen_auth', 'true');
+          }
+          await this.refreshSession();
+          if (!this.activeRestaurantId) {
+            alert("Logged in, but this account has no restaurant. Ask a super admin to create one with your owner email.");
+          }
+        } else {
+          alert("Login failed: missing token");
         }
+      } catch (err) {
+        console.error("Kitchen login failed:", err);
+        alert(err.data?.error || "Login failed");
       }
     },
     logout() {
+      this.clearAuth();
       this.isLoggedIn = false;
+      this.orders = [];
       if (typeof window !== 'undefined') {
         localStorage.removeItem('awaze_kitchen_auth');
       }
