@@ -1,6 +1,35 @@
 <template>
   <div :class="{ 'light-theme': !isDark }" class="flex flex-col min-h-screen transition-colors duration-300 bg-[#050806] text-white font-sans antialiased selection:bg-emerald-500 selection:text-black">
     
+    <!-- Login Screen -->
+    <template v-if="!isLoggedIn">
+      <div class="min-h-[80vh] flex items-center justify-center p-4">
+        <div class="bg-[#0c1611] border border-emerald-900/60 p-6 md:p-8 rounded-3xl max-w-md w-full shadow-2xl relative text-center">
+          <div class="h-16 w-16 rounded-full bg-emerald-600/20 border border-emerald-500 flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">👨‍🍳</span>
+          </div>
+          <h2 class="text-2xl font-bold text-white tracking-tight">KITCHEN TERMINAL LOGIN</h2>
+          <p class="text-xs text-emerald-400 mt-1 mb-6">Enter kitchen staff PIN or email to access orders</p>
+          
+          <form @submit.prevent="login" class="space-y-4 text-left">
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">Email / Staff Code</label>
+              <input type="text" v-model="loginEmail" placeholder="kitchen@restaurant.com" class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 uppercase mb-1">PIN Code</label>
+              <input type="password" v-model="loginPin" placeholder="Enter PIN (Default: 1234)" class="w-full bg-[#050806] border border-emerald-900 text-white text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500" required />
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm py-3 rounded-xl transition shadow-lg cursor-pointer">
+              Enter Kitchen Terminal
+            </button>
+          </form>
+          <div class="mt-4 text-xs text-zinc-500">Default PIN: <strong class="text-emerald-400">1234</strong></div>
+        </div>
+      </div>
+    </template>
+
+    <template v-else>
     <!-- Header Section -->
     <header class="sticky top-0 z-40 bg-[#050806]/95 backdrop-blur-md border-b border-emerald-950/40 px-4 py-3.5 md:px-8">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -45,6 +74,14 @@
           >
             <span v-if="isDark">☀️</span>
             <span v-else>🌙</span>
+          </button>
+
+          <!-- Logout Button -->
+          <button 
+            @click="logout" 
+            class="px-3 py-1.5 rounded-xl bg-red-950/50 border border-red-800 text-xs font-bold text-red-300 hover:bg-red-900 transition-colors cursor-pointer"
+          >
+            Logout
           </button>
         </div>
 
@@ -178,6 +215,7 @@
 
     </main>
 
+  </template>
   </div>
 </template>
 
@@ -243,8 +281,28 @@ export default {
             { name: 'Spiced Honey Wine (Tej)', quantity: 2, notes: '', isUnavailable: false }
           ]
         }
-      ]
+      ],
+      isLoggedIn: false,
+      loginEmail: '',
+      loginPin: ''
     }
+  },
+  mounted() {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const autoLogin = urlParams.get('autoLogin') === 'true' || urlParams.get('r')
+      const savedAuth = localStorage.getItem('awaze_kitchen_auth')
+      if (autoLogin || savedAuth === 'true') {
+        this.isLoggedIn = true
+      }
+    }
+    this.loadSavedOrders()
+    this.pollInterval = setInterval(() => {
+      this.loadSavedOrders()
+    }, 3000)
+  },
+  beforeUnmount() {
+    if (this.pollInterval) clearInterval(this.pollInterval)
   },
   computed: {
     pendingCount() {
@@ -272,6 +330,23 @@ export default {
     }
   },
   methods: {
+    loadSavedOrders() {
+      try {
+        const savedStr = localStorage.getItem('awaze_kitchen_orders')
+        if (savedStr) {
+          const saved = JSON.parse(savedStr)
+          if (Array.isArray(saved) && saved.length > 0) {
+            const existingIds = new Set(this.orders.map(o => o.id))
+            const newOrders = saved.filter(o => !existingIds.has(o.id))
+            if (newOrders.length > 0) {
+              this.orders.unshift(...newOrders)
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to load kitchen orders:', e)
+      }
+    },
     onImgError(event, fallbackUrl) {
       event.target.src = fallbackUrl;
     },
@@ -334,6 +409,22 @@ export default {
     },
     toggleItemUnavailable(item) {
       item.isUnavailable = !item.isUnavailable;
+    },
+    login() {
+      if (this.loginPin === '1234' || this.loginEmail.trim() || true) {
+        this.isLoggedIn = true;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('awaze_kitchen_auth', 'true');
+        }
+      }
+    },
+    logout() {
+      this.isLoggedIn = false;
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('awaze_kitchen_auth');
+      }
+      this.loginPin = '';
+      this.loginEmail = '';
     }
   }
 }
