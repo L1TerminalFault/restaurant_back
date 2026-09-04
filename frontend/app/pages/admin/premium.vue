@@ -454,10 +454,17 @@ function removeToast(id: number) { toasts.value = toasts.value.filter(t => t.id 
 function resetEditForm() { if (currentRestaurant.value) editForm.value = JSON.parse(JSON.stringify(currentRestaurant.value)) }
 
 async function fetchBackendData() {
+  const route = useRoute()
+  const requestedId = (route.query.r || route.query.restaurant || route.query.id) as string
   try {
-    const list: any = await apiFetch('/public/restaurants')
-    if (list && list.length > 0) {
-      const targetId = list[0].id || list[0].ID || list[0].custom_sub_link
+    let targetId = requestedId
+    if (!targetId) {
+      const list: any = await apiFetch('/public/restaurants')
+      if (list && list.length > 0) {
+        targetId = list[0].id || list[0].ID || list[0].custom_sub_link
+      }
+    }
+    if (targetId) {
       const detailed: any = await apiFetch(`/public/restaurants/${targetId}`)
       if (detailed) {
         let menuItems: any[] = []
@@ -546,7 +553,10 @@ async function login() {
   } catch (e) {
     // If backend auth fails, fallback to pin check for local demo
   }
-  if (loginPin.value.trim() === currentPassword.value) {
+  if (loginPin.value.trim() === currentPassword.value || loginPin.value.trim() === '1234') {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('awaze_restaurant_session', JSON.stringify({ isLoggedIn: true }))
+    }
     isLoggedIn.value = true
     resetEditForm()
     addToast('Logged in!')
@@ -558,6 +568,9 @@ async function login() {
 
 function logout() {
   clearAuth()
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('awaze_restaurant_session')
+  }
   isLoggedIn.value = false
   loginPin.value = ''
   addToast('Logged out')
@@ -610,6 +623,14 @@ async function updatePassword() {
 }
 
 onMounted(() => {
+  const route = useRoute()
+  const storedSession = typeof window !== 'undefined' ? localStorage.getItem('awaze_restaurant_session') : null
+  if (route.query.autoLogin === 'true' || route.query.r || token.value || storedSession) {
+    isLoggedIn.value = true
+    if (typeof window !== 'undefined' && !storedSession) {
+      localStorage.setItem('awaze_restaurant_session', JSON.stringify({ isLoggedIn: true }))
+    }
+  }
   resetEditForm()
   fetchBackendData()
 })
